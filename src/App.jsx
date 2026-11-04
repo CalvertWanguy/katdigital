@@ -73,7 +73,7 @@ export default function App() {
         <a href="/" className="brand-logo">
           KatDigital <span>Koleksyon</span>
         </a>
-        <div className="nav-tagline">Bèl Kat Vœux Dijital pou Fèt Fen Dane</div>
+        <div className="nav-tagline">Bèl Kat Vœux & Swè Dijital pou Fèt Fen Dane</div>
         <div>
           <button
             onClick={() => handleOpenDemo(TEMPLATES[0])}
@@ -95,14 +95,14 @@ export default function App() {
         </div>
       </header>
 
-      {/* 2. Bannyè ak Filtè Kategori selon òtograf AKA */}
+      {/* 2. Bannyè ak Filtè Kategori */}
       <section className="hero-section">
         <div className="hero-subtitle">Koleksyon Espesyal Fèt Fen Dane 2026 - 2027</div>
         <h1 className="hero-title">
-          Voye bèl swè ki pap janm efase,<br />dirèkteman sou WhatsApp.
+          Voye bèl swè ki pap janm efase,<br />fasilman bay tout moun ou renmen.
         </h1>
         <p className="hero-desc">
-          Yon eksperyans papetri dijital kalite siperyè ak anvlòp 3D ki ouvri. Chwazi yon bèl modèl, pèsonalize pawòl ou, epi fè moun ou renmen yo plezi pou sèlman <strong>100 Goud</strong>.
+          Yon eksperyans papetri dijital kalite siperyè ak bèl anvlòp 3D ki ouvri. Chwazi yon modèl, pèsonalize pawòl ou, epi pataje l fasilman sou WhatsApp, rezo sosyal oswa mesaj pou sèlman <strong>100 Goud</strong>.
         </p>
 
         <div className="categories-bar">

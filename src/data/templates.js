@@ -101,7 +101,7 @@ export const TEMPLATES = [
   },
   {
     id: 'amour-douceur',
-    title: 'Lanmou & Doucè Fèt',
+    title: 'Lanmou & Dousè Fèt',
     subtitle: 'Koleksyon Pou Koup',
     category: 'mennaj',
     badge: 'Romantik',
