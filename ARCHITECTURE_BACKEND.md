@@ -1,77 +1,95 @@
-# KatDigital • Spécification Base de Données & Relations Back-end
+# KatDigital • Spécification Technique & Architecture Back-end (Supabase)
 
-Document d'ingénierie logicielle pour l'intégration de la base de données, des relations de clés étrangères et du cycle de vie des cartes.
+Document officiel pour le développeur back-end : flux utilisateur étape par étape, schéma PostgreSQL sur Supabase, Edge Functions et webhooks MonCash / Stripe.
 
 ---
 
-## 1. Schéma des Relations entre les Tables (MCD / MLD)
+## 1. Le Flux Utilisateur Étape par Étape (User Journey)
 
+Pour maximiser les conversions et éliminer toute friction, le projet adopte la stratégie d'achat d'impulsion sans création de compte obligatoire (Guest Checkout) :
+
+| Étape | Action de l'Utilisateur | Action du Front-end | Rôle du Back-end (Supabase) |
+| :--- | :--- | :--- | :--- |
+| **1. Découverte** | Arrive sur le site, explore le catalogue et teste les démos d'ouverture 3D. | Affiche le catalogue de cartes. | Fournit la table `templates` avec les modèles actifs. |
+| **2. Création** | Clique sur *« Pèsonalize »*, tape le destinataire, son nom et choisit/modifie son message. | Met à jour l'état local et offre un aperçu immédiat en direct. | Aucun appel serveur nécessaire à cette étape (expérience instantanée). |
+| **3. Paywall** | Clique sur *« Pataje »* ou *« Telechaje »*. Choisit MonCash (100 Goud) ou Carte ($2.99). | Appelle `POST /api/orders/create` avec les données de la carte. | Insère la commande dans `orders` avec statut `pending` et génère la session MonCash / Stripe. |
+| **4. Paiement** | Valide avec son code PIN MonCash (ou saisit sa carte sur Stripe). | Attend la confirmation ou redirige le client. | Reçoit le webhook certifié, passe le statut en `paid`, et crée la carte dans `cards` avec un slug unique (ex: `x7K9p2`). |
+| **5. Déblocage** | Reçoit l'écran de succès avec le lien de sa carte débloqué. | Débloque le bouton *« Pataje sou WhatsApp »* et *« Telechaje Imaj PNG »*. | Fournit les métadonnées Open Graph pour un bel aperçu sur WhatsApp. |
+| **6. Réception** | Le destinataire (Vanessa) clique sur le lien WhatsApp reçu. | Ouvre directement l'enveloppe personnalisée avec musique et confettis. | Incrémente `views_count` et renvoie les données publiques sécurisées. |
+
+---
+
+## 2. Pourquoi Supabase pour ce projet ?
+
+* **PostgreSQL Robuste :** Gestion relationnelle native des commandes, cartes et logs financiers.
+* **Supabase Edge Functions :** Exécution serverless en TypeScript pour gérer les webhooks MonCash (Digicel) et Stripe.
+* **Table Editor Intuitif :** Toute l'équipe peut visualiser en temps réel les cartes vendues et les revenus sans coder de back-office dédié.
+* **Sécurité RLS (Row Level Security) :** Garantit qu'aucune carte non payée ne puisse être consultée publiquement.
+
+---
+
+## 3. Schéma Relationnel de la Base de Données (Supabase SQL)
+
+### Relations entre les tables :
 | Table Source | Clé Étrangère (FK) | Table Cible (PK) | Type de Relation & Description |
 | :--- | :--- | :--- | :--- |
 | **`orders`** | `template_id` | `templates.id` | Plusieurs commandes peuvent utiliser le même modèle de carte (Many-to-One). |
 | **`cards`** | `order_id` | `orders.id` | Une commande payée génère exactement une carte consultable (One-to-One sécurisé). |
-| **`webhook_logs`** | `order_id` | `orders.id` | Traçabilité financière : une commande peut recevoir plusieurs notifications de webhook (Many-to-One). |
+| **`webhook_logs`** | `order_id` | `orders.id` | Traçabilité financière : plusieurs notifications webhook pour une commande (Many-to-One). |
 
 ---
 
-## 2. Table `templates` (Catalogue des modèles de cartes)
+### Structure des Tables :
 
-Contient les modèles de cartes prédéfinis affichés sur le catalogue front-end :
+#### Table `templates` (Catalogue des modèles)
+```sql
+CREATE TABLE templates (
+  id VARCHAR(50) PRIMARY KEY,
+  title VARCHAR(100) NOT NULL,
+  category VARCHAR(50) NOT NULL,
+  envelope_color VARCHAR(20) NOT NULL,
+  heading VARCHAR(100) NOT NULL,
+  default_message TEXT NOT NULL,
+  price_htg INT DEFAULT 100,
+  price_usd DECIMAL(5,2) DEFAULT 2.99,
+  is_active BOOLEAN DEFAULT TRUE
+);
+```
 
-| Champ (Colonne) | Type SQL | Contrainte | Description / Exemple |
-| :--- | :--- | :--- | :--- |
-| `id` | VARCHAR(50) | **PRIMARY KEY** | Identifiant unique du modèle (ex: `noel-bordeaux`, `sapin-emeraude`). |
-| `title` | VARCHAR(100) | NOT NULL | Nom public du modèle (ex: `Nwèl Vlou Bòdo`). |
-| `category` | VARCHAR(50) | NOT NULL | Catégorie de filtre (`noel`, `nouvel-an`, `tradition`, `mennaj`). |
-| `envelope_color` | VARCHAR(20) | NOT NULL | Couleur HEX de l'enveloppe extérieure (ex: `#7A1F2D`). |
-| `flap_color` | VARCHAR(20) | NOT NULL | Couleur HEX du rabat supérieur 3D (ex: `#8B2535`). |
-| `heading` | VARCHAR(100) | NOT NULL | Titre imprimé sur la carte (ex: `Jwaye Nwèl & Bòn Ane 2027`). |
-| `default_message` | TEXT | NOT NULL | Message suggéré par défaut en kreyòl. |
-| `price_htg` | INT | DEFAULT 100 | Prix standard en Gourdes pour Haïti. |
-| `price_usd` | DECIMAL(5,2) | DEFAULT 2.99 | Prix standard en Dollars USD pour la diaspora. |
-| `is_active` | BOOLEAN | DEFAULT TRUE | Activer ou désactiver la visibilité dans le catalogue. |
+#### Table `orders` (Commandes et paiements)
+```sql
+CREATE TABLE orders (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  template_id VARCHAR(50) REFERENCES templates(id),
+  recipient_name VARCHAR(100) NOT NULL,
+  sender_name VARCHAR(100) NOT NULL,
+  message_content TEXT NOT NULL,
+  payment_gateway VARCHAR(20) NOT NULL, -- 'moncash' ou 'stripe'
+  payment_status VARCHAR(20) DEFAULT 'pending', -- 'pending', 'paid', 'failed'
+  phone_number VARCHAR(30),
+  transaction_ref VARCHAR(100),
+  amount_paid DECIMAL(10,2) NOT NULL,
+  currency VARCHAR(5) NOT NULL, -- 'HTG' ou 'USD'
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+```
 
----
-
-## 3. Table `orders` (Commandes et transactions)
-
-Enregistre chaque tentative d'achat avant et après validation du paiement :
-
-| Champ (Colonne) | Type SQL | Contrainte | Description / Exemple |
-| :--- | :--- | :--- | :--- |
-| `id` | UUID | **PRIMARY KEY** | Identifiant unique de la commande (ex: `c3f1b2...`). |
-| `template_id` | VARCHAR(50) | **FK -> templates.id** | Référence au modèle de carte choisi. |
-| `recipient_name` | VARCHAR(100) | NOT NULL | Nom du destinataire (ex: `Vanessa`). |
-| `sender_name` | VARCHAR(100) | NOT NULL | Nom de l'expéditeur (ex: `David Jean`). |
-| `message_content` | TEXT | NOT NULL | Texte personnalisé rédigé ou choisi par l'acheteur. |
-| `payment_gateway` | VARCHAR(20) | NOT NULL | `moncash` (Digicel) ou `stripe` (Carte bancaire). |
-| `payment_status` | VARCHAR(20) | DEFAULT 'pending' | `pending` (en cours), `paid` (validé) ou `failed`. |
-| `phone_number` | VARCHAR(30) | NULLABLE | Numéro de téléphone de l'acheteur (si MonCash). |
-| `transaction_ref` | VARCHAR(100) | NULLABLE | Référence de transaction reçue par le Webhook. |
-| `amount_paid` | DECIMAL(10,2) | NOT NULL | Montant réglé (100.00 ou 2.99). |
-| `currency` | VARCHAR(5) | NOT NULL | `HTG` pour Haïti, `USD` pour l'international. |
-| `created_at` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Date et heure de création de la commande. |
-
----
-
-## 4. Table `cards` (Cartes actives avec lien unique)
-
-Créée **UNIQUEMENT** après confirmation réelle du paiement par le Webhook :
-
-| Champ (Colonne) | Type SQL | Contrainte | Description / Exemple |
-| :--- | :--- | :--- | :--- |
-| `id` | UUID | **PRIMARY KEY** | Identifiant technique interne. |
-| `order_id` | UUID | **FK -> orders.id (UNIQUE)** | Lien direct vers la commande réglée. |
-| `slug` | VARCHAR(16) | **UNIQUE NOT NULL** | Code court du lien public (ex: `k8F9x2` pour `katdigital.ht/v/k8F9x2`). |
-| `views_count` | INT | DEFAULT 0 | Nombre de fois que le destinataire a ouvert l'enveloppe. |
-| `last_viewed_at` | TIMESTAMP | NULLABLE | Dernière consultation de la carte. |
-| `created_at` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Date d'activation de la carte. |
+#### Table `cards` (Cartes débloquées pour le destinataire)
+```sql
+CREATE TABLE cards (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  order_id UUID REFERENCES orders(id) UNIQUE,
+  slug VARCHAR(16) UNIQUE NOT NULL, -- ex: 'x7K9p2'
+  views_count INT DEFAULT 0,
+  last_viewed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+```
 
 ---
 
-## 5. Cycle de Vie d'une Carte (Du clic au destinataire)
+## 4. Les 3 Fonctions Clés (Supabase Edge Functions)
 
-1. **Étape 1 (Panier) :** L'acheteur saisit son nom, celui du destinataire et son message. Le front-end appelle `POST /api/orders/create`. Une ligne est insérée dans `orders` avec `payment_status = 'pending'`.
-2. **Étape 2 (Paiement) :** L'acheteur est redirigé vers MonCash (code PIN) ou Stripe Checkout (carte bancaire).
-3. **Étape 3 (Activation Webhook) :** Le serveur MonCash ou Stripe envoie un webhook sécurisé au back-end. Le back-end vérifie la signature cryptographique, passe `orders.payment_status` à `paid`, et crée la ligne correspondante dans `cards` avec un code court unique (ex: `x7K9p2`).
-4. **Étape 4 (Consultation) :** Quand le destinataire clique sur `https://katdigital.ht/v/x7K9p2`, le front-end appelle `GET /api/cards/x7K9p2`. Le back-end incrémente `views_count` et renvoie l'enveloppe avec son message personnalisé !
+1. **`create-order` :** Reçoit la personnalisation du front, insère la commande en `pending` dans Supabase, et génère l'URL de paiement MonCash ou Stripe Checkout.
+2. **`moncash-webhook` :** Écoute les notifications serveur de Digicel. Dès que le code PIN est validé, met à jour `orders.payment_status = 'paid'`, génère un code court `slug` aléatoire unique (ex: `x7K9p2`), et insère la ligne dans `cards`.
+3. **`stripe-webhook` :** Écoute l'événement `checkout.session.completed`. Vérifie la signature cryptographique du webhook Stripe, active la carte et génère le lien.
