@@ -2,7 +2,14 @@ import React, { useState } from 'react';
 import { TEMPLATES } from './data/templates';
 import EnvelopeViewerModal from './components/EnvelopeViewerModal';
 import PersonalizeModal from './components/PersonalizeModal';
-import { ArrowRight } from 'lucide-react';
+import {
+  LayoutGrid,
+  Gift,
+  Star,
+  Bookmark,
+  Heart,
+  ArrowRight
+} from 'lucide-react';
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -51,8 +58,8 @@ export default function App() {
               fontWeight: 600,
               letterSpacing: '0.5px',
               textTransform: 'uppercase',
-              padding: '8px 16px',
-              borderRadius: '20px',
+              padding: '9px 18px',
+              borderRadius: '30px',
               border: 'none',
               cursor: 'pointer'
             }}
@@ -62,48 +69,62 @@ export default function App() {
         </div>
       </header>
 
-      {/* 2. Bannière d'accueil & Filtres en Pilules sobres */}
+      {/* 2. Bannière d'accueil & Filtres de Catégories (Style Evite) */}
       <section className="hero-section">
-        <div className="hero-subtitle">Édition Spéciale Fin d'Année 2026 - 2027</div>
+        <div className="hero-subtitle">Édition Spéciale Fêtes 2026 - 2027</div>
         <h1 className="hero-title">
           Partagez des vœux inoubliables,<br />directement sur WhatsApp.
         </h1>
         <p className="hero-desc">
-          Une expérience de papeterie digitale haut de gamme. Sélectionnez un modèle avec ouverture animée, personnalisez vos messages et surprenez vos proches pour seulement <strong>100 HTG</strong>.
+          Une papeterie digitale raffinée avec ouverture d'enveloppe en 3D. Choisissez un modèle, personnalisez votre message et surprenez vos proches pour seulement <strong>100 HTG</strong>.
         </p>
 
-        {/* Pilules de catégories sobres sans émojis */}
+        {/* Pilules de catégories parfaitement alignées avec icônes vectorielles légères */}
         <div className="categories-bar">
-          <div
+          <button
+            type="button"
             className={`category-pill ${selectedCategory === 'all' ? 'active' : ''}`}
             onClick={() => setSelectedCategory('all')}
           >
-            Tous les Modèles
-          </div>
-          <div
+            <LayoutGrid size={14} />
+            <span>Tous les Modèles</span>
+          </button>
+
+          <button
+            type="button"
             className={`category-pill ${selectedCategory === 'noel' ? 'active' : ''}`}
             onClick={() => setSelectedCategory('noel')}
           >
-            Noël Classique
-          </div>
-          <div
+            <Gift size={14} />
+            <span>Noël Classique</span>
+          </button>
+
+          <button
+            type="button"
             className={`category-pill ${selectedCategory === 'nouvel-an' ? 'active' : ''}`}
             onClick={() => setSelectedCategory('nouvel-an')}
           >
-            Nouvel An 2027
-          </div>
-          <div
+            <Star size={14} />
+            <span>Nouvel An 2027</span>
+          </button>
+
+          <button
+            type="button"
             className={`category-pill ${selectedCategory === 'tradition' ? 'active' : ''}`}
             onClick={() => setSelectedCategory('tradition')}
           >
-            1er Janvier & Traditions
-          </div>
-          <div
+            <Bookmark size={14} />
+            <span>1er Janvier & Traditions</span>
+          </button>
+
+          <button
+            type="button"
             className={`category-pill ${selectedCategory === 'mennaj' ? 'active' : ''}`}
             onClick={() => setSelectedCategory('mennaj')}
           >
-            Messages Personnels
-          </div>
+            <Heart size={14} />
+            <span>Messages d'Amour</span>
+          </button>
         </div>
       </section>
 

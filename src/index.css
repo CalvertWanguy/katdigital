@@ -71,79 +71,87 @@ body {
 }
 
 /* ==========================================================
-   HERO & CATÉGORIES (STYLE EVITE)
+   HERO & CATÉGORIES (STYLE EVITE HAUT DE GAMME)
    ========================================================== */
 .hero-section {
   text-align: center;
-  padding: 35px 20px 15px;
-  max-width: 800px;
+  padding: 38px 20px 24px;
+  max-width: 860px;
   margin: 0 auto;
 }
 
 .hero-subtitle {
-  font-size: 12px;
-  letter-spacing: 2px;
+  font-size: 11px;
+  letter-spacing: 2.2px;
   text-transform: uppercase;
   color: var(--gold-accent);
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .hero-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 38px;
+  font-size: 40px;
   font-weight: 700;
   color: #1F2922;
   line-height: 1.15;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .hero-desc {
   font-size: 14px;
   color: var(--text-muted);
-  line-height: 1.6;
-  max-width: 520px;
-  margin: 0 auto 24px;
+  line-height: 1.65;
+  max-width: 580px;
+  margin: 0 auto 28px;
 }
 
+/* Barre de filtres parfaitement centrée et espacée */
 .categories-bar {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
   gap: 10px;
-  overflow-x: auto;
-  padding: 6px 15px 15px;
-  justify-content: flex-start;
-  scrollbar-width: none;
-}
-.categories-bar::-webkit-scrollbar { display: none; }
-
-@media (min-width: 650px) {
-  .categories-bar { justify-content: center; }
+  margin: 0 auto;
+  padding: 0 10px;
 }
 
 .category-pill {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   background: #FFFFFF;
   border: 1px solid #E2DCD1;
-  border-radius: 30px;
-  padding: 7px 16px;
+  border-radius: 9999px;
+  padding: 9px 18px;
   font-size: 13px;
   font-weight: 600;
   color: var(--text-main);
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  font-family: inherit;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
-.category-pill:hover, .category-pill.active {
-  border-color: var(--primary-green);
-  background: #F1EFEA;
-  color: var(--primary-green);
+
+.category-pill:hover {
+  border-color: var(--gold-accent);
+  background: #FAF8F5;
+  color: #1F2922;
+  transform: translateY(-1px);
 }
+
 .category-pill.active {
   background: var(--primary-green);
   color: #FFFFFF;
   border-color: var(--primary-green);
+  box-shadow: 0 4px 14px rgba(43, 71, 54, 0.2);
+}
+
+.category-pill svg {
+  flex-shrink: 0;
+  stroke-width: 2;
 }
 
 /* ==========================================================
@@ -346,7 +354,6 @@ body {
   50% { transform: translateY(-6px); }
 }
 
-/* Enveloppe 3D physique */
 .real-envelope {
   position: relative;
   width: 330px;
@@ -523,7 +530,6 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Actions après ouverture */
 .card-actions-panel {
   margin-top: 25px;
   width: 100%;
@@ -547,7 +553,7 @@ body {
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   box-shadow: 0 6px 18px rgba(37, 211, 102, 0.3);
   cursor: pointer;
   width: 90%;
