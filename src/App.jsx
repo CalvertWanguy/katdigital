@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TEMPLATES } from './data/templates';
 import EnvelopeViewerModal from './components/EnvelopeViewerModal';
 import PersonalizeModal from './components/PersonalizeModal';
@@ -16,6 +16,31 @@ export default function App() {
   const [activeTemplate, setActiveTemplate] = useState(null);
   const [customizerTemplate, setCustomizerTemplate] = useState(null);
   const [customData, setCustomData] = useState(null);
+  const [isDirectRecipientView, setIsDirectRecipientView] = useState(false);
+
+  // Détection d'un lien unique de destinataire dans l'URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const to = params.get('to');
+      const from = params.get('from');
+      const themeId = params.get('theme');
+      const msg = params.get('msg');
+
+      if (to && from) {
+        // Trouver le modèle correspondant ou prendre le bordeaux par défaut
+        const matchedTemplate = TEMPLATES.find((t) => t.id === themeId) || TEMPLATES[0];
+        setCustomData({
+          recipient: decodeURIComponent(to),
+          sender: decodeURIComponent(from),
+          message: msg ? decodeURIComponent(msg) : matchedTemplate.defaultMessage,
+          heading: matchedTemplate.heading
+        });
+        setActiveTemplate(matchedTemplate);
+        setIsDirectRecipientView(true);
+      }
+    }
+  }, []);
 
   const filteredTemplates = TEMPLATES.filter((t) => {
     if (selectedCategory === 'all') return true;
@@ -27,6 +52,8 @@ export default function App() {
   });
 
   const handleOpenDemo = (template) => {
+    setCustomData(null);
+    setIsDirectRecipientView(false);
     setActiveTemplate(template);
   };
 
@@ -44,7 +71,7 @@ export default function App() {
     <div>
       {/* 1. En-tête Navigation */}
       <header className="header-nav">
-        <a href="#" className="brand-logo">
+        <a href="/" className="brand-logo">
           KatDigital <span>Collection</span>
         </a>
         <div className="nav-tagline">Cartes & Vœux digitaux festifs pour WhatsApp</div>
@@ -69,7 +96,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* 2. Bannière d'accueil & Filtres de Catégories (Style Evite) */}
+      {/* 2. Bannière d'accueil & Filtres de Catégories */}
       <section className="hero-section">
         <div className="hero-subtitle">Édition Spéciale Fêtes 2026 - 2027</div>
         <h1 className="hero-title">
@@ -79,7 +106,6 @@ export default function App() {
           Une papeterie digitale raffinée avec ouverture d'enveloppe en 3D. Choisissez un modèle, personnalisez votre message et surprenez vos proches pour seulement <strong>100 HTG</strong>.
         </p>
 
-        {/* Pilules de catégories parfaitement alignées avec icônes vectorielles légères */}
         <div className="categories-bar">
           <button
             type="button"
@@ -202,9 +228,14 @@ export default function App() {
         <EnvelopeViewerModal
           template={activeTemplate}
           customData={customData}
+          isDirectView={isDirectRecipientView}
           onClose={() => {
             setActiveTemplate(null);
             setCustomData(null);
+            // Nettoyer l'URL sans recharger
+            if (isDirectRecipientView) {
+              window.history.replaceState({}, '', '/');
+            }
           }}
           onOpenCustomizer={(t) => {
             setActiveTemplate(null);

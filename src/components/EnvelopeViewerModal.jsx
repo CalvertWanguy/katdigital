@@ -3,7 +3,6 @@ import gsap from 'gsap';
 import confetti from 'canvas-confetti';
 import { Gift, RotateCcw, X } from 'lucide-react';
 
-// Véritable logo officiel vectoriel SVG WhatsApp (Reconnaissable et rassurant)
 const WhatsAppOfficialLogo = () => (
   <svg
     viewBox="0 0 24 24"
@@ -16,7 +15,7 @@ const WhatsAppOfficialLogo = () => (
   </svg>
 );
 
-export default function EnvelopeViewerModal({ template, customData, onClose, onOpenCustomizer }) {
+export default function EnvelopeViewerModal({ template, customData, isDirectView, onClose, onOpenCustomizer }) {
   const [isOpened, setIsOpened] = useState(false);
   const envelopeRef = useRef(null);
   const flapRef = useRef(null);
@@ -30,11 +29,13 @@ export default function EnvelopeViewerModal({ template, customData, onClose, onO
   const message = customData?.message || template.defaultMessage;
   const title = customData?.heading || template.heading;
 
-  const currentUrl = typeof window !== 'undefined' ? window.location.href : 'https://katdijital.ht';
-  const whatsappShareText = encodeURIComponent(
-    `Gade bèl kat fèt mwen sot kreye pou ou a ! ✨\nKlike sou lyen sa a pou w ouvri bèl anvlòp ou an :\n👉 ${currentUrl}`
-  );
-  const whatsappUrl = `https://wa.me/?text=${whatsappShareText}`;
+  // Construction d'un lien unique de partage pour cette carte
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://katdigital.ht';
+  const uniqueCardLink = `${origin}/?to=${encodeURIComponent(recipient)}&from=${encodeURIComponent(sender)}&theme=${template.id}&msg=${encodeURIComponent(message)}`;
+
+  // Message WhatsApp propre sans caractères exotiques pour éviter les losanges "?"
+  const shareMessageText = `Gade bel kat fet mwen sot kreye pou ou a !\n\nKlike sou lyen sa a pou w ouvri bel anvlop ou an :\n${uniqueCardLink}`;
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessageText)}`;
 
   const playElegantChime = () => {
     try {
@@ -219,7 +220,7 @@ export default function EnvelopeViewerModal({ template, customData, onClose, onO
           </div>
         </div>
 
-        {/* Panneau d'actions : VRAI logo WhatsApp + Icône Cadeau de Prestige */}
+        {/* Panneau d'actions */}
         <div ref={actionsRef} className="card-actions-panel">
           <a
             href={whatsappUrl}
@@ -236,7 +237,7 @@ export default function EnvelopeViewerModal({ template, customData, onClose, onO
             onClick={() => onOpenCustomizer(template)}
           >
             <Gift size={17} style={{ flexShrink: 0 }} />
-            <span>Pèsonalize & Resevwa pa w la (100 HTG)</span>
+            <span>Kreye pa w la tou (100 HTG)</span>
           </button>
 
           <span className="btn-replay-anim" onClick={replayAnimation}>
