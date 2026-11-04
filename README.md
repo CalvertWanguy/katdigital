@@ -1,70 +1,87 @@
-# 🎄 KatDijital • Platfòm Kat Vœux Dijital Anime
+# KatDigital
 
-> Platfòm web modèn pou kreye ak voye bèl kat vœux dijital anime (Noël & Bòn Ane 2027) dirèkteman sou WhatsApp avèk peman MonCash ak kat kredi.
-
-Inspiré par les standards de papeterie de luxe et d'animation éditoriale de **Greenvelope** et **Evite**.
+Plateforme web de cartes de vœux et d'invitations digitales interactives, optimisée pour une distribution mobile et WhatsApp avec intégration de paiements locaux et internationaux.
 
 ---
 
-## ✨ Fonksyonalite prensipal yo (Features)
+## Vue d'ensemble
 
-* **🎨 Estetik Papeterie de Luxe (Style Evite) :**
-  * Fond crème ak papye d'art natirèl (`#FAF7F2`, `#F4EFE6`).
-  * Tipografi haute couture (*Cormorant Garamond* ak *Playfair Display*).
-  * Filtè pa kategori an pilil : *Tout Modèl*, *Nwèl*, *Bòn Ane 2027*, *1ye Janvye & Soup Joumou*, *Pou Mennaj*.
-
-* **✉️ Ouvèti Fizik Anvlòp 3D (Style Greenvelope) :**
-  * Sceau cire relief "2027".
-  * Wotasyon 180° rabat anvlòp la an 3D (`rotateX`) ak GSAP.
-  * Doublure enteryè (*liner*) tekstire ak kachèt an lò.
-  * Glisman kat la vers le haut ak flanm etensèl confetti.
-  * Douce mélodie carillon fèt entegre (Web Audio API).
-
-* **📱 WhatsApp First & Pèsonalizasyon :**
-  * Fòmilè rapid : chwa non destinataire / expéditeur, seleksyon bèl mesaj kreyòl tout pare oswa pèsonalize.
-  * Bouton pataj WhatsApp dirèk ak vrè lyen dinamik ki klike.
-  * Sipò peman lokal **MonCash (100 HTG)** ak entènasyonal **Kat kredi ($2.99 USD)**.
+KatDigital est une solution web orientée mobile conçue pour moderniser l'envoi de vœux lors des célébrations de fin d'année (Noël, Nouvel An 2027 et Fête Nationale du 1er Janvier). Le projet s'appuie sur les standards d'animation et de papeterie éditoriale haut de gamme inspirés de références du secteur telles que Greenvelope et Evite, combinant l'élégance du papier traditionnel à l'interactivité numérique.
 
 ---
 
-## 🛠️ Stack Teknoloji
+## Caractéristiques techniques et fonctionnelles
 
-* **Frontend :** [React](https://react.dev/) + [Vite](https://vite.dev/)
-* **Animasyon 3D :** [GSAP](https://gsap.com/)
-* **Efè Fèt :** [Canvas-Confetti](https://github.com/catdad/canvas-confetti)
-* **Ikòn :** [Lucide React](https://lucide.dev/)
-* **Peman prevwa :** API MonCash (Digicel Business) + Stripe
+### 1. Expérience visuelle et éditoriale
+* Direction artistique inspirée de la papeterie fine : teintes chaudes (#FAF7F2, #F4EFE6) et textures subtiles.
+* Typographie éditoriale structurée avec les polices Cormorant Garamond, Playfair Display et Montserrat.
+* Système de navigation par catégories : Sélection globale, Fêtes de Noël, Nouvel An 2027, Traditions culturelles, Messages personnels.
 
----
+### 2. Moteur d'animation physique
+* Modélisation physique de l'enveloppe avec rabat supérieur interactif animé en 3D via GSAP (rotateX).
+* Doublure intérieure texturée respectant la profondeur de plan (z-index dynamique).
+* Extraction fluide de la carte d'invitation avec mise à l'échelle centrale optimisée pour écrans mobiles.
+* Génération de particules festives calibrées via Canvas-Confetti pour maintenir un taux de rafraîchissement stable à 60 FPS sur navigateur mobile (WebView WhatsApp).
+* Synthèse sonore native via l'API Web Audio pour un chargement instantané sans dépendance de fichiers audio volumineux.
 
-## 🚀 Kòman pou w lanse pwojè a sou machin ou
-
-1. **Klone repo a :**
-   ```bash
-   git clone https://github.com/CalvertWanguy/katdigital.git
-   cd katdigital
-   ```
-
-2. **Enstale depandans yo :**
-   ```bash
-   npm install
-   ```
-
-3. **Lanse sèvè lokal la :**
-   ```bash
-   npm run dev
-   ```
-   Ouvri [http://localhost:5173/](http://localhost:5173/) nan navigatè w la.
-
-4. **Bati pou pwodiksyon :**
-   ```bash
-   npm run build
-   ```
+### 3. Parcours utilisateur et distribution
+* Flux de personnalisation en moins de deux minutes : saisie des expéditeurs et destinataires, sélection de messages prédéfinis ou rédaction personnalisée.
+* Génération d'URL uniques prêtes pour le partage instantané via l'API WhatsApp avec balises Open Graph dédiées.
+* Passerelle de paiement multidevise : intégration MonCash (HTG) pour le marché national et cartes bancaires/Stripe (USD) pour la diaspora et l'international.
 
 ---
 
-## 👥 Ekip la (Team)
+## Architecture logicielle
 
-* **Front-end & UX :** Calvert Wanguy
-* **Back-end & API Peman :** En cours
-* **Design & Visuels :** En cours de recrutement
+* **Environnement et Framework :** React 19, Vite
+* **Animations complexes :** GSAP (GreenSock)
+* **Moteur de particules :** Canvas-Confetti
+* **Système d'icônes :** Lucide React
+* **Intégrations de paiement :** API MonCash (Digicel Business), Stripe Checkout
+
+---
+
+## Installation et démarrage local
+
+### Prérequis
+* Node.js (version 18 ou supérieure recommandée)
+* Gestionnaire de paquets npm ou yarn
+
+### Procédure de déploiement local
+
+1. Cloner le dépôt :
+```bash
+git clone https://github.com/CalvertWanguy/katdigital.git
+cd katdigital
+```
+
+2. Installer les dépendances du projet :
+```bash
+npm install
+```
+
+3. Démarrer le serveur de développement :
+```bash
+npm run dev
+```
+L'application est accessible par défaut à l'adresse suivante : `http://localhost:5173/`.
+
+4. Générer la version de production :
+```bash
+npm run build
+```
+
+---
+
+## Organisation de l'équipe
+
+* **Front-end Engineering & UI Architecture :** Calvert Wanguy
+* **Back-end Engineering & Infrastructure Paiement :** En cours
+* **Design Graphique & Direction Artistique :** En cours de recrutement
+
+---
+
+## Contact et support
+
+Pour toute demande relative au projet ou proposition de collaboration :
+* Email : contact@wzcollective.com
