@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Smartphone, CreditCard, Gift } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Smartphone, CreditCard, Gift, User, Edit3, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { PRESET_MESSAGES } from '../data/templates';
 
 export default function PersonalizeModal({ template, onClose, onSaveAndPreview }) {
@@ -11,7 +11,20 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handlePresetChange = (presetId) => {
+  // Verrouiller le défilement de l'arrière-plan sur ordinateur et mobile
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    const originalTouchAction = document.body.style.touchAction;
+    document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.touchAction = originalTouchAction;
+    };
+  }, []);
+
+  const handleSelectCategory = (presetId) => {
     setSelectedPreset(presetId);
     const found = PRESET_MESSAGES.find((m) => m.id === presetId);
     if (found) {
@@ -39,155 +52,161 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
   };
 
   return (
-    <div className="customizer-modal">
+    <div className="customizer-modal" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="customizer-card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        
+        {/* Antèt Modal la */}
+        <div className="customizer-header">
           <div>
-            <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 22, fontWeight: 700, color: '#2B4736' }}>
-              Pèsonalize Kat Pa w la
-            </h3>
-            <span style={{ fontSize: 12, color: '#6B6864' }}>Modèl : {template.title}</span>
+            <span className="customizer-badge" style={{ color: template.envelopeColor, background: `${template.envelopeColor}14` }}>
+              Modèl : {template.title}
+            </span>
+            <h3 className="customizer-title">Pèsonalize Kat Pa w la</h3>
           </div>
-          <button
-            onClick={onClose}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6B6864' }}
-            aria-label="Fèmen"
-          >
-            <X size={20} />
+          <button onClick={onClose} className="customizer-close-btn" aria-label="Fèmen">
+            <X size={18} />
           </button>
         </div>
 
-        <form onSubmit={handleValidate}>
-          <div className="form-group">
-            <label className="form-label">Pou ki moun ? (Non moun k ap resevwa kat la)</label>
-            <input
-              type="text"
-              placeholder="Pa egzanp : Vanessa, Manman, Jean..."
-              className="form-input"
-              value={recipient}
-              onChange={(e) => setRecipient(e.target.value)}
-              required
-            />
+        <form onSubmit={handleValidate} className="customizer-form">
+          
+          {/* Seksyon 1 : Moun yo */}
+          <div className="form-row-2">
+            <div className="form-group-clean">
+              <label className="form-label-clean">
+                <User size={13} style={{ color: 'var(--primary-green)' }} />
+                <span>Pou ki moun ?</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Ex: Vanessa, Manman..."
+                className="form-input-clean"
+                value={recipient}
+                onChange={(e) => setRecipient(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="form-group-clean">
+              <label className="form-label-clean">
+                <Edit3 size={13} style={{ color: 'var(--primary-green)' }} />
+                <span>De ki moun ? (Non w)</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Ex: David, Pitit ou..."
+                className="form-input-clean"
+                value={sender}
+                onChange={(e) => setSender(e.target.value)}
+                required
+              />
+            </div>
           </div>
 
-          <div className="form-group">
-            <label className="form-label">De ki moun ? (Non pa w)</label>
-            <input
-              type="text"
-              placeholder="Pa egzanp : David, Pitit ou..."
-              className="form-input"
-              value={sender}
-              onChange={(e) => setSender(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Chwazi yon bèl mesaj tout pare :</label>
-            <select
-              className="form-select"
-              value={selectedPreset}
-              onChange={(e) => handlePresetChange(e.target.value)}
-            >
+          {/* Seksyon 2 : Seleksyon Mesaj Rapid an Pilil */}
+          <div className="form-group-clean">
+            <label className="form-label-clean">
+              <span>Chwazi yon bèl mesaj rapid :</span>
+            </label>
+            <div className="preset-pill-list">
               {PRESET_MESSAGES.map((msg) => (
-                <option key={msg.id} value={msg.id}>
+                <button
+                  key={msg.id}
+                  type="button"
+                  className={`preset-pill-item ${selectedPreset === msg.id ? 'active' : ''}`}
+                  onClick={() => handleSelectCategory(msg.id)}
+                >
                   {msg.label}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Oswa modifye tèks la jan w vle :</label>
+          {/* Tèks mesaj la */}
+          <div className="form-group-clean">
+            <label className="form-label-clean">
+              <span>Tèks kat la (ou ka modifye l jan w vle) :</span>
+            </label>
             <textarea
-              rows={4}
-              className="form-textarea"
+              rows={3}
+              className="form-textarea-clean"
               value={customMessage}
               onChange={(e) => setCustomMessage(e.target.value)}
               required
             />
           </div>
 
-          <div className="form-group" style={{ marginTop: 20 }}>
-            <label className="form-label">Chwazi mwayen peman (100 Goud / $2.99 USD) :</label>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          {/* Seksyon 3 : Chwa Mwayen Peman */}
+          <div className="form-group-clean">
+            <label className="form-label-clean">
+              <span>Mwayen peman :</span>
+            </label>
+            <div className="payment-cards-grid">
+              
               <div
+                className={`payment-choice-card ${paymentMethod === 'moncash' ? 'active-moncash' : ''}`}
                 onClick={() => setPaymentMethod('moncash')}
-                style={{
-                  border: `2px solid ${paymentMethod === 'moncash' ? '#7A1F2D' : '#E2DCD1'}`,
-                  background: paymentMethod === 'moncash' ? '#FAF2F4' : '#FFF',
-                  padding: '10px 12px',
-                  borderRadius: 10,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  fontSize: 13,
-                  fontWeight: 600
-                }}
               >
-                <Smartphone size={18} color="#7A1F2D" />
-                <span>MonCash (100 Goud)</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div className="payment-icon-box moncash-box">
+                    <Smartphone size={18} color="#C41230" />
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 14, color: '#1A201C' }}>MonCash</div>
+                    <div style={{ fontSize: 11, color: '#6B6864' }}>Ayiti • 100 Goud</div>
+                  </div>
+                </div>
+                {paymentMethod === 'moncash' && <CheckCircle2 size={18} color="#C41230" />}
               </div>
 
               <div
+                className={`payment-choice-card ${paymentMethod === 'card' ? 'active-card' : ''}`}
                 onClick={() => setPaymentMethod('card')}
-                style={{
-                  border: `2px solid ${paymentMethod === 'card' ? '#2B4736' : '#E2DCD1'}`,
-                  background: paymentMethod === 'card' ? '#F0F5F2' : '#FFF',
-                  padding: '10px 12px',
-                  borderRadius: 10,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  fontSize: 13,
-                  fontWeight: 600
-                }}
               >
-                <CreditCard size={18} color="#2B4736" />
-                <span>Kat Kredi ($2.99)</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div className="payment-icon-box card-box">
+                    <CreditCard size={18} color="#2B4736" />
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 14, color: '#1A201C' }}>Kat Kredi</div>
+                    <div style={{ fontSize: 11, color: '#6B6864' }}>Diaspora • $2.99 USD</div>
+                  </div>
+                </div>
+                {paymentMethod === 'card' && <CheckCircle2 size={18} color="#2B4736" />}
               </div>
+
             </div>
           </div>
 
+          {/* Nimewo MonCash si chwazi */}
           {paymentMethod === 'moncash' && (
-            <div className="form-group">
-              <label className="form-label">Nimewo telefòn MonCash ou :</label>
+            <div className="form-group-clean moncash-input-anim">
+              <label className="form-label-clean">
+                <span>Nimewo telefòn MonCash ou :</span>
+              </label>
               <input
                 type="tel"
                 placeholder="+509 XXXX-XXXX"
-                className="form-input"
+                className="form-input-clean"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
               />
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            style={{
-              width: '100%',
-              background: 'var(--gold-foil)',
-              color: '#2B1D04',
-              fontWeight: 700,
-              fontSize: 14,
-              padding: '14px',
-              borderRadius: 30,
-              border: 'none',
-              cursor: 'pointer',
-              marginTop: 10,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              boxShadow: '0 6px 18px rgba(195, 157, 94, 0.35)'
-            }}
-          >
-            <Gift size={18} />
-            {isSubmitting ? 'Ap valide...' : 'Valide epi wè kat la (100 Goud)'}
-          </button>
+          {/* Bouton Aksyon */}
+          <div style={{ marginTop: 22 }}>
+            <button type="submit" disabled={isSubmitting} className="btn-validate-personalize">
+              <Gift size={18} />
+              <span>{isSubmitting ? 'Ap prepare kat ou an...' : 'Valide epi wè kat la (100 Goud)'}</span>
+            </button>
+            
+            <div className="security-footer-note">
+              <ShieldCheck size={13} />
+              <span>Peman an sekirite • Lyen inik ou an ap pare touswit</span>
+            </div>
+          </div>
+
         </form>
       </div>
     </div>
