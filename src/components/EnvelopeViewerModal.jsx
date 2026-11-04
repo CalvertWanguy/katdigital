@@ -24,16 +24,27 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
   const promptRef = useRef(null);
   const actionsRef = useRef(null);
 
+  // Verrouiller le défilement de l'arrière-plan sur mobile
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    const originalTouchAction = document.body.style.touchAction;
+    document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.touchAction = originalTouchAction;
+    };
+  }, []);
+
   const recipient = customData?.recipient || 'Chè Vanessa';
   const sender = customData?.sender || 'David Jean';
   const message = customData?.message || template.defaultMessage;
   const title = customData?.heading || template.heading;
 
-  // Konstriksyon lyen inik pou pataje kat sa a
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://katdigital.ht';
   const uniqueCardLink = `${origin}/?to=${encodeURIComponent(recipient)}&from=${encodeURIComponent(sender)}&theme=${template.id}&msg=${encodeURIComponent(message)}`;
 
-  // Tèks mesaj WhatsApp an bon kreyòl natirèl e pwòp
   const shareMessageText = `Gade bèl kat fèt mwen sot kreye pou ou a !\n\nKlike sou lyen sa a pou w ouvri bèl anvlòp ou an :\n${uniqueCardLink}`;
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessageText)}`;
 
@@ -113,7 +124,7 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
       }
     })
     .to(cardRef.current, {
-      y: -190,
+      y: -180,
       duration: 0.85,
       ease: 'power2.out',
       onComplete: () => {
@@ -122,25 +133,27 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
       }
     })
     .to(envelopeRef.current, {
-      y: 110,
-      opacity: 0.25,
+      y: 90,
+      opacity: 0.2,
       scale: 0.92,
       duration: 0.8,
       ease: 'power2.out'
     }, '-=0.4')
+    // La carte se stabilise au centre sans descendre sur les boutons
     .to(cardRef.current, {
-      y: -20,
-      scale: 1.05,
+      y: -30,
+      scale: 1.04,
       duration: 0.6,
       ease: 'back.out(1.15)'
     }, '-=0.6')
+    // Les boutons apparaissent NETTEMENT EN DESSOUS de la carte
     .to(actionsRef.current, {
       opacity: 1,
       y: 0,
       pointerEvents: 'auto',
       duration: 0.5,
       ease: 'power2.out'
-    }, '-=0.2');
+    }, '-=0.1');
   };
 
   const replayAnimation = () => {
@@ -165,85 +178,87 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
         <X size={20} />
       </button>
 
-      <div className="viewer-stage">
-        <div ref={promptRef} className="open-prompt" onClick={openEnvelope}>
-          Klike sou anvlòp la pou w ouvri l
-        </div>
-
-        <div
-          ref={envelopeRef}
-          className="real-envelope"
-          style={{ background: template.envelopeColor }}
-          onClick={openEnvelope}
-        >
-          <div className="real-liner" />
-
-          <div ref={cardRef} className="real-card">
-            <div className="real-card-border" />
-
-            <div>
-              <div className="card-top-caption">Bèl Swè Fèt Fen Dane</div>
-              <h2 className="card-main-title" style={{ color: template.envelopeColor }}>
-                {title}
-              </h2>
-              <div className="card-separator" />
-            </div>
-
-            <div>
-              <div className="card-destinataire">{recipient},</div>
-              <p className="card-text-body">{message}</p>
-            </div>
-
-            <div className="card-signature-box">
-              <div className="card-signature-label">Ak tout afeksyon mwen,</div>
-              <div className="card-signature-name">{sender}</div>
-            </div>
+      <div className="viewer-scroll-container">
+        <div className="viewer-stage">
+          <div ref={promptRef} className="open-prompt" onClick={openEnvelope}>
+            Klike sou anvlòp la pou w ouvri l
           </div>
 
           <div
-            className="real-envelope-pocket"
-            style={{
-              borderLeftColor: template.pocketColors.left,
-              borderRightColor: template.pocketColors.right,
-              borderBottomColor: template.pocketColors.bottom
-            }}
-          />
+            ref={envelopeRef}
+            className="real-envelope"
+            style={{ background: template.envelopeColor }}
+            onClick={openEnvelope}
+          >
+            <div className="real-liner" />
 
-          <div
-            ref={flapRef}
-            className="real-envelope-flap"
-            style={{ borderTopColor: template.flapColor }}
-          />
+            <div ref={cardRef} className="real-card">
+              <div className="real-card-border" />
 
-          <div ref={sealRef} className="real-wax-seal">
-            2027
+              <div>
+                <div className="card-top-caption">Bèl Swè Fèt Fen Dane</div>
+                <h2 className="card-main-title" style={{ color: template.envelopeColor }}>
+                  {title}
+                </h2>
+                <div className="card-separator" />
+              </div>
+
+              <div className="card-message-area">
+                <div className="card-destinataire">{recipient},</div>
+                <p className="card-text-body">{message}</p>
+              </div>
+
+              <div className="card-signature-box">
+                <div className="card-signature-label">Ak tout afeksyon mwen,</div>
+                <div className="card-signature-name">{sender}</div>
+              </div>
+            </div>
+
+            <div
+              className="real-envelope-pocket"
+              style={{
+                borderLeftColor: template.pocketColors.left,
+                borderRightColor: template.pocketColors.right,
+                borderBottomColor: template.pocketColors.bottom
+              }}
+            />
+
+            <div
+              ref={flapRef}
+              className="real-envelope-flap"
+              style={{ borderTopColor: template.flapColor }}
+            />
+
+            <div ref={sealRef} className="real-wax-seal">
+              2027
+            </div>
           </div>
-        </div>
 
-        {/* Panèl aksyon */}
-        <div ref={actionsRef} className="card-actions-panel">
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-whatsapp-share"
-          >
-            <WhatsAppOfficialLogo />
-            <span>Pataje lyen sa a sou WhatsApp</span>
-          </a>
+          {/* Panèl aksyon : PLACÉ PROPREMENT EN DESSOUS DE LA CARTE SANS CHEVAUCHEMENT */}
+          <div ref={actionsRef} className="card-actions-panel">
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-whatsapp-share"
+            >
+              <WhatsAppOfficialLogo />
+              <span>Pataje lyen sa a sou WhatsApp</span>
+            </a>
 
-          <button
-            className="btn-create-for-100"
-            onClick={() => onOpenCustomizer(template)}
-          >
-            <Gift size={17} style={{ flexShrink: 0 }} />
-            <span>Kreye pa w la tou (100 Goud)</span>
-          </button>
+            <button
+              className="btn-create-for-100"
+              onClick={() => onOpenCustomizer(template)}
+            >
+              <Gift size={17} style={{ flexShrink: 0 }} />
+              <span>Kreye pa w la tou (100 Goud)</span>
+            </button>
 
-          <span className="btn-replay-anim" onClick={replayAnimation}>
-            <RotateCcw size={13} style={{ display: 'inline', marginRight: 5, verticalAlign: 'middle' }} />
-            Gade ouvèti anvlòp la ankò
-          </span>
+            <span className="btn-replay-anim" onClick={replayAnimation}>
+              <RotateCcw size={13} style={{ display: 'inline', marginRight: 5, verticalAlign: 'middle' }} />
+              Gade ouvèti anvlòp la ankò
+            </span>
+          </div>
         </div>
       </div>
     </div>

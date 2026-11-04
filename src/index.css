@@ -106,7 +106,6 @@ body {
   margin: 0 auto 28px;
 }
 
-/* Barre de filtres parfaitement centrée et espacée */
 .categories-bar {
   display: flex;
   flex-wrap: wrap;
@@ -285,31 +284,32 @@ body {
 }
 
 /* ==========================================================
-   MODAL DE VISIONNAGE DE L'ENVELOPPE (STYLE GREENVELOPE)
+   MODAL DE VISIONNAGE DE L'ENVELOPPE (OPTIMISÉE MOBILE)
    ========================================================== */
 .viewer-modal {
   position: fixed;
   inset: 0;
-  background: rgba(22, 28, 24, 0.82);
-  backdrop-filter: blur(8px);
+  background: rgba(18, 24, 20, 0.90);
+  backdrop-filter: blur(10px);
   z-index: 100;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 15px;
+  justify-content: flex-start;
+  padding: 20px 10px 40px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .btn-close-modal {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.2);
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.25);
   border: none;
   color: #FFF;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   cursor: pointer;
   font-size: 18px;
@@ -317,47 +317,55 @@ body {
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
-  z-index: 120;
+  z-index: 150;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 .btn-close-modal:hover {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.viewer-scroll-container {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 35px;
 }
 
 .viewer-stage {
   position: relative;
   width: 100%;
-  max-width: 420px;
-  min-height: 580px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   perspective: 1400px;
 }
 
 .open-prompt {
   color: #F8F5EE;
-  font-size: 14px;
-  letter-spacing: 1px;
+  font-size: 13px;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   font-weight: 600;
   cursor: pointer;
   animation: bouncePrompt 2s infinite ease-in-out;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.45);
   padding: 8px 18px;
   border-radius: 30px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 @keyframes bouncePrompt {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  50% { transform: translateY(-5px); }
 }
 
+/* Enveloppe 3D physique */
 .real-envelope {
   position: relative;
-  width: 330px;
-  height: 225px;
+  width: 320px;
+  height: 215px;
   border-radius: 6px;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
   cursor: pointer;
@@ -376,15 +384,16 @@ body {
   z-index: 1;
 }
 
+/* CARTE PAPIER TEXTURÉE HAUTE QUALITÉ */
 .real-card {
   position: absolute;
-  top: 8px;
-  left: 14px;
-  width: 302px;
-  height: 420px;
+  top: 6px;
+  left: 12px;
+  width: 296px;
+  height: 380px;
   background: #FFFDF9;
   border-radius: 8px;
-  padding: 24px 20px;
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -421,28 +430,32 @@ body {
   text-transform: uppercase;
   color: var(--gold-accent);
   font-weight: 700;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .card-main-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
-  line-height: 1.1;
-  margin: 8px 0;
+  line-height: 1.15;
+  margin: 6px 0;
   font-style: italic;
 }
 
 .card-separator {
-  width: 30px;
+  width: 28px;
   height: 1px;
   background: #D6BA85;
-  margin: 8px auto;
+  margin: 6px auto;
+}
+
+.card-message-area {
+  margin: 8px 0;
 }
 
 .card-destinataire {
   font-family: 'Playfair Display', serif;
-  font-size: 18px;
+  font-size: 17px;
   color: #2B2620;
   font-weight: 600;
   margin-bottom: 6px;
@@ -454,14 +467,14 @@ body {
   line-height: 1.5;
   color: #4A463F;
   font-style: italic;
-  padding: 0 10px;
+  padding: 0 8px;
 }
 
 .card-signature-box {
   border-top: 1px solid #EFE9DC;
   width: 100%;
-  padding-top: 10px;
-  margin-bottom: 4px;
+  padding-top: 8px;
+  margin-bottom: 2px;
 }
 .card-signature-label {
   font-size: 9px;
@@ -483,9 +496,9 @@ body {
   left: 0;
   width: 0;
   height: 0;
-  border-left: 165px solid;
-  border-right: 165px solid;
-  border-bottom: 125px solid;
+  border-left: 160px solid;
+  border-right: 160px solid;
+  border-bottom: 120px solid;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   z-index: 3;
@@ -498,16 +511,16 @@ body {
   left: 0;
   width: 0;
   height: 0;
-  border-left: 165px solid transparent;
-  border-right: 165px solid transparent;
-  border-top: 125px solid;
+  border-left: 160px solid transparent;
+  border-right: 160px solid transparent;
+  border-top: 120px solid;
   transform-origin: top center;
   z-index: 4;
 }
 
 .real-wax-seal {
   position: absolute;
-  top: 112px;
+  top: 108px;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 44px;
@@ -530,8 +543,12 @@ body {
   letter-spacing: 0.5px;
 }
 
+/* ==========================================================
+   PANNEAU D'ACTIONS POSITIONNÉ PROPREMENT EN DESSOUS DE LA CARTE
+   ========================================================== */
 .card-actions-panel {
-  margin-top: 25px;
+  margin-top: 175px; /* Décalage pour laisser 100% de visibilité à la carte */
+  margin-bottom: 30px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -540,7 +557,7 @@ body {
   opacity: 0;
   transform: translateY(20px);
   pointer-events: none;
-  z-index: 20;
+  z-index: 30;
 }
 
 .btn-whatsapp-share {
@@ -548,7 +565,7 @@ body {
   color: #FFFFFF;
   font-weight: 700;
   font-size: 14px;
-  padding: 13px 24px;
+  padding: 13px 22px;
   border-radius: 30px;
   text-decoration: none;
   display: flex;
@@ -556,7 +573,7 @@ body {
   gap: 10px;
   box-shadow: 0 6px 18px rgba(37, 211, 102, 0.3);
   cursor: pointer;
-  width: 90%;
+  width: 92%;
   max-width: 320px;
   justify-content: center;
 }
@@ -566,7 +583,7 @@ body {
   color: #2B1D04;
   font-weight: 700;
   font-size: 13px;
-  padding: 12px 20px;
+  padding: 13px 20px;
   border-radius: 30px;
   border: none;
   cursor: pointer;
@@ -574,7 +591,7 @@ body {
   align-items: center;
   gap: 8px;
   box-shadow: 0 6px 18px rgba(195, 157, 94, 0.35);
-  width: 90%;
+  width: 92%;
   max-width: 320px;
   justify-content: center;
 }
