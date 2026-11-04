@@ -1,7 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import confetti from 'canvas-confetti';
-import { Gift, RotateCcw, X } from 'lucide-react';
+import {
+  Gift,
+  RotateCcw,
+  X,
+  Lock,
+  Download,
+  Copy,
+  Check,
+  Smartphone,
+  CreditCard,
+  ShieldCheck,
+  CheckCircle2,
+  Share2
+} from 'lucide-react';
 
 const WhatsAppOfficialLogo = () => (
   <svg
@@ -15,8 +28,22 @@ const WhatsAppOfficialLogo = () => (
   </svg>
 );
 
-export default function EnvelopeViewerModal({ template, customData, isDirectView, onClose, onOpenCustomizer }) {
+export default function EnvelopeViewerModal({
+  template,
+  customData,
+  isDirectView,
+  onClose,
+  onOpenCustomizer
+}) {
   const [isOpened, setIsOpened] = useState(false);
+  const [isPaid, setIsPaid] = useState(Boolean(isDirectView)); // Si direct link = déjà payé
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('moncash');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+
   const envelopeRef = useRef(null);
   const flapRef = useRef(null);
   const cardRef = useRef(null);
@@ -24,16 +51,25 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
   const promptRef = useRef(null);
   const actionsRef = useRef(null);
 
-  // Verrouiller le défilement de l'arrière-plan sur mobile
+  // Verrouiller le défilement de l'arrière-plan de manière absolue (iOS & Android)
   useEffect(() => {
+    const scrollY = window.scrollY;
     const originalOverflow = document.body.style.overflow;
-    const originalTouchAction = document.body.style.touchAction;
+    const originalPosition = document.body.style.position;
+    const originalTop = document.body.style.top;
+    const originalWidth = document.body.style.width;
+
     document.body.style.overflow = 'hidden';
-    document.body.style.touchAction = 'none';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
 
     return () => {
       document.body.style.overflow = originalOverflow;
-      document.body.style.touchAction = originalTouchAction;
+      document.body.style.position = originalPosition;
+      document.body.style.top = originalTop;
+      document.body.style.width = originalWidth;
+      window.scrollTo(0, scrollY);
     };
   }, []);
 
@@ -42,6 +78,8 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
   const message = customData?.message || template.defaultMessage;
   const title = customData?.heading || template.heading;
 
+  // Code slug simulé (ex: 'x7K9p2')
+  const slug = customData?.slug || 'x7K9p2';
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://katdigital.ht';
   const uniqueCardLink = `${origin}/?to=${encodeURIComponent(recipient)}&from=${encodeURIComponent(sender)}&theme=${template.id}&msg=${encodeURIComponent(message)}`;
 
@@ -123,8 +161,9 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
         if (flapRef.current) flapRef.current.style.zIndex = 1;
       }
     })
+    // Étape 4 : La carte glisse hors de l'enveloppe vers le haut
     .to(cardRef.current, {
-      y: -180,
+      y: -135,
       duration: 0.85,
       ease: 'power2.out',
       onComplete: () => {
@@ -132,21 +171,22 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
         launchLuxuryConfetti();
       }
     })
+    // Étape 5 : L'enveloppe s'estompe légèrement à l'arrière-plan
     .to(envelopeRef.current, {
-      y: 90,
-      opacity: 0.2,
-      scale: 0.92,
-      duration: 0.8,
+      y: 10,
+      opacity: 0.25,
+      scale: 0.95,
+      duration: 0.6,
       ease: 'power2.out'
     }, '-=0.4')
-    // La carte se stabilise au centre sans descendre sur les boutons
+    // Étape 6 : La carte reste bien dégagée en hauteur avec un zoom subtil
     .to(cardRef.current, {
-      y: -30,
-      scale: 1.04,
-      duration: 0.6,
-      ease: 'back.out(1.15)'
-    }, '-=0.6')
-    // Les boutons apparaissent NETTEMENT EN DESSOUS de la carte
+      y: -135,
+      scale: 1.02,
+      duration: 0.4,
+      ease: 'power1.out'
+    }, '-=0.3')
+    // Étape 7 : Les 3 boutons d'action apparaissent nettement EN DESSOUS de la carte
     .to(actionsRef.current, {
       opacity: 1,
       y: 0,
@@ -170,6 +210,97 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
     gsap.set(actionsRef.current, { opacity: 0, y: 20, pointerEvents: 'none' });
 
     setTimeout(openEnvelope, 300);
+  };
+
+  // Similation de validation de paiement MonCash / Stripe
+  const handleProcessPayment = (e) => {
+    e.preventDefault();
+    setIsProcessingPayment(true);
+
+    setTimeout(() => {
+      setIsProcessingPayment(false);
+      setIsPaid(true);
+      setShowCheckoutModal(false);
+      setShowSuccessModal(true);
+      launchLuxuryConfetti();
+    }, 1200);
+  };
+
+  // Téléchargement haute résolution de la carte en format image PNG (pour statut WhatsApp)
+  const handleDownloadCardImage = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1440;
+    const ctx = canvas.getContext('2d');
+
+    // Fond papier de luxe
+    ctx.fillStyle = '#FFFDF9';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Cadre doré double
+    ctx.strokeStyle = '#D6BA85';
+    ctx.lineWidth = 6;
+    ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
+    ctx.lineWidth = 2;
+    ctx.strokeRect(55, 55, canvas.width - 110, canvas.height - 110);
+
+    // Titre
+    ctx.fillStyle = template.envelopeColor;
+    ctx.font = 'bold 64px "Cormorant Garamond", Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(title, canvas.width / 2, 240);
+
+    // Destinataire
+    ctx.fillStyle = '#2B2620';
+    ctx.font = 'italic 50px "Playfair Display", Georgia, serif';
+    ctx.fillText(`${recipient},`, canvas.width / 2, 420);
+
+    // Message multilignes
+    ctx.fillStyle = '#4A463F';
+    ctx.font = '36px "Cormorant Garamond", Georgia, serif';
+    const words = message.split(' ');
+    let line = '';
+    let y = 560;
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > 800 && n > 0) {
+        ctx.fillText(line, canvas.width / 2, y);
+        line = words[n] + ' ';
+        y += 55;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, canvas.width / 2, y);
+
+    // Signature
+    ctx.fillStyle = '#8C877D';
+    ctx.font = '24px "Montserrat", sans-serif';
+    ctx.fillText('AK TOUT AFEKSYON MWEN,', canvas.width / 2, 1150);
+
+    ctx.fillStyle = '#2B4736';
+    ctx.font = 'bold 44px "Playfair Display", Georgia, serif';
+    ctx.fillText(sender, canvas.width / 2, 1220);
+
+    // Filigrane discret
+    ctx.fillStyle = '#A69279';
+    ctx.font = '22px "Montserrat", sans-serif';
+    ctx.fillText('KatDigital.ht • Bèl Swè Fen Dane', canvas.width / 2, 1340);
+
+    // Déclenchement du téléchargement
+    const link = document.createElement('a');
+    link.download = `kat-${recipient.toLowerCase().replace(/\s+/g, '-')}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  };
+
+  const handleCopyLink = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(uniqueCardLink);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
+    }
   };
 
   return (
@@ -234,33 +365,240 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
             </div>
           </div>
 
-          {/* Panèl aksyon : PLACÉ PROPREMENT EN DESSOUS DE LA CARTE SANS CHEVAUCHEMENT */}
+          {/* Panèl aksyon : Pozisyone nèt anba kat la san kache okenn tèks */}
           <div ref={actionsRef} className="card-actions-panel">
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-whatsapp-share"
-            >
-              <WhatsAppOfficialLogo />
-              <span>Pataje lyen sa a sou WhatsApp</span>
-            </a>
+            {isPaid ? (
+              // CAS 1 : KAT LA PEYE / VALID (Destinataire oswa Kliyan apre peman)
+              <>
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-whatsapp-share"
+                >
+                  <WhatsAppOfficialLogo />
+                  <span>Pataje lyen sa a sou WhatsApp</span>
+                </a>
 
-            <button
-              className="btn-create-for-100"
-              onClick={() => onOpenCustomizer(template)}
-            >
-              <Gift size={17} style={{ flexShrink: 0 }} />
-              <span>Kreye pa w la tou (100 Goud)</span>
-            </button>
+                {isDirectView ? (
+                  <button
+                    className="btn-create-for-100"
+                    onClick={() => onOpenCustomizer(template)}
+                  >
+                    <Gift size={17} style={{ flexShrink: 0 }} />
+                    <span>Kreye pa w la tou (100 Goud)</span>
+                  </button>
+                ) : (
+                  <div style={{ display: 'flex', gap: '8px', width: '92%', maxWidth: '320px' }}>
+                    <button
+                      className="btn-download-image"
+                      onClick={handleDownloadCardImage}
+                      style={{ flex: 1, padding: '11px 14px', fontSize: '13px' }}
+                    >
+                      <Download size={16} />
+                      <span>Telechaje PNG</span>
+                    </button>
+                    <button
+                      className="btn-copy-link"
+                      onClick={handleCopyLink}
+                      style={{ flex: 1, padding: '11px 14px', fontSize: '13px' }}
+                    >
+                      {copiedLink ? <Check size={16} color="#2B4736" /> : <Copy size={16} />}
+                      <span>{copiedLink ? 'Kopye !' : 'Kopye Lyen'}</span>
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              // CAS 2 : APÈSI DÉMO / AVAN PEMAN
+              <>
+                <button
+                  className="btn-create-for-100"
+                  onClick={() => onOpenCustomizer(template)}
+                  style={{
+                    background: 'var(--gold-foil)',
+                    color: '#2B1D04',
+                    border: 'none'
+                  }}
+                >
+                  <Gift size={17} style={{ flexShrink: 0 }} />
+                  <span>Pèsonalize & Kreye pa w la (100 Goud)</span>
+                </button>
 
-            <span className="btn-replay-anim" onClick={replayAnimation}>
+                <button
+                  className="btn-unlock-share"
+                  onClick={() => setShowCheckoutModal(true)}
+                >
+                  <Lock size={16} />
+                  <span>Debloke & Voye Kat sa a (100 Goud)</span>
+                </button>
+              </>
+            )}
+
+            <button type="button" className="btn-replay-anim" onClick={replayAnimation}>
               <RotateCcw size={13} style={{ display: 'inline', marginRight: 5, verticalAlign: 'middle' }} />
-              Gade ouvèti anvlòp la ankò
-            </span>
+              <span>Gade ouvèti anvlòp la ankò</span>
+            </button>
           </div>
         </div>
       </div>
+
+      {/* ==========================================================
+          MODAL DE PAIEMENT EXPRESS (MONCASH / STRIPE)
+          ========================================================== */}
+      {showCheckoutModal && (
+        <div className="checkout-overlay">
+          <div className="checkout-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+              <div>
+                <span className="customizer-badge" style={{ color: '#7A1F2D', background: '#7A1F2D14' }}>
+                  Peman an Sekirite
+                </span>
+                <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 23, fontWeight: 700, color: '#2B4736', marginTop: 4 }}>
+                  Debloke Kat pou {recipient}
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowCheckoutModal(false)}
+                className="customizer-close-btn"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <p style={{ fontSize: 13, color: '#6B6864', lineHeight: 1.5, marginBottom: 16 }}>
+              Bèl kat ou an pare ! Chwazi mwayen peman w pou w resevwa lyen ofisyèl la epi voye l sou WhatsApp.
+            </p>
+
+            <form onSubmit={handleProcessPayment}>
+              <div className="payment-cards-grid" style={{ marginBottom: 14 }}>
+                <div
+                  className={`payment-choice-card ${paymentMethod === 'moncash' ? 'active-moncash' : ''}`}
+                  onClick={() => setPaymentMethod('moncash')}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div className="payment-icon-box moncash-box">
+                      <Smartphone size={18} color="#C41230" />
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: 14 }}>MonCash</div>
+                      <div style={{ fontSize: 11, color: '#6B6864' }}>Ayiti • 100 Goud</div>
+                    </div>
+                  </div>
+                  {paymentMethod === 'moncash' && <CheckCircle2 size={18} color="#C41230" />}
+                </div>
+
+                <div
+                  className={`payment-choice-card ${paymentMethod === 'card' ? 'active-card' : ''}`}
+                  onClick={() => setPaymentMethod('card')}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div className="payment-icon-box card-box">
+                      <CreditCard size={18} color="#2B4736" />
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: 14 }}>Kat Kredi</div>
+                      <div style={{ fontSize: 11, color: '#6B6864' }}>Diaspora • $2.99</div>
+                    </div>
+                  </div>
+                  {paymentMethod === 'card' && <CheckCircle2 size={18} color="#2B4736" />}
+                </div>
+              </div>
+
+              {paymentMethod === 'moncash' && (
+                <div className="form-group-clean">
+                  <label className="form-label-clean">Nimewo telefòn MonCash ou :</label>
+                  <input
+                    type="tel"
+                    placeholder="+509 XXXX-XXXX"
+                    className="form-input-clean"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isProcessingPayment}
+                className="btn-validate-personalize"
+                style={{ marginTop: 14 }}
+              >
+                <Lock size={16} />
+                <span>
+                  {isProcessingPayment
+                    ? 'Validasyon peman an kour...'
+                    : `Konfime & Peye (${paymentMethod === 'moncash' ? '100 Goud' : '2.99 $'})`}
+                </span>
+              </button>
+
+              <div className="security-footer-note">
+                <ShieldCheck size={13} />
+                <span>Peman 100% sekirize • Deblokaj enstantane</span>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================================
+          MODAL DE SUCCÈS (ÉCRAN DE VICTOIRE APRÈS PAIEMENT)
+          ========================================================== */}
+      {showSuccessModal && (
+        <div className="checkout-overlay">
+          <div className="checkout-card" style={{ textAlign: 'center' }}>
+            <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#E8F5EE', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+              <CheckCircle2 size={32} color="#2B4736" />
+            </div>
+
+            <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 26, fontWeight: 700, color: '#2B4736' }}>
+              Bravo {sender} !
+            </h3>
+            <p style={{ fontSize: 13, color: '#6B6864', margin: '6px 0 20px', lineHeight: 1.5 }}>
+              Kat ou an pou <strong>{recipient}</strong> debloke avèk siksè. Ou ka voye l sou WhatsApp oswa telechaje l kounya !
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-whatsapp-share"
+                style={{ width: '100%', maxWidth: 'none' }}
+              >
+                <WhatsAppOfficialLogo />
+                <span>Pataje sou WhatsApp kounya</span>
+              </a>
+
+              <button
+                className="btn-download-image"
+                onClick={handleDownloadCardImage}
+                style={{ width: '100%' }}
+              >
+                <Download size={17} />
+                <span>Telechaje Imaj la pou Estati w (PNG)</span>
+              </button>
+
+              <button
+                className="btn-copy-link"
+                onClick={handleCopyLink}
+                style={{ width: '100%' }}
+              >
+                {copiedLink ? <Check size={16} color="#2B4736" /> : <Copy size={16} />}
+                <span>{copiedLink ? 'Lyen an kopye !' : 'Kopye lyen an'}</span>
+              </button>
+
+              <button
+                onClick={() => setShowSuccessModal(false)}
+                style={{ background: 'none', border: 'none', fontSize: 12, color: '#8C877D', cursor: 'pointer', marginTop: 6 }}
+              >
+                Gade kat la ankò
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

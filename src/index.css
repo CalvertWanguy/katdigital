@@ -289,8 +289,8 @@ body {
 .viewer-modal {
   position: fixed;
   inset: 0;
-  background: rgba(18, 24, 20, 0.90);
-  backdrop-filter: blur(10px);
+  background: rgba(18, 24, 20, 0.92);
+  backdrop-filter: blur(12px);
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -298,6 +298,7 @@ body {
   justify-content: flex-start;
   padding: 20px 10px 40px;
   overflow-y: auto;
+  overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -330,7 +331,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 35px;
+  padding-top: 130px; /* Laisse monter la carte librement sans heurter le haut de l'écran */
+  padding-bottom: 50px;
 }
 
 .viewer-stage {
@@ -454,37 +456,39 @@ body {
 }
 
 .card-destinataire {
-  font-family: 'Playfair Display', serif;
-  font-size: 17px;
-  color: #2B2620;
-  font-weight: 600;
-  margin-bottom: 6px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  color: #1A1816;
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 
 .card-text-body {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 15px;
-  line-height: 1.5;
-  color: #4A463F;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #24211D;
   font-style: italic;
-  padding: 0 8px;
+  padding: 0 10px;
+  font-weight: 500;
 }
 
 .card-signature-box {
   border-top: 1px solid #EFE9DC;
   width: 100%;
-  padding-top: 8px;
-  margin-bottom: 2px;
+  padding-top: 10px;
+  margin-bottom: 4px;
 }
 .card-signature-label {
-  font-size: 9px;
+  font-size: 9.5px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: #8C877D;
+  color: #7A756B;
+  font-weight: 600;
 }
 .card-signature-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 15px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 16px;
   color: var(--primary-green);
   font-weight: 700;
   margin-top: 2px;
@@ -547,7 +551,7 @@ body {
    PANNEAU D'ACTIONS POSITIONNÉ PROPREMENT EN DESSOUS DE LA CARTE
    ========================================================== */
 .card-actions-panel {
-  margin-top: 175px; /* Décalage pour laisser 100% de visibilité à la carte */
+  margin-top: 90px; /* Dégage nettement 50px sous le bas de la carte élevée */
   margin-bottom: 30px;
   width: 100%;
   display: flex;
@@ -596,12 +600,136 @@ body {
   justify-content: center;
 }
 
-.btn-replay-anim {
+.btn-unlock-share {
+  background: var(--gold-foil);
+  color: #2B1D04;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 22px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 24px rgba(195, 157, 94, 0.4);
+  width: 92%;
+  max-width: 320px;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-unlock-share:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(195, 157, 94, 0.5);
+}
+
+.btn-modify-card {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FAF7F2;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-modify-card:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.btn-download-image {
+  background: #FFFFFF;
+  color: var(--primary-green);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 12px 20px;
+  border-radius: 30px;
+  border: 1.5px solid var(--primary-green);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 92%;
+  max-width: 320px;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s;
+}
+.btn-download-image:hover {
+  background: #F4EFE6;
+  transform: translateY(-1px);
+}
+
+.btn-copy-link {
+  background: transparent;
+  color: #FAF7F2;
   font-size: 12px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.btn-copy-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #FFF;
+}
+
+/* ==========================================================
+   CHECKOUT OVERLAY & CARD (MODAL DE PAIEMENT)
+   ========================================================== */
+.checkout-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 18, 15, 0.88);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  overscroll-behavior: contain;
+}
+
+.checkout-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 440px;
+  padding: 26px 22px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+  border: 1px solid #ECE7DE;
+  animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUpModal {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.btn-replay-anim {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
   color: #D6CEBE;
   text-decoration: underline;
   cursor: pointer;
-  margin-top: 4px;
+  margin-top: 8px;
+  padding: 6px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+.btn-replay-anim:hover {
+  color: #FFFFFF;
 }
 
 /* ==========================================================
@@ -617,6 +745,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 15px;
+  overscroll-behavior: contain;
 }
 
 .customizer-card {

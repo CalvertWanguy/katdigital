@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Smartphone, CreditCard, Gift, User, Edit3, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { X, User, Edit3, Eye } from 'lucide-react';
 import { PRESET_MESSAGES } from '../data/templates';
 
 export default function PersonalizeModal({ template, onClose, onSaveAndPreview }) {
@@ -7,20 +7,26 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
   const [sender, setSender] = useState('');
   const [selectedPreset, setSelectedPreset] = useState('fanmi');
   const [customMessage, setCustomMessage] = useState(PRESET_MESSAGES[0].text);
-  const [paymentMethod, setPaymentMethod] = useState('moncash');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Verrouiller le défilement de l'arrière-plan sur ordinateur et mobile
+  // Verrouiller le défilement de l'arrière-plan de manière absolue (iOS & Android)
   useEffect(() => {
+    const scrollY = window.scrollY;
     const originalOverflow = document.body.style.overflow;
-    const originalTouchAction = document.body.style.touchAction;
+    const originalPosition = document.body.style.position;
+    const originalTop = document.body.style.top;
+    const originalWidth = document.body.style.width;
+
     document.body.style.overflow = 'hidden';
-    document.body.style.touchAction = 'none';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
 
     return () => {
       document.body.style.overflow = originalOverflow;
-      document.body.style.touchAction = originalTouchAction;
+      document.body.style.position = originalPosition;
+      document.body.style.top = originalTop;
+      document.body.style.width = originalWidth;
+      window.scrollTo(0, scrollY);
     };
   }, []);
 
@@ -39,16 +45,12 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
       return;
     }
 
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      onSaveAndPreview({
-        recipient,
-        sender,
-        message: customMessage,
-        heading: template.heading
-      });
-    }, 600);
+    onSaveAndPreview({
+      recipient,
+      sender,
+      message: customMessage,
+      heading: template.heading
+    });
   };
 
   return (
@@ -70,7 +72,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
 
         <form onSubmit={handleValidate} className="customizer-form">
           
-          {/* Seksyon 1 : Moun yo */}
+          {/* Moun yo */}
           <div className="form-row-2">
             <div className="form-group-clean">
               <label className="form-label-clean">
@@ -103,7 +105,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
             </div>
           </div>
 
-          {/* Seksyon 2 : Seleksyon Mesaj Rapid an Pilil */}
+          {/* Seleksyon Mesaj Rapid an Pilil */}
           <div className="form-group-clean">
             <label className="form-label-clean">
               <span>Chwazi yon bèl mesaj rapid :</span>
@@ -136,74 +138,15 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
             />
           </div>
 
-          {/* Seksyon 3 : Chwa Mwayen Peman */}
-          <div className="form-group-clean">
-            <label className="form-label-clean">
-              <span>Mwayen peman :</span>
-            </label>
-            <div className="payment-cards-grid">
-              
-              <div
-                className={`payment-choice-card ${paymentMethod === 'moncash' ? 'active-moncash' : ''}`}
-                onClick={() => setPaymentMethod('moncash')}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div className="payment-icon-box moncash-box">
-                    <Smartphone size={18} color="#C41230" />
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: 14, color: '#1A201C' }}>MonCash</div>
-                    <div style={{ fontSize: 11, color: '#6B6864' }}>Ayiti • 100 Goud</div>
-                  </div>
-                </div>
-                {paymentMethod === 'moncash' && <CheckCircle2 size={18} color="#C41230" />}
-              </div>
-
-              <div
-                className={`payment-choice-card ${paymentMethod === 'card' ? 'active-card' : ''}`}
-                onClick={() => setPaymentMethod('card')}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div className="payment-icon-box card-box">
-                    <CreditCard size={18} color="#2B4736" />
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: 14, color: '#1A201C' }}>Kat Kredi</div>
-                    <div style={{ fontSize: 11, color: '#6B6864' }}>Diaspora • $2.99 USD</div>
-                  </div>
-                </div>
-                {paymentMethod === 'card' && <CheckCircle2 size={18} color="#2B4736" />}
-              </div>
-
-            </div>
-          </div>
-
-          {/* Nimewo MonCash si chwazi */}
-          {paymentMethod === 'moncash' && (
-            <div className="form-group-clean moncash-input-anim">
-              <label className="form-label-clean">
-                <span>Nimewo telefòn MonCash ou :</span>
-              </label>
-              <input
-                type="tel"
-                placeholder="+509 XXXX-XXXX"
-                className="form-input-clean"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-              />
-            </div>
-          )}
-
-          {/* Bouton Aksyon */}
-          <div style={{ marginTop: 22 }}>
-            <button type="submit" disabled={isSubmitting} className="btn-validate-personalize">
-              <Gift size={18} />
-              <span>{isSubmitting ? 'Ap prepare kat ou an...' : 'Valide epi wè kat la (100 Goud)'}</span>
+          {/* Bouton Wè Kijan l ap Soti (Aperçu direct sans barrière) */}
+          <div style={{ marginTop: 20 }}>
+            <button type="submit" className="btn-validate-personalize">
+              <Eye size={18} />
+              <span>Wè Kijan l ap Soti (Aperçu)</span>
             </button>
             
             <div className="security-footer-note">
-              <ShieldCheck size={13} />
-              <span>Peman an sekirite • Lyen inik ou an ap pare touswit</span>
+              <span>Ou pral wè bèl anvlòp la ouvri ak non w anvan w peye</span>
             </div>
           </div>
 
