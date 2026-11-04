@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TEMPLATES } from './data/templates';
 import EnvelopeViewerModal from './components/EnvelopeViewerModal';
 import PersonalizeModal from './components/PersonalizeModal';
-import { Sparkles, Heart, Gift, Send, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -10,7 +10,6 @@ export default function App() {
   const [customizerTemplate, setCustomizerTemplate] = useState(null);
   const [customData, setCustomData] = useState(null);
 
-  // Filtrage par catégorie
   const filteredTemplates = TEMPLATES.filter((t) => {
     if (selectedCategory === 'all') return true;
     if (selectedCategory === 'noel') return t.category === 'noel';
@@ -31,16 +30,15 @@ export default function App() {
   const handleSaveAndPreview = (data) => {
     setCustomData(data);
     setCustomizerTemplate(null);
-    // Ouvre immédiatement la visionneuse avec les données personnalisées
     setActiveTemplate(customizerTemplate);
   };
 
   return (
     <div>
-      {/* 1. En-tête Navigation (Style Evite / Greenvelope) */}
+      {/* 1. En-tête Navigation */}
       <header className="header-nav">
         <a href="#" className="brand-logo">
-          KatDijital <span>Collection</span>
+          KatDigital <span>Collection</span>
         </a>
         <div className="nav-tagline">Cartes & Vœux digitaux festifs pour WhatsApp</div>
         <div>
@@ -59,52 +57,52 @@ export default function App() {
               cursor: 'pointer'
             }}
           >
-            Wè yon Démo
+            Découvrir une Démo
           </button>
         </div>
       </header>
 
-      {/* 2. Bannière d'accueil & Filtres en Pilules */}
+      {/* 2. Bannière d'accueil & Filtres en Pilules sobres */}
       <section className="hero-section">
-        <div className="hero-subtitle">Édition Spéciale Fèt Fen Dane 2026 - 2027</div>
+        <div className="hero-subtitle">Édition Spéciale Fin d'Année 2026 - 2027</div>
         <h1 className="hero-title">
-          Voye bèl vœux ki pap janm efase,<br />dirèkteman sou WhatsApp.
+          Partagez des vœux inoubliables,<br />directement sur WhatsApp.
         </h1>
         <p className="hero-desc">
-          Pa bezwen al nan lari chache kat fizik. Chwazi yon bèl modèl ki ouvri an 3D, mete bèl pawòl kreyòl oswa franse, epi fè moun ou renmen yo plezi pou sèlman <strong>100 Goud</strong>.
+          Une expérience de papeterie digitale haut de gamme. Sélectionnez un modèle avec ouverture animée, personnalisez vos messages et surprenez vos proches pour seulement <strong>100 HTG</strong>.
         </p>
 
-        {/* Pilules de catégories Evite */}
+        {/* Pilules de catégories sobres sans émojis */}
         <div className="categories-bar">
           <div
             className={`category-pill ${selectedCategory === 'all' ? 'active' : ''}`}
             onClick={() => setSelectedCategory('all')}
           >
-            🌟 Tout Modèl yo
+            Tous les Modèles
           </div>
           <div
             className={`category-pill ${selectedCategory === 'noel' ? 'active' : ''}`}
             onClick={() => setSelectedCategory('noel')}
           >
-            🎄 Nwèl
+            Noël Classique
           </div>
           <div
             className={`category-pill ${selectedCategory === 'nouvel-an' ? 'active' : ''}`}
             onClick={() => setSelectedCategory('nouvel-an')}
           >
-            ✨ Bòn Ane 2027
+            Nouvel An 2027
           </div>
           <div
             className={`category-pill ${selectedCategory === 'tradition' ? 'active' : ''}`}
             onClick={() => setSelectedCategory('tradition')}
           >
-            🇭🇹 1ye Janvye & Soup Joumou
+            1er Janvier & Traditions
           </div>
           <div
             className={`category-pill ${selectedCategory === 'mennaj' ? 'active' : ''}`}
             onClick={() => setSelectedCategory('mennaj')}
           >
-            ❤️ Pou Mennaj
+            Messages Personnels
           </div>
         </div>
       </section>
@@ -112,9 +110,9 @@ export default function App() {
       {/* 3. Catalogue de Cartes */}
       <main className="catalog-container">
         <div className="section-heading">
-          <span>Modèl Disponib yo ({filteredTemplates.length})</span>
+          <span>Modèles Disponibles ({filteredTemplates.length})</span>
           <span style={{ fontSize: 13, color: '#C39D5E', cursor: 'pointer', fontWeight: 600 }}>
-            Nouvo modèl chak semèn →
+            Nouvelles éditions chaque semaine
           </span>
         </div>
 
@@ -125,7 +123,6 @@ export default function App() {
               className="preview-item"
               onClick={() => handleOpenDemo(template)}
             >
-              {/* Mockup enveloppe + carte */}
               <div className="mockup-frame">
                 <div
                   className="mockup-env"
@@ -165,14 +162,13 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Titre et détails */}
               <div className="card-meta-title">{template.title}</div>
-              <div className="card-meta-desc">{template.subtitle} • Animasyon 3D & Mizik</div>
+              <div className="card-meta-desc">{template.subtitle} • Animation 3D & Audio</div>
 
               <div className="card-meta-footer">
                 <span className="price-pill">{template.priceHTG} HTG</span>
                 <span className="btn-view-demo">
-                  Ouvri Démo <ArrowRight size={12} style={{ display: 'inline', verticalAlign: 'middle' }} />
+                  Ouvrir <ArrowRight size={12} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: 4 }} />
                 </span>
               </div>
             </div>
@@ -180,7 +176,7 @@ export default function App() {
         </div>
       </main>
 
-      {/* 4. Modal Visionneuse Enveloppe (Style Greenvelope) */}
+      {/* 4. Modal Visionneuse Enveloppe */}
       {activeTemplate && (
         <EnvelopeViewerModal
           template={activeTemplate}
