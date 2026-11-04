@@ -24,17 +24,17 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
   const promptRef = useRef(null);
   const actionsRef = useRef(null);
 
-  const recipient = customData?.recipient || 'Chère Vanessa';
+  const recipient = customData?.recipient || 'Chè Vanessa';
   const sender = customData?.sender || 'David Jean';
   const message = customData?.message || template.defaultMessage;
   const title = customData?.heading || template.heading;
 
-  // Construction d'un lien unique de partage pour cette carte
+  // Konstriksyon lyen inik pou pataje kat sa a
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://katdigital.ht';
   const uniqueCardLink = `${origin}/?to=${encodeURIComponent(recipient)}&from=${encodeURIComponent(sender)}&theme=${template.id}&msg=${encodeURIComponent(message)}`;
 
-  // Message WhatsApp propre sans caractères exotiques pour éviter les losanges "?"
-  const shareMessageText = `Gade bel kat fet mwen sot kreye pou ou a !\n\nKlike sou lyen sa a pou w ouvri bel anvlop ou an :\n${uniqueCardLink}`;
+  // Tèks mesaj WhatsApp an bon kreyòl natirèl e pwòp
+  const shareMessageText = `Gade bèl kat fèt mwen sot kreye pou ou a !\n\nKlike sou lyen sa a pou w ouvri bèl anvlòp ou an :\n${uniqueCardLink}`;
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessageText)}`;
 
   const playElegantChime = () => {
@@ -161,7 +161,7 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
 
   return (
     <div className="viewer-modal">
-      <button className="btn-close-modal" onClick={onClose} aria-label="Fermer">
+      <button className="btn-close-modal" onClick={onClose} aria-label="Fèmen">
         <X size={20} />
       </button>
 
@@ -182,7 +182,7 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
             <div className="real-card-border" />
 
             <div>
-              <div className="card-top-caption">Vœux de Fin d'Année</div>
+              <div className="card-top-caption">Bèl Swè Fèt Fen Dane</div>
               <h2 className="card-main-title" style={{ color: template.envelopeColor }}>
                 {title}
               </h2>
@@ -195,7 +195,7 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
             </div>
 
             <div className="card-signature-box">
-              <div className="card-signature-label">Avèk anpil afeksyon de</div>
+              <div className="card-signature-label">Ak tout afeksyon mwen,</div>
               <div className="card-signature-name">{sender}</div>
             </div>
           </div>
@@ -220,7 +220,7 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
           </div>
         </div>
 
-        {/* Panneau d'actions */}
+        {/* Panèl aksyon */}
         <div ref={actionsRef} className="card-actions-panel">
           <a
             href={whatsappUrl}
@@ -237,12 +237,12 @@ export default function EnvelopeViewerModal({ template, customData, isDirectView
             onClick={() => onOpenCustomizer(template)}
           >
             <Gift size={17} style={{ flexShrink: 0 }} />
-            <span>Kreye pa w la tou (100 HTG)</span>
+            <span>Kreye pa w la tou (100 Goud)</span>
           </button>
 
           <span className="btn-replay-anim" onClick={replayAnimation}>
             <RotateCcw size={13} style={{ display: 'inline', marginRight: 5, verticalAlign: 'middle' }} />
-            Rewè ouvèti anvlòp la
+            Gade ouvèti anvlòp la ankò
           </span>
         </div>
       </div>

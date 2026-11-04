@@ -18,7 +18,7 @@ export default function App() {
   const [customData, setCustomData] = useState(null);
   const [isDirectRecipientView, setIsDirectRecipientView] = useState(false);
 
-  // Détection d'un lien unique de destinataire dans l'URL
+  // Deteksyon yon lyen inik destinataire nan URL la
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -28,7 +28,6 @@ export default function App() {
       const msg = params.get('msg');
 
       if (to && from) {
-        // Trouver le modèle correspondant ou prendre le bordeaux par défaut
         const matchedTemplate = TEMPLATES.find((t) => t.id === themeId) || TEMPLATES[0];
         setCustomData({
           recipient: decodeURIComponent(to),
@@ -69,12 +68,12 @@ export default function App() {
 
   return (
     <div>
-      {/* 1. En-tête Navigation */}
+      {/* 1. Antèt Navigasyon */}
       <header className="header-nav">
         <a href="/" className="brand-logo">
-          KatDigital <span>Collection</span>
+          KatDigital <span>Koleksyon</span>
         </a>
-        <div className="nav-tagline">Cartes & Vœux digitaux festifs pour WhatsApp</div>
+        <div className="nav-tagline">Bèl Kat Vœux Dijital pou Fèt Fen Dane</div>
         <div>
           <button
             onClick={() => handleOpenDemo(TEMPLATES[0])}
@@ -91,19 +90,19 @@ export default function App() {
               cursor: 'pointer'
             }}
           >
-            Découvrir une Démo
+            Wè yon Démo
           </button>
         </div>
       </header>
 
-      {/* 2. Bannière d'accueil & Filtres de Catégories */}
+      {/* 2. Bannyè ak Filtè Kategori selon òtograf AKA */}
       <section className="hero-section">
-        <div className="hero-subtitle">Édition Spéciale Fêtes 2026 - 2027</div>
+        <div className="hero-subtitle">Koleksyon Espesyal Fèt Fen Dane 2026 - 2027</div>
         <h1 className="hero-title">
-          Partagez des vœux inoubliables,<br />directement sur WhatsApp.
+          Voye bèl swè ki pap janm efase,<br />dirèkteman sou WhatsApp.
         </h1>
         <p className="hero-desc">
-          Une papeterie digitale raffinée avec ouverture d'enveloppe en 3D. Choisissez un modèle, personnalisez votre message et surprenez vos proches pour seulement <strong>100 HTG</strong>.
+          Yon eksperyans papetri dijital kalite siperyè ak anvlòp 3D ki ouvri. Chwazi yon bèl modèl, pèsonalize pawòl ou, epi fè moun ou renmen yo plezi pou sèlman <strong>100 Goud</strong>.
         </p>
 
         <div className="categories-bar">
@@ -113,7 +112,7 @@ export default function App() {
             onClick={() => setSelectedCategory('all')}
           >
             <LayoutGrid size={14} />
-            <span>Tous les Modèles</span>
+            <span>Tout Modèl yo</span>
           </button>
 
           <button
@@ -122,7 +121,7 @@ export default function App() {
             onClick={() => setSelectedCategory('noel')}
           >
             <Gift size={14} />
-            <span>Noël Classique</span>
+            <span>Nwèl Tradisyonèl</span>
           </button>
 
           <button
@@ -131,7 +130,7 @@ export default function App() {
             onClick={() => setSelectedCategory('nouvel-an')}
           >
             <Star size={14} />
-            <span>Nouvel An 2027</span>
+            <span>Bòn Ane 2027</span>
           </button>
 
           <button
@@ -140,7 +139,7 @@ export default function App() {
             onClick={() => setSelectedCategory('tradition')}
           >
             <Bookmark size={14} />
-            <span>1er Janvier & Traditions</span>
+            <span>1ye Janvye & Tradisyon</span>
           </button>
 
           <button
@@ -149,17 +148,17 @@ export default function App() {
             onClick={() => setSelectedCategory('mennaj')}
           >
             <Heart size={14} />
-            <span>Messages d'Amour</span>
+            <span>Mesaj Lanmou</span>
           </button>
         </div>
       </section>
 
-      {/* 3. Catalogue de Cartes */}
+      {/* 3. Katalòg Kat */}
       <main className="catalog-container">
         <div className="section-heading">
-          <span>Modèles Disponibles ({filteredTemplates.length})</span>
+          <span>Modèl ki Disponib yo ({filteredTemplates.length})</span>
           <span style={{ fontSize: 13, color: '#C39D5E', cursor: 'pointer', fontWeight: 600 }}>
-            Nouvelles éditions chaque semaine
+            Nouvo modèl chak semèn
           </span>
         </div>
 
@@ -210,12 +209,12 @@ export default function App() {
               </div>
 
               <div className="card-meta-title">{template.title}</div>
-              <div className="card-meta-desc">{template.subtitle} • Animation 3D & Audio</div>
+              <div className="card-meta-desc">{template.subtitle} • Animasyon 3D & Mizik</div>
 
               <div className="card-meta-footer">
-                <span className="price-pill">{template.priceHTG} HTG</span>
+                <span className="price-pill">{template.priceHTG} Goud</span>
                 <span className="btn-view-demo">
-                  Ouvrir <ArrowRight size={12} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: 4 }} />
+                  Ouvri <ArrowRight size={12} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: 4 }} />
                 </span>
               </div>
             </div>
@@ -223,7 +222,7 @@ export default function App() {
         </div>
       </main>
 
-      {/* 4. Modal Visionneuse Enveloppe */}
+      {/* 4. Modal Ouvèti Anvlòp */}
       {activeTemplate && (
         <EnvelopeViewerModal
           template={activeTemplate}
@@ -232,7 +231,6 @@ export default function App() {
           onClose={() => {
             setActiveTemplate(null);
             setCustomData(null);
-            // Nettoyer l'URL sans recharger
             if (isDirectRecipientView) {
               window.history.replaceState({}, '', '/');
             }
@@ -244,7 +242,7 @@ export default function App() {
         />
       )}
 
-      {/* 5. Modal Personnalisation */}
+      {/* 5. Modal Pèsonalizasyon */}
       {customizerTemplate && (
         <PersonalizeModal
           template={customizerTemplate}

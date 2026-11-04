@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Smartphone, CreditCard, Gift, Check } from 'lucide-react';
+import { X, Smartphone, CreditCard, Gift } from 'lucide-react';
 import { PRESET_MESSAGES } from '../data/templates';
 
 export default function PersonalizeModal({ template, onClose, onSaveAndPreview }) {
@@ -22,7 +22,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
   const handleValidate = (e) => {
     e.preventDefault();
     if (!recipient.trim() || !sender.trim()) {
-      alert('Veuillez renseigner le destinataire et votre nom.');
+      alert('Tanpri mete non moun k ap resevwa kat la ak non pa w.');
       return;
     }
 
@@ -44,14 +44,14 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <div>
             <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 22, fontWeight: 700, color: '#2B4736' }}>
-              Personnalisation de la Carte
+              Pèsonalize Kat Pa w la
             </h3>
-            <span style={{ fontSize: 12, color: '#6B6864' }}>Modèle : {template.title}</span>
+            <span style={{ fontSize: 12, color: '#6B6864' }}>Modèl : {template.title}</span>
           </div>
           <button
             onClick={onClose}
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6B6864' }}
-            aria-label="Fermer"
+            aria-label="Fèmen"
           >
             <X size={20} />
           </button>
@@ -59,10 +59,10 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
 
         <form onSubmit={handleValidate}>
           <div className="form-group">
-            <label className="form-label">Destinataire (Nom ou prénom de la personne)</label>
+            <label className="form-label">Pou ki moun ? (Non moun k ap resevwa kat la)</label>
             <input
               type="text"
-              placeholder="Ex: Vanessa, Chers Parents, Jean..."
+              placeholder="Pa egzanp : Vanessa, Manman, Jean..."
               className="form-input"
               value={recipient}
               onChange={(e) => setRecipient(e.target.value)}
@@ -71,10 +71,10 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
           </div>
 
           <div className="form-group">
-            <label className="form-label">Expéditeur (Votre nom)</label>
+            <label className="form-label">De ki moun ? (Non pa w)</label>
             <input
               type="text"
-              placeholder="Ex: David, Votre fils..."
+              placeholder="Pa egzanp : David, Pitit ou..."
               className="form-input"
               value={sender}
               onChange={(e) => setSender(e.target.value)}
@@ -83,7 +83,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
           </div>
 
           <div className="form-group">
-            <label className="form-label">Sélectionner un message suggéré :</label>
+            <label className="form-label">Chwazi yon bèl mesaj tout pare :</label>
             <select
               className="form-select"
               value={selectedPreset}
@@ -98,7 +98,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
           </div>
 
           <div className="form-group">
-            <label className="form-label">Message personnalisé :</label>
+            <label className="form-label">Oswa modifye tèks la jan w vle :</label>
             <textarea
               rows={4}
               className="form-textarea"
@@ -109,7 +109,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
           </div>
 
           <div className="form-group" style={{ marginTop: 20 }}>
-            <label className="form-label">Option de règlement (100 HTG / $2.99 USD) :</label>
+            <label className="form-label">Chwazi mwayen peman (100 Goud / $2.99 USD) :</label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               <div
                 onClick={() => setPaymentMethod('moncash')}
@@ -127,7 +127,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
                 }}
               >
                 <Smartphone size={18} color="#7A1F2D" />
-                <span>MonCash (100 HTG)</span>
+                <span>MonCash (100 Goud)</span>
               </div>
 
               <div
@@ -146,14 +146,14 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
                 }}
               >
                 <CreditCard size={18} color="#2B4736" />
-                <span>Carte bancaire ($2.99)</span>
+                <span>Kat Kredi ($2.99)</span>
               </div>
             </div>
           </div>
 
           {paymentMethod === 'moncash' && (
             <div className="form-group">
-              <label className="form-label">Numéro MonCash :</label>
+              <label className="form-label">Nimewo telefòn MonCash ou :</label>
               <input
                 type="tel"
                 placeholder="+509 XXXX-XXXX"
@@ -186,7 +186,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
             }}
           >
             <Gift size={18} />
-            {isSubmitting ? 'Validation en cours...' : 'Valider & Générer la carte (100 HTG)'}
+            {isSubmitting ? 'Ap valide...' : 'Valide epi wè kat la (100 Goud)'}
           </button>
         </form>
       </div>
