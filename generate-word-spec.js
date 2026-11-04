@@ -9,22 +9,61 @@ import {
   TableCell,
   WidthType,
   AlignmentType,
-  ShadingType,
-  ImageRun
+  ShadingType
 } from 'docx';
 import fs from 'fs';
 import path from 'path';
 
 const primaryColor = "2B4736"; // Vert sapin
 const accentColor = "C39D5E";  // Or
-const lightGray = "F4EFE6";
+const darkColor = "1F2922";
+const bgLight = "F8F5EE";
 const borderColor = "D9D2C5";
 
-const createHeaderParagraph = (text, level = HeadingLevel.HEADING_2) => {
+const createTitle = (text) => {
   return new Paragraph({
-    text,
-    heading: level,
-    spacing: { before: 280, after: 120 }
+    children: [
+      new TextRun({
+        text,
+        bold: true,
+        size: 38,
+        color: primaryColor,
+        font: "Georgia"
+      })
+    ],
+    alignment: AlignmentType.CENTER,
+    spacing: { before: 100, after: 60 }
+  });
+};
+
+const createSubTitle = (text) => {
+  return new Paragraph({
+    children: [
+      new TextRun({
+        text,
+        bold: true,
+        size: 24,
+        color: accentColor,
+        font: "Georgia"
+      })
+    ],
+    alignment: AlignmentType.CENTER,
+    spacing: { after: 120 }
+  });
+};
+
+const createHeading = (text) => {
+  return new Paragraph({
+    children: [
+      new TextRun({
+        text,
+        bold: true,
+        size: 26,
+        color: primaryColor,
+        font: "Georgia"
+      })
+    ],
+    spacing: { before: 300, after: 120 }
   });
 };
 
@@ -35,41 +74,91 @@ const createParagraph = (text, bold = false) => {
         text,
         bold,
         size: 22,
-        font: "Calibri"
+        font: "Calibri",
+        color: "222222"
       })
     ],
     spacing: { after: 100 }
   });
 };
 
-const createBullet = (label, desc) => {
-  return new Paragraph({
-    children: [
-      new TextRun({ text: "• " + label + " : ", bold: true, color: primaryColor, size: 22, font: "Calibri" }),
-      new TextRun({ text: desc, size: 22, font: "Calibri" })
-    ],
-    spacing: { after: 80 },
-    indent: { left: 360 }
+// Bloc de code ou schéma textuel propre
+const createDiagramBox = (lines) => {
+  const tableRows = lines.map(line => {
+    return new TableRow({
+      children: [
+        new TableCell({
+          width: { size: 100, type: WidthType.PERCENTAGE },
+          shading: { type: ShadingType.CLEAR, fill: "F5F2EB" },
+          margins: { top: 60, bottom: 60, left: 160, right: 160 },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: line,
+                  font: "Consolas",
+                  size: 19,
+                  color: "1A1816"
+                })
+              ],
+              spacing: { before: 20, after: 20 }
+            })
+          ]
+        })
+      ]
+    });
+  });
+
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: tableRows
   });
 };
 
-const createStyledCell = (text, isHeader = false, widthPercent = 25, isKey = false) => {
-  return new TableCell({
-    width: { size: widthPercent, type: WidthType.PERCENTAGE },
-    shading: {
-      type: ShadingType.CLEAR,
-      fill: isHeader ? primaryColor : (isKey ? "FFF9E6" : "FFFFFF")
-    },
-    margins: { top: 120, bottom: 120, left: 140, right: 140 },
-    children: [
-      new Paragraph({
+// Carte d'étape visuelle simple
+const createStepCard = (num, title, actor, desc) => {
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [
+      new TableRow({
         children: [
-          new TextRun({
-            text,
-            bold: isHeader || isKey,
-            size: isHeader ? 20 : 19,
-            color: isHeader ? "FFFFFF" : (isKey ? "855D10" : "222222"),
-            font: isKey ? "Consolas" : "Calibri"
+          new TableCell({
+            width: { size: 10, type: WidthType.PERCENTAGE },
+            shading: { type: ShadingType.CLEAR, fill: primaryColor },
+            margins: { top: 100, bottom: 100, left: 100, right: 100 },
+            children: [
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [
+                  new TextRun({
+                    text: num,
+                    bold: true,
+                    size: 26,
+                    color: "FFFFFF",
+                    font: "Calibri"
+                  })
+                ]
+              })
+            ]
+          }),
+          new TableCell({
+            width: { size: 90, type: WidthType.PERCENTAGE },
+            shading: { type: ShadingType.CLEAR, fill: "FAF8F5" },
+            margins: { top: 100, bottom: 100, left: 140, right: 140 },
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({ text: title + "  ", bold: true, size: 22, color: primaryColor, font: "Georgia" }),
+                  new TextRun({ text: `[${actor}]`, bold: true, size: 18, color: accentColor, font: "Calibri" })
+                ],
+                spacing: { after: 40 }
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: desc, size: 20, color: "444444", font: "Calibri" })
+                ]
+              })
+            ]
           })
         ]
       })
@@ -77,20 +166,72 @@ const createStyledCell = (text, isHeader = false, widthPercent = 25, isKey = fal
   });
 };
 
-const createDbTable = (headers, rows, widths = [22, 18, 15, 45]) => {
+const createArrowSeparator = () => {
+  return new Paragraph({
+    alignment: AlignmentType.CENTER,
+    children: [
+      new TextRun({
+        text: "  |  ",
+        size: 22,
+        bold: true,
+        color: accentColor,
+        font: "Consolas"
+      }),
+      new TextRun({
+        text: "\n  v  ",
+        size: 22,
+        bold: true,
+        color: primaryColor,
+        font: "Consolas"
+      })
+    ],
+    spacing: { before: 40, after: 40 }
+  });
+};
+
+// Tableau SQL propre
+const createSqlTable = (headers, rows) => {
   const tableRows = [];
 
+  // En-tête
   tableRows.push(
     new TableRow({
       tableHeader: true,
-      children: headers.map((h, i) => createStyledCell(h, true, widths[i]))
+      children: headers.map((h, i) => new TableCell({
+        width: { size: i === 0 ? 25 : (i === 1 ? 20 : (i === 2 ? 18 : 37)), type: WidthType.PERCENTAGE },
+        shading: { type: ShadingType.CLEAR, fill: primaryColor },
+        margins: { top: 100, bottom: 100, left: 120, right: 120 },
+        children: [
+          new Paragraph({
+            children: [new TextRun({ text: h, bold: true, size: 20, color: "FFFFFF", font: "Calibri" })]
+          })
+        ]
+      }))
     })
   );
 
+  // Lignes
   rows.forEach(r => {
     tableRows.push(
       new TableRow({
-        children: r.map((cellText, i) => createStyledCell(cellText, false, widths[i], i === 0 || i === 2))
+        children: r.map((cellText, i) => new TableCell({
+          width: { size: i === 0 ? 25 : (i === 1 ? 20 : (i === 2 ? 18 : 37)), type: WidthType.PERCENTAGE },
+          shading: { type: ShadingType.CLEAR, fill: (i === 0 ? "FFFDF9" : "FFFFFF") },
+          margins: { top: 80, bottom: 80, left: 120, right: 120 },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: cellText,
+                  bold: (i === 0 || i === 2),
+                  size: 19,
+                  color: (i === 2 && cellText.includes("KEY") ? "996B1F" : "222222"),
+                  font: (i === 0 ? "Consolas" : "Calibri")
+                })
+              ]
+            })
+          ]
+        }))
       })
     );
   });
@@ -101,53 +242,68 @@ const createDbTable = (headers, rows, widths = [22, 18, 15, 45]) => {
   });
 };
 
-// Chargement de l'image du schéma
-const imagePath = path.join("C:", "Users", "wangu", "Desktop", "katdijital", "schema_flux_katdigital.png");
-let diagramImageBuffer = null;
-if (fs.existsSync(imagePath)) {
-  diagramImageBuffer = fs.readFileSync(imagePath);
-}
+// Contenu du schéma simple en texte
+const schemaTextLines = [
+  "+----------------------------------------------------------------------------------------------------+",
+  "|                                KATDIGITAL • SCHÉMA DU FLUX GLOBAL                                  |",
+  "+----------------------------------------------------------------------------------------------------+",
+  "",
+  "[ 1. CLIENT ]                  [ 2. PAIEMENT ]           [ 3. SUPABASE ]             [ 4. DESTINATAIRE ]",
+  "      |                               |                         |                            |",
+  " 1. Choisit un modèle                 |                         |                            |",
+  "    (Sans mot de passe)               |                         |                            |",
+  "      |                               |                         |                            |",
+  " 2. Personnalise le texte             |                         |                            |",
+  "    (Aperçu direct instantané)        |                         |                            |",
+  "      |                               |                         |                            |",
+  " 3. Clique sur 'Partager'             |                         |                            |",
+  "    => Ouvre le PAYWALL               |                         |                            |",
+  "      |------------------------------>|                         |                            |",
+  "                                 4. Choix :                     |                            |",
+  "                                    MonCash (100 HTG)           |                            |",
+  "                                    ou Stripe ($2.99 USD)       |                            |",
+  "                                      |                         |                            |",
+  "                                 5. Valide avec son PIN         |                            |",
+  "                                    (ou sa carte bancaire)      |                            |",
+  "                                      |                         |                            |",
+  "                                      |--- 6. Crée la commande ->|                            |",
+  "                                      |       (status: PENDING) |                            |",
+  "                                      |                         |                            |",
+  "                                      |--- 7. Webhook sécurisé ->|                            |",
+  "                                              (Paiement certifié)                            |",
+  "                                                                |                            |",
+  "                                                       8. Active la carte                    |",
+  "                                                          status: PAID                       |",
+  "                                                          Code slug unique                   |",
+  "                                                                |                            |",
+  " 9. Débloque les boutons <--------------------------------------|                            |",
+  "    - Partager sur WhatsApp                                                                  |",
+  "    - Télécharger image PNG                                                                  |",
+  "      |                                                                                      |",
+  "      |-------------------------- 10. Envoie le lien unique sur WhatsApp ------------------->|",
+  "                                                                                             |",
+  "                                                                                10. Ouvre l'enveloppe 3D",
+  "                                                                                    (Musique & Confettis)",
+  "                                                                                             |",
+  "                                                                                11. VIRALITÉ :",
+  "                                                                                    Bouton au bas :",
+  "                                                                                    'Kreye pa w la tou'",
+  "                                                                                             |",
+  " [ Nouveau Client ] <------------------------------------------------------------------------|"
+];
 
 const doc = new Document({
   sections: [
     {
       properties: {},
       children: [
-        // ========================================================
-        // EN-TÊTE PRINCIPAL DU DOCUMENT
-        // ========================================================
+        // TITRE
+        createTitle("KATDIGITAL"),
+        createSubTitle("Spécification Technique & Flux Système (Supabase)"),
         new Paragraph({
           children: [
             new TextRun({
-              text: "KATDIGITAL",
-              bold: true,
-              size: 44,
-              color: primaryColor,
-              font: "Georgia"
-            })
-          ],
-          alignment: AlignmentType.CENTER,
-          spacing: { before: 100, after: 60 }
-        }),
-
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: "Spécification Technique & Architecture Back-end (Supabase)",
-              bold: true,
-              size: 26,
-              color: accentColor,
-              font: "Georgia"
-            })
-          ],
-          alignment: AlignmentType.CENTER,
-          spacing: { after: 140 }
-        }),
-
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: "Document officiel pour le développeur back-end : Schéma visuel du flux global, parcours Guest Checkout (sans compte), modèle relationnel PostgreSQL (Supabase), Edge Functions et passerelles MonCash (100 HTG) & Stripe ($2.99 USD).",
+              text: "Ce document explique de manière simple et directe comment le système fonctionne de A à Z : le parcours client sans mot de passe, les passerelles MonCash/Stripe, et les tables Supabase.",
               italics: true,
               size: 20,
               color: "555555",
@@ -155,227 +311,160 @@ const doc = new Document({
             })
           ],
           alignment: AlignmentType.CENTER,
-          spacing: { after: 240 }
+          spacing: { after: 250 }
         }),
 
-        // ========================================================
-        // 1. LE SCHÉMA VISUEL DU FLUX TECHNIQUE DU PROJET
-        // ========================================================
-        createHeaderParagraph("1. Schéma Visuel du Flux Global du Système", HeadingLevel.HEADING_1),
-        createParagraph(
-          "Ce diagramme d'architecture résume le parcours complet d'une carte : de la visite sans mot de passe (Guest Checkout) jusqu'au déblocage après paiement MonCash/Stripe, et l'activation de la boucle de viralité pour acquérir de nouveaux clients sans frais publicitaires."
+        // SECTION 1 : LE SCHÉMA SIMPLE
+        createHeading("1. Le Schéma Simple du Flux"),
+        createParagraph("Voici le schéma direct montrant les échanges entre le Client, les Passerelles de Paiement, Supabase et le Destinataire :"),
+
+        createDiagramBox(schemaTextLines),
+
+        new Paragraph({ text: "", spacing: { after: 200 } }),
+
+        // SECTION 2 : LES ÉTAPES DU FLUX
+        createHeading("2. Les 8 Étapes Expliquées Simplement"),
+
+        createStepCard(
+          "1",
+          "Choix du Modèle",
+          "Client - Front-end",
+          "Le client arrive sur katdigital.ht. Il n'a PAS besoin de créer de compte ni de mot de passe (Guest Checkout). Il teste les démos et choisit sa carte préférée."
+        ),
+        createArrowSeparator(),
+
+        createStepCard(
+          "2",
+          "Personnalisation en Direct",
+          "Client - Front-end",
+          "Le client entre le nom du destinataire (ex: Vanessa), son nom (ex: David), et choisit son texte. La carte s'affiche immédiatement avec son texte en direct."
+        ),
+        createArrowSeparator(),
+
+        createStepCard(
+          "3",
+          "Déclenchement du Paywall",
+          "Psychologie de Vente",
+          "Le client clique sur 'Pataje sou WhatsApp'. Une fenêtre élégante apparaît : 'Bèl kat ou an pare ! Peye 100 Goud pou w debloke lyen an epi voye l bay Vanessa'."
+        ),
+        createArrowSeparator(),
+
+        createStepCard(
+          "4",
+          "Choix du Paiement",
+          "MonCash / Stripe",
+          "• Pour Haïti : MonCash (100 Gourdes) via son numéro de téléphone.\n• Pour la Diaspora : Carte Bancaire (2.99 $ USD) via Stripe."
+        ),
+        createArrowSeparator(),
+
+        createStepCard(
+          "5",
+          "Validation & Webhook Sécurisé",
+          "Supabase Edge Functions",
+          "Le client valide son code PIN MonCash (ou sa carte sur Stripe). La passerelle envoie un webhook à Supabase. Supabase vérifie la signature et passe la commande en statut 'PAID'."
+        ),
+        createArrowSeparator(),
+
+        createStepCard(
+          "6",
+          "Génération du Lien Unique & Déblocage",
+          "Supabase Database",
+          "Supabase génère un code court unique (ex: 'x7K9p2') dans la table 'cards'. Le front-end affiche immédiatement l'écran de victoire avec le bouton vert 'Pataje sou WhatsApp' débloqué."
+        ),
+        createArrowSeparator(),
+
+        createStepCard(
+          "7",
+          "Réception & Ouverture 3D",
+          "Destinataire (Vanessa)",
+          "Vanessa reçoit le message WhatsApp contenant le lien. En cliquant, elle découvre l'enveloppe personnalisée qui s'ouvre en 3D avec le carillon musical et les confettis."
+        ),
+        createArrowSeparator(),
+
+        createStepCard(
+          "8",
+          "Boucle Virale (Pub Gratuite)",
+          "Viral Loop",
+          "Au bas de la carte reçue par Vanessa, un bouton discret indique : 'Ou renmen kat sa a? Kreye pa w la tou pou 100 Goud'. Vanessa clique et crée à son tour des cartes pour ses proches."
         ),
 
-        // Insertion du schéma PNG haute résolution
-        ...(diagramImageBuffer ? [
-          new Paragraph({
-            children: [
-              new ImageRun({
-                data: diagramImageBuffer,
-                transformation: {
-                  width: 620,
-                  height: 422
-                }
-              })
-            ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 140, after: 120 }
-          }),
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: "Figure 1 : Schéma des 4 Colonnes d'Exécution (Client -> Passerelles -> Supabase -> Destinataire & Viralité)",
-                italics: true,
-                size: 18,
-                color: "777777",
-                font: "Calibri"
-              })
-            ],
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 220 }
-          })
-        ] : []),
+        new Paragraph({ text: "", spacing: { after: 250 } }),
 
-        // ========================================================
-        // 2. LE FLUX UTILISATEUR ÉTAPE PAR ÉTAPE (DÉTAILLÉ)
-        // ========================================================
-        createHeaderParagraph("2. Le Parcours Utilisateur & Rôles Système (Étape par Étape)", HeadingLevel.HEADING_2),
-        createParagraph(
-          "Pour maximiser le taux de conversion (plus de 85% d'abandons en moins), la plateforme supprime toute obligation de mot de passe ou de connexion Google. Le client teste, personnalise et s'attache à sa création avant de payer pour débloquer le partage :"
-        ),
+        // SECTION 3 : LES TABLES DE BASE DE DONNÉES SUPABASE
+        createHeading("3. Les 3 Tables de la Base de Données (Supabase)"),
+        createParagraph("Pour que le développeur back-end sache exactement quoi créer sur Supabase :"),
 
-        createDbTable(
-          ["Étape", "Action Client", "Comportement Front-end", "Traitement Back-end (Supabase)"],
+        createParagraph("Table 1 : 'templates' (Les modèles de cartes disponibles)", true),
+        createSqlTable(
+          ["Colonne", "Type", "Contrainte", "Rôle"],
           [
-            [
-              "1. Découverte",
-              "Arrive sur katdigital.ht, consulte le catalogue et teste la démo animée 3D.",
-              "Affiche le catalogue de cartes en cache local.",
-              "Met à disposition la table 'templates' avec les modèles actifs et leurs couleurs."
-            ],
-            [
-              "2. Création",
-              "Tape le nom du destinataire (Vanessa), son nom (David), et choisit son message.",
-              "Met à jour l'état local en direct. La carte est visualisée instantanément.",
-              "Aucune requête serveur (latence 0 pour l'utilisateur)."
-            ],
-            [
-              "3. Paywall",
-              "Clique sur 'Pataje sou WhatsApp' ou 'Telechaje'. Choisit MonCash (100 Goud) ou Carte ($2.99).",
-              "Déclenche POST /api/orders/create avec le payload de la carte personnalisée.",
-              "Edge Function 'create-order' crée la ligne dans 'orders' (status: 'pending') et génère le token MonCash ou la session Stripe."
-            ],
-            [
-              "4. Paiement",
-              "Valide avec son PIN sur son téléphone (MonCash) ou entre sa carte sur Stripe Checkout.",
-              "Affiche un écran d'attente convivial avec polling ou écoute de l'événement.",
-              "Reçoit le webhook sécurisé de Digicel ou Stripe, certifie la signature cryptographique et passe orders.payment_status = 'paid'."
-            ],
-            [
-              "5. Déblocage",
-              "Reçoit l'écran de victoire avec confettis et lien débloqué.",
-              "Affiche les boutons 'Pataje sou WhatsApp' et 'Telechaje Imaj PNG'.",
-              "Génère un slug unique (ex: 'x7K9p2'), insère dans 'cards', et fournit les balises Open Graph pour WhatsApp."
-            ],
-            [
-              "6. Réception",
-              "Le destinataire (Vanessa) clique sur le lien WhatsApp reçu.",
-              "Ouvre l'enveloppe personnalisée en 3D avec musique festive et confettis.",
-              "GET /api/cards/x7K9p2 renvoie les données publiques et incrémente views_count."
-            ],
-            [
-              "7. Viralité",
-              "Vanessa voit au bas de sa carte : 'Ou renmen kat sa a? Kreye pa w la tou pou 100 Goud'.",
-              "Clique sur le bouton et ouvre le créateur de carte pour ses propres proches.",
-              "Nouvelle commande créée -> Boucle virale d'acquisition gratuite !"
-            ]
-          ],
-          [14, 28, 28, 30]
+            ["id", "VARCHAR(50)", "PRIMARY KEY", "Identifiant du modèle (ex: 'noel-bordeaux', 'sapin-emeraude')"],
+            ["title", "VARCHAR(100)", "NOT NULL", "Nom du modèle (ex: 'Nwèl Vlou Bòdo')"],
+            ["category", "VARCHAR(50)", "NOT NULL", "Filtre ('noel', 'nouvel-an', 'tradition', 'mennaj')"],
+            ["envelope_color", "VARCHAR(20)", "NOT NULL", "Couleur HEX de l'enveloppe (ex: '#7A1F2D')"],
+            ["heading", "VARCHAR(100)", "NOT NULL", "Titre imprimé sur la carte (ex: 'Bòn Ane 2027')"],
+            ["default_message", "TEXT", "NOT NULL", "Message suggéré par défaut"],
+            ["price_htg", "INT", "DEFAULT 100", "Prix en Gourdes (100 HTG)"],
+            ["price_usd", "DECIMAL(5,2)", "DEFAULT 2.99", "Prix en Dollars ($2.99 USD)"]
+          ]
         ),
 
-        new Paragraph({ text: "", spacing: { after: 180 } }),
+        new Paragraph({ text: "", spacing: { after: 150 } }),
 
-        // ========================================================
-        // 3. ARCHITECTURE TECHNIQUE SUPABASE
-        // ========================================================
-        createHeaderParagraph("3. Pourquoi Supabase pour l'Architecture Technique ?", HeadingLevel.HEADING_2),
-        createBullet("Base Relationnelle PostgreSQL", "Stockage intègre et robuste des commandes, statuts financiers et cartes débloquées."),
-        createBullet("Supabase Edge Functions (Deno / TypeScript)", "Permet d'exécuter des webhooks ultra-rapides et sécurisés (HMAC SHA-256) sans gérer de serveur VPS lourd."),
-        createBullet("Table Editor & Dashboard", "Permet à l'équipe opérationnelle de suivre les ventes en direct et d'exporter les rapports financiers sans coder de back-office dédié."),
-        createBullet("Sécurité RLS (Row Level Security)", "Garantit qu'aucune carte avec un statut 'pending' ou 'failed' ne puisse être lue par une URL publique."),
-
-        new Paragraph({ text: "", spacing: { after: 180 } }),
-
-        // ========================================================
-        // 4. SCHÉMA RELATIONNEL DE LA BASE DE DONNÉES (SQL)
-        // ========================================================
-        createHeaderParagraph("4. Schéma Relationnel des Tables Supabase (MCD / MLD)", HeadingLevel.HEADING_2),
-
-        createParagraph("Tableau récapitulatif des relations (Clés étrangères) :", true),
-        createDbTable(
-          ["Table Source", "Clé Étrangère (FK)", "Table Cible (PK)", "Type de Relation & Règle"],
+        createParagraph("Table 2 : 'orders' (Les commandes et paiements des clients)", true),
+        createSqlTable(
+          ["Colonne", "Type", "Contrainte", "Rôle"],
           [
-            ["orders", "template_id", "templates.id", "Plusieurs commandes peuvent utiliser le même modèle de carte (Many-to-One)."],
-            ["cards", "order_id", "orders.id", "Une commande validée génère exactement UNE carte unique publique (One-to-One sécurisé)."],
-            ["webhook_logs", "order_id", "orders.id", "Traçabilité et audit financier : plusieurs logs possibles par commande (Many-to-One)."]
-          ],
-          [20, 20, 20, 40]
+            ["id", "UUID", "PRIMARY KEY", "Identifiant unique généré automatiquement"],
+            ["template_id", "VARCHAR(50)", "FOREIGN KEY", "Relie la commande au modèle de carte acheté"],
+            ["recipient_name", "VARCHAR(100)", "NOT NULL", "Nom du destinataire (ex: 'Vanessa')"],
+            ["sender_name", "VARCHAR(100)", "NOT NULL", "Nom de l'expéditeur (ex: 'David Jean')"],
+            ["message_content", "TEXT", "NOT NULL", "Le message personnalisé rédigé"],
+            ["payment_gateway", "VARCHAR(20)", "NOT NULL", "'moncash' ou 'stripe'"],
+            ["payment_status", "VARCHAR(20)", "DEFAULT 'pending'", "'pending' (en attente), 'paid' (payé), 'failed'"],
+            ["phone_number", "VARCHAR(30)", "NULLABLE", "Numéro de téléphone si payé par MonCash"],
+            ["amount_paid", "DECIMAL(10,2)", "NOT NULL", "100.00 ou 2.99"],
+            ["created_at", "TIMESTAMPTZ", "DEFAULT now()", "Date et heure de la commande"]
+          ]
         ),
 
-        new Paragraph({ text: "", spacing: { after: 140 } }),
+        new Paragraph({ text: "", spacing: { after: 150 } }),
 
-        createParagraph("Table 1 : 'templates' (Catalogue des modèles de cartes)", true),
-        createDbTable(
-          ["Colonne", "Type SQL", "Contrainte", "Description / Exemple"],
+        createParagraph("Table 3 : 'cards' (Les cartes débloquées que le destinataire peut voir)", true),
+        createSqlTable(
+          ["Colonne", "Type", "Contrainte", "Rôle"],
           [
-            ["id", "VARCHAR(50)", "PRIMARY KEY", "Identifiant du modèle (ex: 'noel-bordeaux', 'sapin-emeraude')."],
-            ["title", "VARCHAR(100)", "NOT NULL", "Nom affiché (ex: 'Nwèl Vlou Bòdo')."],
-            ["category", "VARCHAR(50)", "NOT NULL", "Catégorie ('noel', 'nouvel-an', 'tradition', 'mennaj')."],
-            ["envelope_color", "VARCHAR(20)", "NOT NULL", "Couleur HEX de l'enveloppe (ex: '#7A1F2D')."],
-            ["flap_color", "VARCHAR(20)", "NOT NULL", "Couleur HEX du rabat supérieur 3D."],
-            ["heading", "VARCHAR(100)", "NOT NULL", "Titre imprimé sur la carte (ex: 'Bòn Ane 2027 & Siksè')."],
-            ["default_message", "TEXT", "NOT NULL", "Texte suggéré par défaut en kreyòl."],
-            ["price_htg", "INT", "DEFAULT 100", "Prix pour Haïti en Gourdes (100 HTG)."],
-            ["price_usd", "DECIMAL(5,2)", "DEFAULT 2.99", "Prix pour la diaspora en USD (2.99 $)."],
-            ["is_active", "BOOLEAN", "DEFAULT TRUE", "Visibilité dans le catalogue public."]
-          ],
-          [22, 18, 18, 42]
+            ["id", "UUID", "PRIMARY KEY", "Identifiant unique interne de la carte"],
+            ["order_id", "UUID", "FOREIGN KEY UNIQUE", "Lié obligatoirement à la commande payée"],
+            ["slug", "VARCHAR(16)", "UNIQUE NOT NULL", "Code unique du lien public (ex: 'x7K9p2')"],
+            ["views_count", "INT", "DEFAULT 0", "Nombre de fois que Vanessa a ouvert l'enveloppe"],
+            ["created_at", "TIMESTAMPTZ", "DEFAULT now()", "Date de mise en ligne de la carte"]
+          ]
         ),
 
-        new Paragraph({ text: "", spacing: { after: 140 } }),
+        new Paragraph({ text: "", spacing: { after: 200 } }),
 
-        createParagraph("Table 2 : 'orders' (Commandes, acheteurs et transactions)", true),
-        createDbTable(
-          ["Colonne", "Type SQL", "Contrainte", "Description / Exemple"],
-          [
-            ["id", "UUID", "PRIMARY KEY DEFAULT gen_random_uuid()", "Identifiant unique interne de la commande."],
-            ["template_id", "VARCHAR(50)", "FK -> templates.id", "Référence au modèle de carte acheté."],
-            ["recipient_name", "VARCHAR(100)", "NOT NULL", "Nom du destinataire (ex: 'Vanessa')."],
-            ["sender_name", "VARCHAR(100)", "NOT NULL", "Nom de l'expéditeur (ex: 'David Jean')."],
-            ["message_content", "TEXT", "NOT NULL", "Message personnalisé rédigé par le client."],
-            ["payment_gateway", "VARCHAR(20)", "NOT NULL", "'moncash' (Haïti) ou 'stripe' (Diaspora)."],
-            ["payment_status", "VARCHAR(20)", "DEFAULT 'pending'", "'pending', 'paid' ou 'failed'."],
-            ["phone_number", "VARCHAR(30)", "NULLABLE", "Numéro de téléphone de l'acheteur (requis si MonCash)."],
-            ["customer_email", "VARCHAR(150)", "NULLABLE", "Email de l'acheteur (si Stripe)."],
-            ["transaction_ref", "VARCHAR(100)", "NULLABLE", "ID de transaction externe Digicel ou Stripe."],
-            ["amount_paid", "DECIMAL(10,2)", "NOT NULL", "Montant réglé (100.00 ou 2.99)."],
-            ["currency", "VARCHAR(5)", "NOT NULL", "'HTG' ou 'USD'."],
-            ["created_at", "TIMESTAMPTZ", "DEFAULT now()", "Horodatage de la commande."]
-          ],
-          [22, 18, 22, 38]
-        ),
-
-        new Paragraph({ text: "", spacing: { after: 140 } }),
-
-        createParagraph("Table 3 : 'cards' (Cartes actives consultables par le destinataire)", true),
-        createDbTable(
-          ["Colonne", "Type SQL", "Contrainte", "Description / Exemple"],
-          [
-            ["id", "UUID", "PRIMARY KEY DEFAULT gen_random_uuid()", "Identifiant technique."],
-            ["order_id", "UUID", "FK -> orders.id UNIQUE", "Liaison stricte à la commande réglée."],
-            ["slug", "VARCHAR(16)", "UNIQUE NOT NULL", "Code court du lien public (ex: 'x7K9p2' pour katdigital.ht/?c=x7K9p2)."],
-            ["views_count", "INT", "DEFAULT 0", "Nombre d'ouvertures de l'enveloppe par le destinataire."],
-            ["last_viewed_at", "TIMESTAMPTZ", "NULLABLE", "Date et heure de dernière ouverture."],
-            ["created_at", "TIMESTAMPTZ", "DEFAULT now()", "Date de génération de la carte débloquée."]
-          ],
-          [22, 18, 22, 38]
-        ),
-
-        new Paragraph({ text: "", spacing: { after: 180 } }),
-
-        // ========================================================
-        // 5. LES 3 EDGE FUNCTIONS À CODER PAR LE BACK-END
-        // ========================================================
-        createHeaderParagraph("5. Les 3 Supabase Edge Functions à Implémenter", HeadingLevel.HEADING_2),
-        createBullet(
-          "1. 'create-order' (POST /functions/v1/create-order)",
-          "Reçoit les données de la carte et le moyen de paiement. Insère dans 'orders' avec status 'pending'. Communique avec l'API Digicel Business (pour obtenir le token de redirection MonCash) ou avec l'API Stripe (pour créer la session Stripe Checkout). Renvoie l'URL de paiement au front-end."
-        ),
-        createBullet(
-          "2. 'moncash-webhook' (POST /functions/v1/moncash-webhook)",
-          "Point d'entrée serveur appelé par Digicel dès validation du code PIN. Vérifie la transaction via l'API MonCash, met à jour orders.payment_status = 'paid', génère un slug unique aléatoire (ex: 'k9X2p7'), et insère la carte débloquée dans la table 'cards'."
-        ),
-        createBullet(
-          "3. 'stripe-webhook' (POST /functions/v1/stripe-webhook)",
-          "Écoute l'événement 'checkout.session.completed'. Valide la signature cryptographique du header 'stripe-signature' avec le secret du webhook. Passe orders.payment_status = 'paid' et génère la carte dans 'cards'."
-        ),
-
-        new Paragraph({ text: "", spacing: { after: 180 } }),
-
-        // ========================================================
-        // 6. RÈGLES DE SÉCURITÉ & ANTI-FRAUDE
-        // ========================================================
-        createHeaderParagraph("6. Règles de Sécurité & Anti-Fraude", HeadingLevel.HEADING_2),
-        createBullet("Aucune génération de lien côté client", "Le slug unique ne doit JAMAIS être créé par le navigateur du client. Seul le serveur Supabase crée le slug dans la table 'cards' une fois le paiement vérifié par le webhook."),
-        createBullet("Idempotence des Webhooks", "Si Digicel ou Stripe renvoie le même webhook deux fois, le serveur vérifie si orders.payment_status est déjà 'paid' pour éviter de dupliquer les cartes ou les crédits."),
-        createBullet("Accès Public Sécurisé (RLS)", "La lecture publique d'une carte (GET /api/cards/:slug) ne renvoie QUE le nom du destinataire, le nom de l'expéditeur, le message et les couleurs du modèle. Aucune donnée financière, ni numéro de téléphone, ni montant n'est exposé au destinataire.")
+        // SECTION 4 : LES RÔLES DU BACK-END
+        createHeading("4. Ce que le Développeur Back-end doit Faire (En Résumé)"),
+        createParagraph("1. Créer le projet Supabase et exécuter les scripts SQL des 3 tables ci-dessus.", true),
+        createParagraph("2. Coder l'Edge Function 'create-order' qui initialise la commande et génère le lien de paiement MonCash ou Stripe Checkout.", true),
+        createParagraph("3. Coder l'Edge Function 'moncash-webhook' et 'stripe-webhook' qui reçoit la confirmation du paiement, passe orders.payment_status = 'paid' et génère la ligne dans 'cards' avec son code court unique.", true),
+        createParagraph("4. Coder l'API de lecture publique GET /api/cards/:slug qui renvoie le nom, le message et les couleurs de l'enveloppe au destinataire.", true)
       ]
     }
   ]
 });
 
 Packer.toBuffer(doc).then((buffer) => {
-  const outputPath = path.join("C:", "Users", "wangu", "Desktop", "katdijital", "SPECIFICATION_TECHNIQUE_BACKEND.docx");
-  fs.writeFileSync(outputPath, buffer);
-  console.log("Document Word régénéré avec succès avec le schéma graphique complet !");
+  const primaryFile = path.join("C:", "Users", "wangu", "Desktop", "katdijital", "SPECIFICATION_TECHNIQUE_BACKEND.docx");
+  const alternateFile = path.join("C:", "Users", "wangu", "Desktop", "katdijital", "FLUX_TECHNIQUE_KATDIGITAL.docx");
+  
+  try {
+    fs.writeFileSync(primaryFile, buffer);
+    console.log("Fichier principal SPECIFICATION_TECHNIQUE_BACKEND.docx généré avec succès !");
+  } catch (err) {
+    console.log("Le fichier principal est actuellement ouvert dans Word. Génération du fichier FLUX_TECHNIQUE_KATDIGITAL.docx...");
+    fs.writeFileSync(alternateFile, buffer);
+    console.log("Fichier FLUX_TECHNIQUE_KATDIGITAL.docx généré avec succès !");
+  }
 });
