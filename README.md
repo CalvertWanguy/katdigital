@@ -75,7 +75,7 @@ npm run build
 
 ## Organisation de l'équipe
 
-* **Front-end Engineering & UI Architecture :** Calvert Wanguy
+* **Front-end Engineering & UI Architecture :** Mr. Guy
 * **Back-end Engineering & Infrastructure Paiement :** En cours
 * **Design Graphique & Direction Artistique :** En cours de recrutement
 
