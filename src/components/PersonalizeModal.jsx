@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, Edit3, Eye, Music, Volume2, VolumeX, Upload, Trash2 } from 'lucide-react';
+import {
+  X,
+  User,
+  Edit3,
+  Eye,
+  Music,
+  Volume2,
+  VolumeX,
+  Upload,
+  Trash2,
+  Check,
+  ChevronRight,
+  Sparkles
+} from 'lucide-react';
 import { PRESET_MESSAGES } from '../data/templates';
 import { MUSIC_OPTIONS, playHolidaySoundtrack, stopHolidaySoundtrack } from '../utils/audioSynthesizer';
 
 export default function PersonalizeModal({ template, onClose, onSaveAndPreview }) {
+  const [activeTab, setActiveTab] = useState('message'); // 'message' | 'music'
+  const [showAllPresets, setShowAllPresets] = useState(false);
+  const [customHeading, setCustomHeading] = useState(template?.heading || 'Bòn Fèt Nwèl & Lapè nan Kè');
   const [recipient, setRecipient] = useState('');
   const [sender, setSender] = useState('');
   const [selectedPreset, setSelectedPreset] = useState('fanmi');
@@ -13,7 +29,14 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
   const [uploadedFileName, setUploadedFileName] = useState('');
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
 
-  // Verrouiller le défilement de l'arrière-plan de manière absolue (iOS & Android)
+  // Kalkile limit tèks optimal selon fòma ak tèm kat la
+  const maxChars = template?.maxChars || (
+    template?.format === 'parchment' ? 420 :
+    template?.format === 'bifold' ? 380 :
+    template?.format === 'kraft_sheet' ? 350 : 320
+  );
+
+  // Verrouiller le défilement de l'arrière-plan de manière absolue
   useEffect(() => {
     const scrollY = window.scrollY;
     const originalOverflow = document.body.style.overflow;
@@ -78,6 +101,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
   const handleValidate = (e) => {
     e.preventDefault();
     if (!recipient.trim() || !sender.trim()) {
+      setActiveTab('message');
       alert('Tanpri mete non moun k ap resevwa kat la ak non pa w.');
       return;
     }
@@ -85,10 +109,10 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
     stopHolidaySoundtrack();
 
     onSaveAndPreview({
-      recipient,
-      sender,
-      message: customMessage,
-      heading: template.heading,
+      recipient: recipient.trim(),
+      sender: sender.trim(),
+      message: customMessage.trim(),
+      heading: customHeading.trim() || template.heading,
       musicId: uploadedFileName ? 'custom' : selectedMusic,
       customAudioUrl: customAudioUrl || null
     });
@@ -105,15 +129,15 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
       }}
     >
       <div className="customizer-card">
-        
         {/* Antèt Modal la */}
         <div className="customizer-header">
           <div>
-            <span className="customizer-badge" style={{ color: template.envelopeColor, background: `${template.envelopeColor}14` }}>
+            <span className="customizer-model-tag">
               Modèl : {template.title}
             </span>
-            <h3 className="customizer-title">Pèsonalize Kat Pa w la</h3>
+            <h3 className="customizer-heading">Pèsonalize Kat Pa w la</h3>
           </div>
+
           <button
             onClick={() => {
               stopHolidaySoundtrack();
@@ -126,207 +150,247 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
           </button>
         </div>
 
-        <form onSubmit={handleValidate} className="customizer-form">
-          
-          {/* Moun yo */}
-          <div className="form-row-2">
-            <div className="form-group-clean">
-              <label className="form-label-clean">
-                <User size={13} style={{ color: 'var(--primary-green)' }} />
-                <span>Pou ki moun ?</span>
-              </label>
-              <input
-                type="text"
-                placeholder="Ex: Vanessa, Manman..."
-                className="form-input-clean"
-                value={recipient}
-                onChange={(e) => setRecipient(e.target.value)}
-                required
-              />
-            </div>
+        {/* Bouton Onglet Navigasyon zanmitay (1. Mesaj | 2. Mizik) */}
+        <div className="customizer-tabs">
+          <button
+            type="button"
+            className={`customizer-tab-btn ${activeTab === 'message' ? 'active' : ''}`}
+            onClick={() => setActiveTab('message')}
+          >
+            <Edit3 size={14} />
+            <span>1. Mesaj Kat la</span>
+          </button>
 
-            <div className="form-group-clean">
-              <label className="form-label-clean">
-                <Edit3 size={13} style={{ color: 'var(--primary-green)' }} />
-                <span>De ki moun ? (Non w)</span>
-              </label>
-              <input
-                type="text"
-                placeholder="Ex: David, Pitit ou..."
-                className="form-input-clean"
-                value={sender}
-                onChange={(e) => setSender(e.target.value)}
-                required
-              />
-            </div>
-          </div>
+          <button
+            type="button"
+            className={`customizer-tab-btn ${activeTab === 'music' ? 'active' : ''}`}
+            onClick={() => setActiveTab('music')}
+          >
+            <Music size={14} />
+            <span>2. Mizik & Anbyans</span>
+            {uploadedFileName && <span className="customizer-tab-badge-dot" />}
+          </button>
+        </div>
 
-          {/* Seleksyon Mesaj Rapid an Pilil */}
-          <div className="form-group-clean">
-            <label className="form-label-clean">
-              <span>Chwazi yon bèl mesaj rapid :</span>
-            </label>
-            <div className="preset-pill-list">
-              {PRESET_MESSAGES.map((msg) => (
-                <button
-                  key={msg.id}
-                  type="button"
-                  className={`preset-pill-item ${selectedPreset === msg.id ? 'active' : ''}`}
-                  onClick={() => handleSelectCategory(msg.id)}
-                >
-                  {msg.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Tèks mesaj la */}
-          <div className="form-group-clean">
-            <label className="form-label-clean">
-              <span>Tèks kat la (ou ka modifye l jan w vle) :</span>
-            </label>
-            <textarea
-              rows={3}
-              className="form-textarea-clean"
-              value={customMessage}
-              onChange={(e) => setCustomMessage(e.target.value)}
-              required
-            />
-          </div>
-
-          {/* Chwazi Mizik oswa Telechaje nan telefòn / aparèy */}
-          <div className="form-group-clean">
-            <label className="form-label-clean" style={{ justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Music size={13} style={{ color: 'var(--primary-green)' }} />
-                <span>Mizik Anbyans Kat la :</span>
-              </div>
-            </label>
-
-            {/* Zòn Telechaje Mizik nan Aparèy la */}
-            <div style={{ marginBottom: 12 }}>
-              <input
-                type="file"
-                id="device-audio-upload"
-                accept="audio/*"
-                style={{ display: 'none' }}
-                onChange={handleDeviceAudioUpload}
-              />
-
-              {uploadedFileName ? (
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    background: '#F0F7F2',
-                    border: '1.5px solid #2B4736',
-                    borderRadius: '8px',
-                    padding: '8px 12px'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
-                    <Volume2 size={15} color="#2B4736" style={{ flexShrink: 0 }} />
-                    <span style={{ fontSize: 12, fontWeight: 700, color: '#1E3326', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                      {uploadedFileName}
-                    </span>
+        <form onSubmit={handleValidate} className="customizer-form-wrap">
+          {/* Zòn Fòmilè a ak Défilement Pwòp */}
+          <div className="customizer-body">
+            {activeTab === 'message' ? (
+              <div className="tab-pane-fade">
+                {/* 1. Tit kat la (anlè a) - Premye chan */}
+                <div className="form-field-wrap">
+                  <div className="form-field-header-row">
+                    <label className="form-field-label">
+                      <Edit3 size={13} style={{ color: 'var(--primary-green)' }} />
+                      <span>Tit kat la (anlè a) :</span>
+                    </label>
+                    <span className="form-field-helper">Ou ka chanje tèks sa a tou</span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                    <button
-                      type="button"
-                      style={{
-                        background: 'var(--primary-green)',
-                        color: '#FFF',
-                        border: 'none',
-                        borderRadius: '4px',
-                        padding: '4px 10px',
-                        fontSize: '11px',
-                        fontWeight: 700,
-                        cursor: 'pointer'
-                      }}
-                      onClick={() => handleTogglePreviewAudio('custom')}
-                    >
-                      {isPlayingPreview ? 'Kanpe' : 'Tande l'}
-                    </button>
-                    <button
-                      type="button"
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        color: '#C41230',
-                        cursor: 'pointer',
-                        padding: '2px'
-                      }}
-                      onClick={handleRemoveUploadedAudio}
-                      title="Retire mizik sa a"
-                    >
-                      <Trash2 size={14} />
-                    </button>
+                  <input
+                    type="text"
+                    placeholder="Ex: Bòn Fèt Nwèl & Lapè nan Kè..."
+                    className="form-input-modern"
+                    value={customHeading}
+                    onChange={(e) => setCustomHeading(e.target.value)}
+                    maxLength={55}
+                    required
+                  />
+                </div>
+
+                {/* 2. Moun yo (Destinataire & Expéditeur) */}
+                <div className="form-row-2">
+                  <div className="form-field-wrap">
+                    <label className="form-field-label">
+                      <User size={13} style={{ color: 'var(--primary-green)' }} />
+                      <span>Pou ki moun ?</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ex: Vanessa, Manman cheri..."
+                      className="form-input-modern"
+                      value={recipient}
+                      onChange={(e) => setRecipient(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-field-wrap">
+                    <label className="form-field-label">
+                      <User size={13} style={{ color: 'var(--primary-green)' }} />
+                      <span>De ki moun ? (Non pa w)</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ex: David, Pitit ou..."
+                      className="form-input-modern"
+                      value={sender}
+                      onChange={(e) => setSender(e.target.value)}
+                      required
+                    />
                   </div>
                 </div>
-              ) : (
-                <label
-                  htmlFor="device-audio-upload"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 8,
-                    background: '#FFFFFF',
-                    border: '1.5px dashed #2B4736',
-                    borderRadius: '8px',
-                    padding: '10px 14px',
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    color: '#2B4736',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  <Upload size={14} />
-                  <span>Chwazi yon mizik nan aparèy ou (Telefòn / Òdinatè)</span>
-                </label>
-              )}
-            </div>
 
-            {/* Oubyen chwazi nan melodi fèt entegre yo */}
-            <span style={{ fontSize: 11, color: '#777', fontWeight: 600, display: 'block', marginBottom: 6 }}>
-              Oubyen chwazi yon bèl melodi fèt entegre :
-            </span>
-            <div className="preset-pill-list">
-              {MUSIC_OPTIONS.map((m) => (
-                <button
-                  key={m.id}
-                  type="button"
-                  className={`preset-pill-item ${selectedMusic === m.id && !uploadedFileName ? 'active' : ''}`}
-                  onClick={() => {
-                    handleRemoveUploadedAudio();
-                    handleTogglePreviewAudio(m.id);
-                  }}
-                >
-                  {isPlayingPreview && selectedMusic === m.id && !uploadedFileName ? (
-                    <Volume2 size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
+                {/* 3. Seleksyon Modèl Mesaj Rapid (2 pa defo + bouton Wè plis) */}
+                <div className="form-field-wrap">
+                  <div className="form-field-header-row">
+                    <label className="form-field-label">
+                      <span>Chwazi yon modèl mesaj :</span>
+                    </label>
+                    <button
+                      type="button"
+                      className="btn-toggle-presets"
+                      onClick={() => setShowAllPresets(!showAllPresets)}
+                    >
+                      {showAllPresets ? 'Mwens modèl' : '+ Wè plis modèl'}
+                    </button>
+                  </div>
+                  <div className="preset-pill-grid">
+                    {(showAllPresets ? PRESET_MESSAGES : PRESET_MESSAGES.slice(0, 2)).map((msg) => (
+                      <button
+                        key={msg.id}
+                        type="button"
+                        className={`preset-pill-modern ${selectedPreset === msg.id ? 'active' : ''}`}
+                        onClick={() => handleSelectCategory(msg.id)}
+                      >
+                        <span>{msg.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 4. Tèks Mesaj la ak kontè karaktè */}
+                <div className="form-field-wrap" style={{ marginBottom: 4, flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <div className="form-field-header-row">
+                    <label className="form-field-label">
+                      <span>Tèks kat la :</span>
+                    </label>
+                    <span className="form-field-helper" style={{ fontWeight: 600, color: customMessage.length >= maxChars ? '#C41230' : '#8C877D' }}>
+                      {customMessage.length} / {maxChars} karaktè
+                    </span>
+                  </div>
+                  <textarea
+                    rows={5}
+                    className="form-textarea-modern"
+                    value={customMessage}
+                    onChange={(e) => setCustomMessage(e.target.value)}
+                    maxLength={maxChars}
+                    placeholder="Ekri pawòl ou ak tout kè w la a..."
+                    required
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="tab-pane-fade">
+                {/* Tab 2 : Seleksyon Mizik & Melodi */}
+                <div className="music-section-intro">
+                  <span className="form-field-label">
+                    <Music size={13} style={{ color: 'var(--primary-green)' }} />
+                    <span>Chwazi yon melodi fèt pou akonpaye ouvèti kat la :</span>
+                  </span>
+                </div>
+
+                <div className="music-cards-list">
+                  {MUSIC_OPTIONS.map((m) => {
+                    const isSelected = selectedMusic === m.id && !uploadedFileName;
+                    const isPlayingThis = isPlayingPreview && isSelected;
+
+                    return (
+                      <div
+                        key={m.id}
+                        className={`music-option-card ${isSelected ? 'active' : ''}`}
+                        onClick={() => {
+                          handleRemoveUploadedAudio();
+                          handleTogglePreviewAudio(m.id);
+                        }}
+                      >
+                        <div className="music-option-left">
+                          <div className={`music-icon-bubble ${isSelected ? 'selected' : ''}`}>
+                            {m.id === 'none' ? <VolumeX size={15} /> : <Music size={15} />}
+                          </div>
+                          <div>
+                            <div className="music-option-name">{m.label}</div>
+                            <div className="music-option-desc">{m.desc}</div>
+                          </div>
+                        </div>
+
+                        {m.id !== 'none' && (
+                          <button
+                            type="button"
+                            className={`music-listen-btn ${isPlayingThis ? 'playing' : ''}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleTogglePreviewAudio(m.id);
+                            }}
+                          >
+                            {isPlayingThis ? <Volume2 size={13} /> : <VolumeX size={13} />}
+                            <span>{isPlayingThis ? 'K ap jwe' : 'Koute'}</span>
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Telechaje pwòp vwa oswa mizik pa w */}
+                <div className="music-upload-section">
+                  <input
+                    type="file"
+                    id="device-audio-upload"
+                    accept="audio/*"
+                    style={{ display: 'none' }}
+                    onChange={handleDeviceAudioUpload}
+                  />
+
+                  {uploadedFileName ? (
+                    <div className="uploaded-audio-banner">
+                      <div className="uploaded-audio-meta">
+                        <Volume2 size={16} color="var(--primary-green)" />
+                        <span className="uploaded-audio-filename">{uploadedFileName}</span>
+                      </div>
+                      <div className="uploaded-audio-actions">
+                        <button
+                          type="button"
+                          className="btn-uploaded-listen"
+                          onClick={() => handleTogglePreviewAudio('custom')}
+                        >
+                          {isPlayingPreview ? 'Kanpe' : 'Koute'}
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-uploaded-delete"
+                          onClick={handleRemoveUploadedAudio}
+                          title="Retire dosye sa a"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
                   ) : (
-                    <Music size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
+                    <label htmlFor="device-audio-upload" className="music-upload-dropzone">
+                      <div className="upload-circle-icon">
+                        <Upload size={15} />
+                      </div>
+                      <div className="upload-text-group">
+                        <strong>Oubyen telechaje yon vwa oswa mizik pa w</strong>
+                        <span>Fòma MP3, M4A oswa WAV nan telefòn oswa òdinatè w</span>
+                      </div>
+                    </label>
                   )}
-                  <span>{m.label}</span>
-                </button>
-              ))}
-            </div>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Bouton Wè Kijan l ap Soti (Aperçu direct sans barrière) */}
-          <div style={{ marginTop: 18 }}>
-            <button type="submit" className="btn-validate-personalize">
-              <Eye size={18} />
+          {/* Ba Aksyon Fikse anba (Sticky Footer - Toujou Vizib) */}
+          <div className="customizer-footer">
+            <button type="submit" className="btn-validate-modern">
+              <Eye size={17} />
               <span>Wè Kijan l ap Soti (Aperçu)</span>
             </button>
-            
-            <div className="security-footer-note">
-              <span>W ap ka tande mizik ou an epi wè animasyon an anvan w pataje oswa peye</span>
-            </div>
+            <p className="customizer-footer-note">
+              Gratis pou wè démo a • Pataje l kote w vle pou sèlman <strong>100&nbsp;Goud</strong>
+            </p>
           </div>
-
         </form>
       </div>
     </div>

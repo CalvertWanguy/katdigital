@@ -6,15 +6,12 @@ import {
   X,
   Lock,
   Download,
-  Copy,
-  Check,
   Smartphone,
   CreditCard,
   ShieldCheck,
   CheckCircle2,
   Volume2,
-  VolumeX,
-  Music
+  VolumeX
 } from 'lucide-react';
 import AmbientEffects from './AmbientEffects';
 import {
@@ -61,6 +58,7 @@ export default function EnvelopeViewerModal({
   const parchmentContainerRef = useRef(null);
   const parchmentRibbonRef = useRef(null);
   const bifoldCoverRef = useRef(null);
+  const bifoldBookRef = useRef(null);
   const kraftTopFlapRef = useRef(null);
   const kraftBottomFlapRef = useRef(null);
   const sealContainerRef = useRef(null);
@@ -102,6 +100,17 @@ export default function EnvelopeViewerModal({
     };
   }, [onClose]);
 
+  // Auto-ouvèti entèlijan pou itilizatè pa pèdi atansyon (sitou sou telefòn)
+  useEffect(() => {
+    if (isOpened) return;
+    const delay = isDirectView ? 1100 : 2800;
+    const timer = setTimeout(() => {
+      openCard();
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [isDirectView, isOpened]);
+
   const recipient = customData?.recipient || 'Vanessa';
   const sender = customData?.sender || 'David Jean';
   const message = customData?.message || template.defaultMessage;
@@ -110,10 +119,25 @@ export default function EnvelopeViewerModal({
   const customAudioUrl = customData?.customAudioUrl || null;
 
   const currentHost = typeof window !== 'undefined' ? window.location.origin : 'https://katdigital.ht';
-  const uniqueCardLink = `${currentHost}/?to=${encodeURIComponent(recipient)}&from=${encodeURIComponent(sender)}&theme=${template.id}&msg=${encodeURIComponent(message)}`;
+  const uniqueCardLink = `${currentHost}/?to=${encodeURIComponent(recipient)}&from=${encodeURIComponent(sender)}&theme=${template.id}&msg=${encodeURIComponent(message)}&h=${encodeURIComponent(title)}`;
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
-    `🎁 Ou resevwa yon bèl kat fèt fen dane espesyal de ${sender} !\nKlike la a pou w ouvri bèl kat ou a :\n${uniqueCardLink}`
+    `🎁 Ou resevwa yon bèl kat espesyal de ${sender} !\nKlike la a pou w ouvri bèl kat ou a :\n${uniqueCardLink}`
   )}`;
+
+  // Style bouton pèsonalize selon chak modèl (Minimalis, pwòp & klè)
+  const primaryBtnStyle = {
+    background: template.envelopeColor || '#2B4736',
+    color: '#FFFFFF',
+    border: 'none',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.18)'
+  };
+
+  const secondaryBtnStyle = {
+    background: '#FFFFFF',
+    color: '#1F2922',
+    border: '1px solid rgba(0, 0, 0, 0.15)',
+    boxShadow: '0 1px 4px rgba(0, 0, 0, 0.06)'
+  };
 
   const playWaxBreakAndChime = () => {
     try {
@@ -185,33 +209,32 @@ export default function EnvelopeViewerModal({
 
     const tl = gsap.timeline();
 
-    // 1. Disparition du prompt
+    // 1. Disparition du prompt san sakadman layout
     tl.to(promptRef.current, {
       opacity: 0,
-      y: -10,
-      duration: 0.2,
+      y: -8,
+      duration: 0.15,
       onComplete: () => {
-        if (promptRef.current) promptRef.current.style.display = 'none';
+        if (promptRef.current) promptRef.current.style.visibility = 'hidden';
       }
     });
 
-    // 2. Rupture du Sceau d'or
+    // 2. Rupture rapid & klè du Sceau d'or
     if (sealCrackLineRef.current) {
-      tl.to(sealCrackLineRef.current, { opacity: 1, duration: 0.05 }, 'crack')
-        .to(sealLeftRef.current, { x: -35, y: -10, rotate: -30, opacity: 0, duration: 0.35, ease: 'power2.in' }, 'crack')
-        .to(sealRightRef.current, { x: 35, y: 10, rotate: 30, opacity: 0, duration: 0.35, ease: 'power2.in' }, 'crack');
+      tl.to(sealCrackLineRef.current, { opacity: 1, duration: 0.04 }, 'crack')
+        .to(sealLeftRef.current, { x: -35, y: -10, rotate: -25, opacity: 0, duration: 0.22, ease: 'power2.in' }, 'crack')
+        .to(sealRightRef.current, { x: 35, y: 10, rotate: 25, opacity: 0, duration: 0.22, ease: 'power2.in' }, 'crack');
     }
 
-    // 3. ANIMATION SYMETRIQUE SELON LE FORMAT
+    // 3. ANIMATION SYMETRIQUE SELON LE FORMAT (Rapid, Fluid & Majestueux)
     if (format === 'parchment') {
-      // FORMAT PARCHEMIN : Le parchemin unifié s'ouvre verticalement de manière 100% symétrique
-      tl.to(parchmentRibbonRef.current, { opacity: 0, scale: 0.9, duration: 0.3 }, 'crack')
+      tl.to(parchmentRibbonRef.current, { opacity: 0, scale: 0.9, duration: 0.25 }, 'crack')
         .fromTo(
           parchmentContainerRef.current,
           { height: 60 },
           {
             height: 400,
-            duration: 0.85,
+            duration: 0.6,
             ease: 'power2.out',
             onComplete: () => launchLuxuryConfetti()
           },
@@ -220,69 +243,90 @@ export default function EnvelopeViewerModal({
         .fromTo(
           cardRef.current,
           { opacity: 0 },
-          { opacity: 1, duration: 0.6, ease: 'power2.out' },
-          '-=0.4'
+          { opacity: 1, duration: 0.45, ease: 'power2.out' },
+          '-=0.35'
         );
     } else if (format === 'bifold') {
-      // FORMAT LIV PLIYET : La couverture s'ouvre en 3D avec face arrière sans texte inversé
+      if (bifoldBookRef.current) {
+        bifoldBookRef.current.style.display = 'flex';
+      }
       tl.to(bifoldCoverRef.current, {
-        rotateY: -160,
-        duration: 0.85,
+        rotateY: -110,
+        opacity: 0,
+        scale: 0.95,
+        duration: 0.52,
         ease: 'power2.inOut',
         onComplete: () => {
-          if (bifoldCoverRef.current) bifoldCoverRef.current.style.zIndex = 1;
-          launchLuxuryConfetti();
+          if (bifoldCoverRef.current) bifoldCoverRef.current.style.display = 'none';
         }
-      }, '-=0.15')
-      .set(cardRef.current, { opacity: 1, pointerEvents: 'auto', zIndex: 50 }, '-=0.3');
+      }, '-=0.1')
+      .fromTo(
+        bifoldBookRef.current,
+        { opacity: 0, scale: 0.94, y: 15 },
+        {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          pointerEvents: 'auto',
+          duration: 0.5,
+          ease: 'power2.out',
+          onComplete: () => launchLuxuryConfetti()
+        },
+        '-=0.3'
+      )
+      .set(cardRef.current, { opacity: 1, pointerEvents: 'auto' });
     } else if (format === 'kraft_sheet') {
-      // FORMAT LÈT KRAFT : Les 2 rabats s'ouvrent symétriquement
-      tl.to(kraftTopFlapRef.current, { rotateX: 180, duration: 0.65, ease: 'power2.inOut' }, '-=0.15')
-        .to(kraftBottomFlapRef.current, { rotateX: -180, duration: 0.65, ease: 'power2.inOut' }, '<')
-        .set(cardRef.current, { opacity: 1, pointerEvents: 'auto', zIndex: 50 }, '-=0.3')
+      tl.to(kraftTopFlapRef.current, { rotateX: 180, opacity: 0, duration: 0.48, ease: 'power2.inOut' }, '-=0.15')
+        .to(kraftBottomFlapRef.current, { rotateX: -180, opacity: 0, duration: 0.48, ease: 'power2.inOut' }, '<')
+        .set(cardRef.current, { opacity: 1, pointerEvents: 'auto', zIndex: 50 }, '-=0.25')
         .fromTo(
           cardRef.current,
           { scale: 0.96, opacity: 0.5 },
           {
             scale: 1,
             opacity: 1,
-            duration: 0.55,
+            duration: 0.45,
             ease: 'power2.out',
             onComplete: () => launchLuxuryConfetti()
           },
-          '-=0.2'
+          '-=0.15'
         );
     } else {
       // FORMAT ANVLÒP DE LUKS
       tl.to(flapRef.current, {
         rotateX: 180,
-        duration: 0.65,
+        duration: 0.45,
         ease: 'power2.inOut',
         onComplete: () => {
           if (flapRef.current) flapRef.current.style.zIndex = 1;
         }
-      }, '-=0.18')
-      .set(cardRef.current, { opacity: 1, pointerEvents: 'auto', zIndex: 50 }, '-=0.3')
+      }, '-=0.12')
+      .set(cardRef.current, { opacity: 1, pointerEvents: 'auto', zIndex: 50 }, '-=0.25')
       .fromTo(
         cardRef.current,
-        { y: 30, opacity: 0.2, scale: 0.94 },
+        { y: 20, opacity: 0.2, scale: 0.95, left: '50%', xPercent: -50 },
         {
-          y: -140,
+          y: -105,
           opacity: 1,
           scale: 1,
-          duration: 0.85,
+          left: '50%',
+          xPercent: -50,
+          duration: 0.58,
           ease: 'power2.out',
           onComplete: () => launchLuxuryConfetti()
         },
-        '-=0.25'
+        '-=0.2'
       )
       .to(envelopeRef.current, {
-        y: 45,
-        opacity: 0.35,
-        scale: 0.94,
-        duration: 0.65,
-        ease: 'power2.out'
-      }, '-=0.55');
+        y: 40,
+        opacity: 0,
+        scale: 0.9,
+        duration: 0.4,
+        ease: 'power2.out',
+        onComplete: () => {
+          if (envelopeRef.current) envelopeRef.current.style.display = 'none';
+        }
+      }, '-=0.35');
     }
 
     // 4. Panèl aksyon yo parèt nèt anba kat la
@@ -290,7 +334,7 @@ export default function EnvelopeViewerModal({
       opacity: 1,
       y: 0,
       pointerEvents: 'auto',
-      duration: 0.5,
+      duration: 0.35,
       ease: 'power2.out'
     }, '-=0.1');
   };
@@ -299,6 +343,7 @@ export default function EnvelopeViewerModal({
     setIsOpened(false);
     gsap.killTweensOf('*');
     if (promptRef.current) {
+      promptRef.current.style.visibility = 'visible';
       promptRef.current.style.display = 'block';
       gsap.set(promptRef.current, { opacity: 1, y: 0 });
     }
@@ -313,21 +358,30 @@ export default function EnvelopeViewerModal({
       gsap.set(parchmentContainerRef.current, { height: 60 });
       gsap.set(cardRef.current, { opacity: 0 });
     } else if (format === 'bifold') {
-      gsap.set(bifoldCoverRef.current, { rotateY: 0, zIndex: 30 });
+      if (bifoldCoverRef.current) {
+        bifoldCoverRef.current.style.display = 'flex';
+        gsap.set(bifoldCoverRef.current, { rotateY: 0, opacity: 1, scale: 1 });
+      }
+      if (bifoldBookRef.current) {
+        bifoldBookRef.current.style.display = 'none';
+        gsap.set(bifoldBookRef.current, { opacity: 0, pointerEvents: 'none' });
+      }
       gsap.set(cardRef.current, { opacity: 1, pointerEvents: 'none' });
     } else if (format === 'kraft_sheet') {
-      gsap.set(kraftTopFlapRef.current, { rotateX: 0 });
-      gsap.set(kraftBottomFlapRef.current, { rotateX: 0 });
+      gsap.set([kraftTopFlapRef.current, kraftBottomFlapRef.current], { rotateX: 0, opacity: 1 });
       gsap.set(cardRef.current, { opacity: 0, pointerEvents: 'none' });
     } else {
+      if (envelopeRef.current) {
+        envelopeRef.current.style.display = 'block';
+        gsap.set(envelopeRef.current, { y: 0, opacity: 1, scale: 1 });
+      }
       gsap.set(flapRef.current, { rotateX: 0, zIndex: 4 });
-      gsap.set(cardRef.current, { y: 0, scale: 1, zIndex: 2, opacity: 0, pointerEvents: 'none' });
-      gsap.set(envelopeRef.current, { y: 0, opacity: 1, scale: 1 });
+      gsap.set(cardRef.current, { y: 0, scale: 1, zIndex: 2, opacity: 0, left: '50%', xPercent: -50, pointerEvents: 'none' });
     }
 
     gsap.set(actionsRef.current, { opacity: 0, y: 20, pointerEvents: 'none' });
 
-    setTimeout(openCard, 350);
+    setTimeout(openCard, 280);
   };
 
   const handleProcessPayment = (e) => {
@@ -407,7 +461,7 @@ export default function EnvelopeViewerModal({
     ctx.fillText(sender, canvas.width / 2, sigY + 65);
 
     const link = document.createElement('a');
-    link.download = `KatDigital_${recipient}.png`;
+    link.download = `KatDijitalKoleksyon_${recipient}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   };
@@ -442,19 +496,23 @@ export default function EnvelopeViewerModal({
         </button>
       )}
 
-      <div className="viewer-scroll-container">
-        <div className="viewer-stage">
+      <div className={`viewer-scroll-container ${format === 'bifold' ? 'is-bifold-viewer' : ''}`}>
+        <div
+          className="viewer-stage"
+          onClick={!isOpened ? openCard : undefined}
+          style={{ cursor: !isOpened ? 'pointer' : 'default' }}
+        >
           <div ref={promptRef} className="open-prompt" onClick={openCard}>
             {format === 'parchment'
-              ? 'Klike sou sele a pou w dewoule pachemen an'
+              ? '✦ Touche pou w dewoule pachemen an ✦'
               : format === 'bifold'
-              ? 'Klike pou w ouvri liv papetri a'
+              ? '✦ Touche pou w ouvri liv papetri a ✦'
               : format === 'kraft_sheet'
-              ? 'Klike sou sele a pou w ouvri lèt la'
-              : 'Klike sou sele a pou w ouvri l'}
+              ? '✦ Touche pou w ouvri lèt la ✦'
+              : '✦ Touche pou w ouvri kat la ✉️ ✦'}
           </div>
 
-          <div className="envelope-scene-box">
+          <div className={`envelope-scene-box ${format === 'bifold' ? 'is-bifold-scene' : ''}`}>
             
             {/* ========================================================
                 FORMAT 1 : ANVLÒP DE LUKS (TRADISYONÈL)
@@ -526,7 +584,15 @@ export default function EnvelopeViewerModal({
 
                   <div className="card-message-area">
                     <div className="card-destinataire">{recipient},</div>
-                    <p className="card-text-body">{message}</p>
+                    <p
+                      className="card-text-body"
+                      style={{
+                        fontSize: message.length > 250 ? '14.5px' : message.length > 170 ? '16px' : '17.5px',
+                        lineHeight: message.length > 250 ? 1.45 : message.length > 170 ? 1.52 : 1.6
+                      }}
+                    >
+                      {message}
+                    </p>
                   </div>
 
                   <div className="card-signature-box">
@@ -571,7 +637,16 @@ export default function EnvelopeViewerModal({
 
                     <div className="card-message-area">
                       <div className="card-destinataire" style={{ color: '#2B1A04' }}>{recipient},</div>
-                      <p className="card-text-body" style={{ color: '#2D2012' }}>{message}</p>
+                      <p
+                        className="card-text-body"
+                        style={{
+                          color: '#2D2012',
+                          fontSize: message.length > 280 ? '14.5px' : message.length > 190 ? '16px' : '17.5px',
+                          lineHeight: message.length > 280 ? 1.45 : message.length > 190 ? 1.52 : 1.6
+                        }}
+                      >
+                        {message}
+                      </p>
                     </div>
 
                     <div className="card-signature-box" style={{ borderTopColor: '#DECBB0' }}>
@@ -612,58 +687,135 @@ export default function EnvelopeViewerModal({
             )}
 
             {/* ========================================================
-                FORMAT 3 : BIFOLD LIV PAPETRI (FOLIO 3D SANS TEXTE INVERSÉ)
+                FORMAT 3 : BIFOLD LIV PAPETRI (FOLIO 3D DOUB PAJ OUVERTI)
                 ======================================================== */}
             {format === 'bifold' && (
-              <div className="bifold-book-stage" onClick={openCard}>
-                {/* Couverture qui s'ouvre avec dos propre */}
+              <div className="bifold-book-stage">
+                {/* 1. Kouvèti Fèmen (Vizib anvan klike) */}
                 <div
                   ref={bifoldCoverRef}
-                  className="bifold-cover-flipper"
+                  className="bifold-closed-cover"
+                  style={{
+                    background: `linear-gradient(135deg, ${template.coverColor || '#1E3326'} 0%, #122118 100%)`,
+                    borderColor: template.accentColor || '#D4AF37'
+                  }}
+                  onClick={openCard}
+                  title="Klike pou w ouvri liv papetri a"
                 >
-                  {/* Face avant de la couverture */}
-                  <div className="bifold-cover-face bifold-cover-front" style={{ background: template.coverColor || '#1E3326' }}>
-                    <div className="bifold-cover-emboss">
-                      <div className="bifold-gold-frame" />
-                      <span className="bifold-crest">✦</span>
-                      <h4 className="bifold-cover-text">{title}</h4>
-                      <span className="bifold-sub-note">KLIKE POU OUVERTI</span>
-                    </div>
-                  </div>
+                  <div className="bifold-spine-edge-left" />
 
-                  {/* Face intérieure gauche (propre, pas de texte à l'envers) */}
-                  <div className="bifold-cover-face bifold-cover-back" style={{ background: '#16281E' }}>
-                    <div className="bifold-cover-emboss" style={{ borderColor: 'rgba(212, 175, 55, 0.4)' }}>
-                      <span style={{ fontSize: 28, color: '#D4AF37' }}>✦</span>
-                      <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 18, fontStyle: 'italic', color: '#E8E1D3', marginTop: 10 }}>
-                        Bèl Swè Fèt Fen Dane
-                      </p>
-                      <span style={{ fontSize: 10, letterSpacing: 2, color: '#D4AF37', textTransform: 'uppercase', marginTop: 10 }}>
-                        2026 • 2027
-                      </span>
+                  <div className="bifold-cover-inner-border" style={{ borderColor: template.accentColor || '#D4AF37' }}>
+                    <div className="bifold-corner bifold-corner-tl" />
+                    <div className="bifold-corner bifold-corner-tr" />
+                    <div className="bifold-corner bifold-corner-bl" />
+                    <div className="bifold-corner bifold-corner-br" />
+
+                    <div className="bifold-cover-top">
+                      <span className="bifold-cover-badge">LIV PAPETRI • DE LUKS</span>
+                      <div className="bifold-cover-star">✦</div>
+                    </div>
+
+                    <div className="bifold-cover-center">
+                      <h3 className="bifold-cover-main-title">{template.title}</h3>
+                      <p className="bifold-cover-subtitle">{title}</p>
+
+                      <div className="bifold-seal-wrap">
+                        <div className="bifold-gold-seal">
+                          <svg viewBox="0 0 60 60" className="bifold-seal-svg">
+                            <circle cx="30" cy="30" r="28" fill="#D4AF37" stroke="#8F711C" strokeWidth="1.5" />
+                            <circle cx="30" cy="30" r="24" fill="none" stroke="#FFF5CC" strokeWidth="1" strokeDasharray="2,2" />
+                            <text x="30" y="35" fontSize="13" fontWeight="bold" textAnchor="middle" fill="#2E2003" fontFamily="Georgia, serif">
+                              {template.stampText || '2027'}
+                            </text>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bifold-cover-bottom">
+                      <span className="bifold-tap-hint">✦ KLIKE SOU LIV LA POU W OUVERTI L ✦</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Page intérieure droite : Le message */}
-                <div ref={cardRef} className="real-card bifold-page-right" style={{ opacity: 1, pointerEvents: 'auto' }}>
-                  <div className="real-card-border" style={{ borderColor: template.accentColor || '#D4AF37' }} />
+                {/* 2. Liv Papetri Ouvri (Doub Paj : Volet Gauche + Pli Central + Volet Droit) */}
+                <div
+                  ref={bifoldBookRef}
+                  className="bifold-opened-spread"
+                  style={{ display: 'none', opacity: 0, pointerEvents: 'none' }}
+                >
+                  {/* Volet Gauche : Page de garde d'art & vœux */}
+                  <div
+                    className="bifold-left-page"
+                    style={{
+                      background: `linear-gradient(135deg, ${template.coverColor || '#1A2E22'} 0%, #0F1D15 100%)`
+                    }}
+                  >
+                    <div className="bifold-page-inner-border" style={{ borderColor: 'rgba(212, 175, 55, 0.45)' }}>
+                      <div className="bifold-art-top">
+                        <span style={{ fontSize: 16, color: '#D4AF37' }}>✦</span>
+                        <span className="bifold-art-year">2026 • 2027</span>
+                        <span style={{ fontSize: 16, color: '#D4AF37' }}>✦</span>
+                      </div>
 
-                  <div style={{ marginTop: 6, marginBottom: 4 }}>
-                    <h2 className="card-main-title" style={{ color: template.envelopeColor }}>
-                      {title}
-                    </h2>
-                    <div className="card-separator" style={{ background: template.accentColor || '#D4AF37' }} />
+                      <div className="bifold-tree-illustration">
+                        <svg viewBox="0 0 80 80" width="56" height="56" fill="none">
+                          <polygon points="40,12 48,26 43,26 52,38 46,38 56,52 24,52 34,38 28,38 37,26 32,26" fill="#D4AF37" opacity="0.9" />
+                          <rect x="37" y="52" width="6" height="8" fill="#9B7320" />
+                          <polygon points="40,6 42,10 46,10 43,13 44,17 40,14 36,17 37,13 34,10 38,10" fill="#FFF4BD" />
+                          <circle cx="34" cy="32" r="1.5" fill="#FFF" />
+                          <circle cx="44" cy="30" r="1.5" fill="#FFF" />
+                          <circle cx="38" cy="42" r="1.5" fill="#FFF" />
+                          <circle cx="48" cy="46" r="1.5" fill="#FFF" />
+                        </svg>
+                      </div>
+
+                      <div className="bifold-art-text">
+                        <h4 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '18px', color: '#FFF8E7', fontStyle: 'italic', margin: '4px 0' }}>
+                          Bèl Swè ak Tout Kè Mwen
+                        </h4>
+                        <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '13px', color: '#E2D7C3', lineHeight: '1.45', margin: '6px 0', fontStyle: 'italic' }}>
+                          « Se pou lajwa, lasante ak tout benediksyon klere chak jou nan lavi w nan nouvo ane 2027 la. »
+                        </p>
+                      </div>
+
+                      <div className="bifold-art-bottom">
+                        <span className="bifold-art-badge">✦ KATDIJITAL KOLEKSYON ✦</span>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="card-message-area">
-                    <div className="card-destinataire">{recipient},</div>
-                    <p className="card-text-body">{message}</p>
-                  </div>
+                  {/* Pliure Centrale 3D */}
+                  <div className="bifold-spine-crease" />
 
-                  <div className="card-signature-box">
-                    <div className="card-signature-label">Ak tout afeksyon mwen,</div>
-                    <div className="card-signature-name">{sender}</div>
+                  {/* Volet Droit : Message de correspondance personnalisé */}
+                  <div ref={cardRef} className="bifold-right-page real-card">
+                    <div className="real-card-border" style={{ borderColor: template.accentColor || '#D4AF37' }} />
+
+                    <div style={{ marginTop: 2, marginBottom: 4 }}>
+                      <h2 className="card-main-title" style={{ color: template.envelopeColor, fontSize: '19px' }}>
+                        {title}
+                      </h2>
+                      <div className="card-separator" style={{ background: template.accentColor || '#D4AF37', margin: '4px auto 6px' }} />
+                    </div>
+
+                    <div className="card-message-area">
+                      <div className="card-destinataire">{recipient},</div>
+                      <p
+                        className="card-text-body"
+                        style={{
+                          fontSize: message.length > 260 ? '14.5px' : message.length > 180 ? '16px' : '17.5px',
+                          lineHeight: message.length > 260 ? 1.45 : message.length > 180 ? 1.52 : 1.6
+                        }}
+                      >
+                        {message}
+                      </p>
+                    </div>
+
+                    <div className="card-signature-box">
+                      <div className="card-signature-label">Ak tout afeksyon mwen,</div>
+                      <div className="card-signature-name">{sender}</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -698,7 +850,16 @@ export default function EnvelopeViewerModal({
 
                   <div className="card-message-area">
                     <div className="card-destinataire" style={{ color: '#4A1D2B' }}>{recipient},</div>
-                    <p className="card-text-body" style={{ color: '#3A1E27' }}>{message}</p>
+                    <p
+                      className="card-text-body"
+                      style={{
+                        color: '#3A1E27',
+                        fontSize: message.length > 250 ? '14.5px' : message.length > 170 ? '16px' : '17.5px',
+                        lineHeight: message.length > 250 ? 1.45 : message.length > 170 ? 1.52 : 1.6
+                      }}
+                    >
+                      {message}
+                    </p>
                   </div>
 
                   <div className="card-signature-box" style={{ borderTopColor: '#DEC5B6' }}>
@@ -748,12 +909,13 @@ export default function EnvelopeViewerModal({
                 {isDirectView ? (
                   <button
                     className="btn-stationery-secondary"
+                    style={secondaryBtnStyle}
                     onClick={() => {
                       stopHolidaySoundtrack();
                       onOpenCustomizer(template);
                     }}
                   >
-                    KREYE PA W LA TOU
+                    Kreye pa w la tou
                   </button>
                 ) : (
                   <div className="stationery-btn-row">
@@ -761,41 +923,47 @@ export default function EnvelopeViewerModal({
                       className="btn-stationery-sub"
                       onClick={handleDownloadCardImage}
                     >
-                      TELECHAJE PNG
+                      Telechaje PNG
                     </button>
                     <button
                       className="btn-stationery-sub"
                       onClick={handleCopyLink}
                     >
-                      {copiedLink ? 'KOPYE !' : 'KOPYE LYEN'}
+                      {copiedLink ? 'Kopye !' : 'Kopye lyen'}
                     </button>
                   </div>
                 )}
               </>
             ) : (
-              <>
+              <div className="stationery-main-btns-row">
                 <button
                   className="btn-stationery-primary"
+                  style={primaryBtnStyle}
                   onClick={() => {
                     stopHolidaySoundtrack();
                     onOpenCustomizer(template);
                   }}
                 >
-                  PÈSONALIZE KAT PA W LA
+                  Pèsonalize kat la
                 </button>
 
                 <button
                   className="btn-stationery-secondary"
+                  style={secondaryBtnStyle}
                   onClick={() => setShowCheckoutModal(true)}
                 >
-                  DEBLOKE MODÈL SA A
+                  Debloke modèl sa a
                 </button>
-              </>
+              </div>
             )}
 
-            <button type="button" className="btn-stationery-link" onClick={replayAnimation}>
-              <RotateCcw size={11} style={{ display: 'inline', marginRight: 5, verticalAlign: 'middle' }} />
-              <span>GADE OUVÈTI ANVLÒP LA ANKÒ</span>
+            <button
+              type="button"
+              className="btn-stationery-link"
+              onClick={replayAnimation}
+            >
+              <RotateCcw size={12} style={{ display: 'inline', marginRight: 5, verticalAlign: 'middle' }} />
+              <span>Gade ouvèti a ankò</span>
             </button>
           </div>
         </div>

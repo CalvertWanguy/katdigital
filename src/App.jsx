@@ -9,11 +9,130 @@ import {
   Star,
   Bookmark,
   Heart,
-  ArrowRight,
   Search,
   SlidersHorizontal,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Edit3,
+  Eye,
+  MoreHorizontal
 } from 'lucide-react';
+
+const CATEGORY_SECTIONS = [
+  {
+    id: 'noel',
+    title: 'Nwèl Tradisyonèl',
+    subtitle: 'Bèl kat Nwèl vlou, zetwal ak melodi fèt',
+    icon: Gift
+  },
+  {
+    id: 'nouvel-an',
+    title: 'Bòn Ane 2027 & Siksè',
+    subtitle: 'Pachemen wayal, liv papetri folio ak swè siksè',
+    icon: Star
+  },
+  {
+    id: 'tradition',
+    title: '1ye Janvye & Tradisyon 1804',
+    subtitle: 'Fèt Nasyonal, soup joumou ak lespri libète',
+    icon: Bookmark
+  },
+  {
+    id: 'mennaj',
+    title: 'Mesaj Lanmou & Romantik',
+    subtitle: 'Lèt damou sou papye kraft ak kè k ap flote',
+    icon: Heart
+  }
+];
+
+function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
+  const [showMenu, setShowMenu] = useState(false);
+
+  const getFormatBadge = (fmt) => {
+    switch (fmt) {
+      case 'parchment': return 'Pachemen';
+      case 'bifold': return 'Liv Papetri';
+      case 'kraft_sheet': return 'Lèt Kraft';
+      default: return 'Anvlòp De Liks';
+    }
+  };
+
+  return (
+    <div className="canva-template-card" onClick={onOpenDemo}>
+      {/* Mockup vizyèl */}
+      <div className="canva-card-mockup">
+        <div
+          className="canva-mockup-bg"
+          style={{ background: template.envelopeColor }}
+        />
+
+        <div className="canva-mockup-sheet">
+          <span className="canva-sheet-subtitle">{template.subtitle}</span>
+          <div className="canva-sheet-title" style={{ color: template.envelopeColor }}>
+            {template.title}
+          </div>
+          <p className="canva-sheet-text">
+            {template.defaultMessage.slice(0, 52)}...
+          </p>
+        </div>
+
+        {/* Timbre officiel */}
+        <div className="canva-card-stamp" style={{ color: template.stampColor, borderColor: template.stampColor }}>
+          {template.stampText}
+        </div>
+
+        {/* Bouton 3 ti pwen (...) tankou sou Canva */}
+        <div className="canva-card-dots-wrap" onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            className="canva-card-dots-btn"
+            onClick={() => setShowMenu(!showMenu)}
+            aria-label="Opsyon kat sa a"
+            title="Opsyon"
+          >
+            <MoreHorizontal size={15} />
+          </button>
+
+          {showMenu && (
+            <div className="canva-card-dropdown-menu">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowMenu(false);
+                  onOpenDemo();
+                }}
+              >
+                <Eye size={13} />
+                <span>Ouvri Démo</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowMenu(false);
+                  onOpenCustomizer();
+                }}
+              >
+                <Edit3 size={13} />
+                <span>Pèsonalize</span>
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Enfòmasyon minimalist tankou Canva : Tit + Fòma ak Pri */}
+      <div className="canva-card-info">
+        <h3 className="canva-card-title">{template.title}</h3>
+        <div className="canva-card-meta">
+          <span>{getFormatBadge(template.format)}</span>
+          <span className="canva-meta-dot">•</span>
+          <span className="canva-price-text">{template.priceHTG} Goud</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -32,6 +151,7 @@ export default function App() {
       const from = params.get('from');
       const themeId = params.get('theme');
       const msg = params.get('msg');
+      const customH = params.get('h') || params.get('heading');
 
       if (to && from) {
         const matchedTemplate = TEMPLATES.find((t) => t.id === themeId) || TEMPLATES[0];
@@ -39,7 +159,7 @@ export default function App() {
           recipient: decodeURIComponent(to),
           sender: decodeURIComponent(from),
           message: msg ? decodeURIComponent(msg) : matchedTemplate.defaultMessage,
-          heading: matchedTemplate.heading
+          heading: customH ? decodeURIComponent(customH) : matchedTemplate.heading
         });
         setActiveTemplate(matchedTemplate);
         setIsDirectRecipientView(true);
@@ -77,6 +197,14 @@ export default function App() {
     setActiveTemplate(customizerTemplate);
   };
 
+  const scrollCarousel = (categoryId, direction) => {
+    const el = document.getElementById(`carousel-${categoryId}`);
+    if (el) {
+      const scrollAmount = direction === 'left' ? -280 : 280;
+      el.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   const getCategoryLabel = () => {
     switch (selectedCategory) {
       case 'noel': return 'Nwèl Tradisyonèl';
@@ -92,9 +220,10 @@ export default function App() {
       {/* 1. Antèt Navigasyon */}
       <header className="header-nav">
         <a href="/" className="brand-logo">
-          KatDigital <span>Koleksyon</span>
+          <span className="brand-name-main">KatDijital</span>{' '}
+          <span className="brand-name-sub">Koleksyon</span>
         </a>
-        <div className="nav-tagline">Bèl Kat Vœux & Swè Dijital pou Fèt Fen Dane</div>
+        <div className="nav-tagline">Bèl Kat Vœux & Swè Dijital pou Tout Okazyon</div>
         <div>
           <button
             onClick={() => handleOpenDemo(TEMPLATES[0])}
@@ -108,10 +237,10 @@ export default function App() {
       {/* 2. Bannyè & Rechèch Éditrice (Style Image 2) */}
       <section className="hero-section">
         <h1 className="hero-title">
-          Voye bèl swè fèt fen dane,<br />tou dwat nan kè moun ou renmen yo.
+          Voye bèl kat ak mesaj pèsonalize,<br />tou dwat nan kè moun ou renmen yo.
         </h1>
         <p className="hero-desc">
-          Chwazi yon modèl papetri, ekri pawòl ou ak tout kè w, epi pataje yon souvni inik sou WhatsApp ak rezo sosyal pou sèlman <strong>100 Goud</strong>.
+          Chwazi yon modèl papetri, ekri pawòl ou ak tout kè w, epi pataje yon souvni inik kote w vle pou sèlman <strong>100 Goud</strong>.
         </p>
 
         {/* Ba Rechèch & Koleksyon (Style Evite / Greenvelope) */}
@@ -214,114 +343,165 @@ export default function App() {
         )}
       </section>
 
-      {/* 3. Katalòg Kat */}
+      {/* 3. Katalòg Kat (Style Canva Templates) */}
       <main className="catalog-container">
-        <div className="section-heading">
-          <span>Modèl ki Disponib yo ({filteredTemplates.length})</span>
-          <span style={{ fontSize: 13, color: '#C39D5E', cursor: 'pointer', fontWeight: 600 }}>
-            {filteredTemplates.length === 0 ? 'Okenn rezilta jwenn' : 'Koleksyon Ofisyèl 2026 - 2027'}
-          </span>
-        </div>
+        {/* Ka 1 : Rechèch oswa yon sèl kategori filtre */}
+        {(searchQuery.trim() !== '' || selectedCategory !== 'all') ? (
+          <div>
+            <div className="section-heading">
+              <div>
+                <span>{searchQuery ? `Rezilta pou « ${searchQuery} »` : getCategoryLabel()}</span>
+                <span className="canva-results-count">({filteredTemplates.length} modèl)</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}
+                className="btn-header-demo"
+              >
+                Tout modèl yo
+              </button>
+            </div>
 
-        {filteredTemplates.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '50px 20px', color: '#6B6864' }}>
-            <p style={{ fontSize: 16, marginBottom: 12 }}>Nou pa jwenn okenn modèl pou « {searchQuery} ».</p>
-            <button
-              onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}
-              className="btn-header-demo"
-              style={{ display: 'inline-block' }}
-            >
-              Wè tout modèl yo
-            </button>
+            {filteredTemplates.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '50px 20px', color: '#6B6864' }}>
+                <p style={{ fontSize: 16, marginBottom: 12 }}>Nou pa jwenn okenn modèl pou « {searchQuery} ».</p>
+                <button
+                  onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}
+                  className="btn-header-demo"
+                  style={{ display: 'inline-block' }}
+                >
+                  Wè tout modèl yo
+                </button>
+              </div>
+            ) : (
+              <div className="canva-filtered-grid">
+                {filteredTemplates.map((template) => (
+                  <TemplateCard
+                    key={template.id}
+                    template={template}
+                    onOpenDemo={() => handleOpenDemo(template)}
+                    onOpenCustomizer={() => handleOpenCustomizer(template)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         ) : (
-          <div className="card-grid">
-            {filteredTemplates.map((template) => (
-              <div
-                key={template.id}
-                className="preview-item"
-                onClick={() => handleOpenDemo(template)}
-              >
-                <div className="mockup-frame">
-                  <div
-                    className="mockup-env"
-                    style={{ background: template.envelopeColor }}
-                  />
-                  <div className="mockup-card-content">
-                    <span
-                      style={{
-                        fontSize: '9px',
-                        letterSpacing: '1.5px',
-                        color: template.accentColor,
-                        textTransform: 'uppercase',
-                        fontWeight: 700
-                      }}
-                    >
-                      {template.subtitle}
-                    </span>
-                    <div
-                      style={{
-                        fontFamily: 'Cormorant Garamond, serif',
-                        fontSize: '18px',
-                        fontWeight: 700,
-                        color: template.envelopeColor,
-                        margin: '6px 0',
-                        fontStyle: 'italic'
-                      }}
-                    >
-                      {template.title}
+          /* Ka 2 : Tout Koleksyon yo (Canva Horizontal Slide Rows) */
+          <div className="canva-catalog-sections">
+            {CATEGORY_SECTIONS.map((cat) => {
+              const catTemplates = TEMPLATES.filter((t) => t.category === cat.id);
+              if (catTemplates.length === 0) return null;
+              const IconComp = cat.icon;
+
+              return (
+                <section key={cat.id} className="canva-category-row">
+                  {/* Antèt Rangée Canva */}
+                  <div className="canva-row-header">
+                    <div className="canva-row-title-wrap">
+                      <div className="canva-cat-icon-badge">
+                        <IconComp size={16} />
+                      </div>
+                      <div>
+                        <h2 className="canva-row-title">{cat.title}</h2>
+                        <p className="canva-row-desc">{cat.subtitle}</p>
+                      </div>
                     </div>
-                    <p style={{ fontSize: '10px', color: '#736E65', lineHeight: 1.4 }}>
-                      {template.defaultMessage.slice(0, 58)}...
-                    </p>
+
+                    <div className="canva-row-actions">
+                      <button
+                        type="button"
+                        className="canva-btn-view-all"
+                        onClick={() => setSelectedCategory(cat.id)}
+                      >
+                        Wè tout ({catTemplates.length})
+                      </button>
+
+                      <div className="canva-nav-arrows">
+                        <button
+                          type="button"
+                          className="canva-arrow-btn"
+                          onClick={() => scrollCarousel(cat.id, 'left')}
+                          aria-label="Glise a goch"
+                          title="Glise a goch"
+                        >
+                          <ChevronLeft size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          className="canva-arrow-btn"
+                          onClick={() => scrollCarousel(cat.id, 'right')}
+                          aria-label="Glise a dwat"
+                          title="Glise a dwat"
+                        >
+                          <ChevronRight size={16} />
+                        </button>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="mini-stamp" style={{ color: template.stampColor, borderColor: template.stampColor }}>
-                    {template.stampText}
+                  {/* Piste Carrousel Glisman Orizontal (Slide pour voir tankou Canva) */}
+                  <div className="canva-carousel-wrapper">
+                    <div
+                      id={`carousel-${cat.id}`}
+                      className="canva-carousel-track"
+                    >
+                      {catTemplates.map((template) => (
+                        <TemplateCard
+                          key={template.id}
+                          template={template}
+                          onOpenDemo={() => handleOpenDemo(template)}
+                          onOpenCustomizer={() => handleOpenCustomizer(template)}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Flèch sikilè Canva (Gòch ak Dwat) pou gide itilizatè yo sou mobil */}
+                    <button
+                      type="button"
+                      className="canva-floating-arrow canva-floating-arrow-prev"
+                      onClick={() => scrollCarousel(cat.id, 'left')}
+                      aria-label="Wè modèl anvan yo"
+                      title="Wè modèl anvan yo"
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="canva-floating-arrow canva-floating-arrow-next"
+                      onClick={() => scrollCarousel(cat.id, 'right')}
+                      aria-label="Wè lòt modèl"
+                      title="Wè lòt modèl"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
                   </div>
-                </div>
-
-                <div className="card-meta-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span>{template.title}</span>
-                  <span
-                    style={{
-                      fontSize: '10px',
-                      fontWeight: 700,
-                      letterSpacing: '0.8px',
-                      textTransform: 'uppercase',
-                      color: template.accentColor,
-                      background: '#FAF6EE',
-                      padding: '2px 7px',
-                      borderRadius: '4px',
-                      border: '1px solid #EADBBE'
-                    }}
-                  >
-                    {template.format === 'parchment'
-                      ? 'Pachemen'
-                      : template.format === 'bifold'
-                      ? 'Liv Papetri'
-                      : template.format === 'kraft_sheet'
-                      ? 'Lèt Kraft'
-                      : 'Anvlòp De Liks'}
-                  </span>
-                </div>
-                <div className="card-meta-desc">
-                  {template.subtitle} • {template.ambientAnimation === 'snow' ? 'Flokon Nèj' : template.ambientAnimation === 'hearts' ? 'Kè Damou' : 'Poud Zétwal'} • Avèk Mizik
-                </div>
-
-                <div className="card-meta-footer">
-                  <span className="price-pill">{template.priceHTG} Goud</span>
-                  <span className="btn-view-demo">
-                    Ouvri <ArrowRight size={12} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: 4 }} />
-                  </span>
-                </div>
-              </div>
-            ))}
+                </section>
+              );
+            })}
           </div>
         )}
       </main>
 
-      {/* 4. Modal Ouvèti Anvlòp */}
+      {/* 4. Footer Minimalis, Simetrik & Épuré */}
+      <footer className="app-main-footer">
+        <div className="footer-inner-content">
+          <div className="footer-logo-text">
+            <span className="brand-name-main">KatDijital</span>{' '}
+            <span className="brand-name-sub">Koleksyon</span>
+          </div>
+          <div className="footer-slogan">Kat dijital pèsonalize pou tout okazyon</div>
+
+          <div className="footer-sub-row">
+            <span>© 2026 KatDijital Koleksyon</span>
+            <span className="footer-bullet">•</span>
+            <span>Fèt ak anpil fyète pou tout Ayisyen nan mond lan !</span>
+          </div>
+        </div>
+      </footer>
+
+      {/* 5. Modal Ouvèti Anvlòp */}
       {activeTemplate && (
         <EnvelopeViewerModal
           template={activeTemplate}
