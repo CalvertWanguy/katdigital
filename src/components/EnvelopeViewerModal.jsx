@@ -102,16 +102,6 @@ export default function EnvelopeViewerModal({
     };
   }, [onClose]);
 
-  // Auto-ouvèti entèlijan pou itilizatè pa pèdi atansyon (sitou sou telefòn)
-  useEffect(() => {
-    if (isOpened) return;
-    const delay = isDirectView ? 1100 : 2800;
-    const timer = setTimeout(() => {
-      openCard();
-    }, delay);
-
-    return () => clearTimeout(timer);
-  }, [isDirectView, isOpened]);
 
   const recipient = customData?.recipient || 'Vanessa';
   const sender = customData?.sender || 'David Jean';
@@ -128,7 +118,7 @@ export default function EnvelopeViewerModal({
   const currentHost = typeof window !== 'undefined' ? window.location.origin : 'https://katdigital.ht';
   const uniqueCardLink = `${currentHost}/?to=${encodeURIComponent(recipient)}&from=${encodeURIComponent(sender)}&theme=${template.id}&msg=${encodeURIComponent(message)}&h=${encodeURIComponent(title)}`;
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
-    `🎁 Ou resevwa yon bèl kat espesyal de ${sender} !\nKlike la a pou w ouvri bèl kat ou a :\n${uniqueCardLink}`
+    `Ou resevwa yon bèl kat espesyal de ${sender} !\nKlike la a pou w ouvri kat ou a :\n${uniqueCardLink}`
   )}`;
 
   // Style bouton pèsonalize selon chak modèl (Minimalis, pwòp & klè)
@@ -222,7 +212,10 @@ export default function EnvelopeViewerModal({
       y: -8,
       duration: 0.15,
       onComplete: () => {
-        if (promptRef.current) promptRef.current.style.visibility = 'hidden';
+        if (promptRef.current) {
+          promptRef.current.style.visibility = 'hidden';
+          promptRef.current.style.display = 'none';
+        }
       }
     });
 
@@ -389,8 +382,6 @@ export default function EnvelopeViewerModal({
     }
 
     gsap.set(actionsRef.current, { opacity: 0, y: 20, pointerEvents: 'none' });
-
-    setTimeout(openCard, 280);
   };
 
   const handleProcessPayment = (e) => {
@@ -518,7 +509,7 @@ export default function EnvelopeViewerModal({
               ? 'Touche pou w ouvri liv papetri a'
               : format === 'kraft_sheet'
               ? 'Touche pou w ouvri lèt la'
-              : 'Touche pou w ouvri kat la ✉️'}
+              : 'Touche pou w ouvri kat la'}
           </div>
 
           <div className={`envelope-scene-box ${format === 'bifold' ? 'is-bifold-scene' : ''} ${format === 'parchment' ? 'is-parchment-scene' : ''}`}>
@@ -672,13 +663,15 @@ export default function EnvelopeViewerModal({
                         <div ref={sealLeftRef} className="seal-half seal-left">
                           <svg viewBox="0 0 54 54" className="seal-svg">
                             <circle cx="27" cy="27" r="25" fill="#C99726" stroke="#7A5207" strokeWidth="1.2" />
-                            <text x="27" y="32" fontSize="13" textAnchor="middle" fill="#FFF8D6" fontWeight="bold">1804</text>
+                            <circle cx="27" cy="27" r="18" fill="none" stroke="#FFE79A" strokeWidth="1" strokeDasharray="3 2" />
+                            <circle cx="27" cy="27" r="7" fill="#E8B83D" stroke="#9E6D14" strokeWidth="1" />
                           </svg>
                         </div>
                         <div ref={sealRightRef} className="seal-half seal-right">
                           <svg viewBox="0 0 54 54" className="seal-svg">
                             <circle cx="27" cy="27" r="25" fill="#C99726" stroke="#7A5207" strokeWidth="1.2" />
-                            <text x="27" y="32" fontSize="13" textAnchor="middle" fill="#FFF8D6" fontWeight="bold">1804</text>
+                            <circle cx="27" cy="27" r="18" fill="none" stroke="#FFE79A" strokeWidth="1" strokeDasharray="3 2" />
+                            <circle cx="27" cy="27" r="7" fill="#E8B83D" stroke="#9E6D14" strokeWidth="1" />
                           </svg>
                         </div>
                         <div ref={sealCrackLineRef} className="seal-crack-line" />
@@ -731,10 +724,8 @@ export default function EnvelopeViewerModal({
                         <div className="bifold-gold-seal">
                           <svg viewBox="0 0 60 60" className="bifold-seal-svg">
                             <circle cx="30" cy="30" r="28" fill="#D4AF37" stroke="#8F711C" strokeWidth="1.5" />
-                            <circle cx="30" cy="30" r="24" fill="none" stroke="#FFF5CC" strokeWidth="1" strokeDasharray="2,2" />
-                            <text x="30" y="35" fontSize="13" fontWeight="bold" textAnchor="middle" fill="#2E2003" fontFamily="'Montserrat', sans-serif">
-                              {template.stampText || '2027'}
-                            </text>
+                            <circle cx="30" cy="30" r="21" fill="none" stroke="#FFF5CC" strokeWidth="1" strokeDasharray="2,2" />
+                            <circle cx="30" cy="30" r="8" fill="#E8C35A" stroke="#99731E" strokeWidth="1" />
                           </svg>
                         </div>
                       </div>
@@ -760,9 +751,7 @@ export default function EnvelopeViewerModal({
                     }}
                   >
                     <div className="bifold-page-inner-border" style={{ borderColor: 'rgba(212, 175, 55, 0.45)' }}>
-                      <div className="bifold-art-top">
-                        <span className="bifold-art-year">2026 • 2027</span>
-                      </div>
+                      <div className="bifold-art-top" />
 
                       <div className="bifold-tree-illustration">
                         <svg viewBox="0 0 80 80" width="56" height="56" fill="none">
@@ -1041,7 +1030,7 @@ export default function EnvelopeViewerModal({
                     <span>Nimewo Telefòn MonCash :</span>
                   </label>
                   <div className="phone-input-wrap">
-                    <span className="phone-prefix-badge">🇭🇹 +509</span>
+                    <span className="phone-prefix-badge">+509</span>
                     <input
                       type="tel"
                       placeholder="34 56 7890"

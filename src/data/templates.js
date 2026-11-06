@@ -54,8 +54,6 @@ export const TEMPLATES = [
     defaultMessage: 'Mèsi dèske w toujou yon sous rekonfò ak lapè nan lavi m. Pandan Nwèl sa a ap klere, mwen voye tout afeksyon mwen pou ou menm ak tout fanmi w. Se pou nouvo ane a louvri tout bèl pòt lasante, pwoteksyon ak lajwa pou nou.',
     priceHTG: 100,
     priceUSD: 2.99,
-    stampText: 'AYITI',
-    stampColor: '#A69279',
     confettiColors: ['#ECC880', '#C39D5E', '#FFFFFF', '#7A1F2D']
   },
   {
@@ -74,8 +72,6 @@ export const TEMPLATES = [
     defaultMessage: 'Se ak anpil fyète n ap fete eritaj zansèt nou yo. Pandan bon sant soup joumou an ap monte nan chak kay ayisyen, se pou fòs 1804 la renouvle lespwa nan kè nou, epi pote tèt ansanm, kouraj ak siksè pou tout ane 2027 la.',
     priceHTG: 100,
     priceUSD: 2.99,
-    stampText: '1804',
-    stampColor: '#C99726',
     confettiColors: ['#C99726', '#E5B246', '#FFFFFF', '#3A2714']
   },
   {
@@ -93,8 +89,6 @@ export const TEMPLATES = [
     defaultMessage: 'Pandan ane 2026 la ap fè plas pou 2027, mwen swete w yon nouvo depa ki chaje ak benediksyon, reyalizasyon ak bonè. Se pou chak pwojè w gen nan kè w jwenn siksè, e se pou kay ou toujou rete plen ak lajwa.',
     priceHTG: 100,
     priceUSD: 2.99,
-    stampText: '2027',
-    stampColor: '#2B4736',
     confettiColors: ['#ECC880', '#D4AF37', '#FFFFFF', '#2B4736']
   },
   {
@@ -112,8 +106,6 @@ export const TEMPLATES = [
     defaultMessage: 'Chak segonn mwen pase avè w se yon bèl paj lavi nou k ap ekri. Mèsi pou lanmou w, pasyans ou ak tout souri ou pote nan kè m. Pase yon bèl fèt fen dane, cheri. Mwen pwomèt pou m renmen w pi fò toujou nan nouvo ane k ap vini an.',
     priceHTG: 100,
     priceUSD: 2.99,
-    stampText: 'LANMOU',
-    stampColor: '#F2A7B5',
     confettiColors: ['#F2A7B5', '#ECC880', '#FFFFFF', '#6B3045']
   },
   {
@@ -132,8 +124,6 @@ export const TEMPLATES = [
     defaultMessage: 'Nan okazyon nouvo ane a, mwen deklare ane 2027 la ap yon ane viktwa, kwasans ak gerizon pou ou. Se pou tout kote w pase rankontre favè, se pou tout eprèv tounen temwayaj, e se pou siksè kouvri tout travay men w.',
     priceHTG: 100,
     priceUSD: 2.99,
-    stampText: '2027',
-    stampColor: '#D4AF37',
     confettiColors: ['#D4AF37', '#ECC880', '#1B2A4A', '#FFFFFF']
   },
   {
@@ -156,8 +146,6 @@ export const TEMPLATES = [
     defaultMessage: 'Se pou limyè zetwal Nwèl la klere chemen w nan tout nwit ki fè nwa yo. Mwen swete w yon fèt ki plen ak lapè nan kè w, lanmou bò kote moun ki renmen w, ak lasante pou w byen jwi bèl moman sa yo.',
     priceHTG: 100,
     priceUSD: 2.99,
-    stampText: 'NWÈL',
-    stampColor: '#E5C478',
     confettiColors: ['#E5C478', '#FFFFFF', '#16233B', '#8DA9D4']
   },
   {
@@ -180,8 +168,6 @@ export const TEMPLATES = [
     defaultMessage: 'Se pou sezon Nwèl sa a pote lapè nan kay ou, lajwa nan kè w, ak anpil benediksyon pou tout fanmi an. Pase yon bèl fèt Nwèl.',
     priceHTG: 100,
     priceUSD: 2.99,
-    stampText: 'NWÈL',
-    stampColor: '#D4AF37',
     confettiColors: ['#D4AF37', '#FFFFFF', '#1B3B2B', '#ECC880']
   },
   {
@@ -199,8 +185,6 @@ export const TEMPLATES = [
     defaultMessage: 'Mwen swete ane 2027 la pote gwo viktwa pou ou. Se pou tout rèv ou te genyen kòmanse reyalize, e se pou lasante ak kè poze toujou akonpanye w.',
     priceHTG: 100,
     priceUSD: 2.99,
-    stampText: '2027',
-    stampColor: '#E5B842',
     confettiColors: ['#E5B842', '#FFFFFF', '#2C2314', '#D4AF37']
   },
   {
@@ -219,8 +203,6 @@ export const TEMPLATES = [
     defaultMessage: '1ye Janvye se rapèl diyite ak libète pèp ayisyen. Pandan nou tout ap pataje bon sant soup joumou an, se pou lespri zansèt nou yo klere chemen nou pou ane 2027 la.',
     priceHTG: 100,
     priceUSD: 2.99,
-    stampText: '1804',
-    stampColor: '#D99318',
     confettiColors: ['#D99318', '#FFFFFF', '#422817', '#F7EBD6']
   },
   {
@@ -238,8 +220,7 @@ export const TEMPLATES = [
     defaultMessage: 'Pandan tout moun ap chèche kado pou fèt fen dane a, mwen deja jwenn pa m nan ki se prezans ou nan lavi m. Mwen renmen w jodi a, e m ap renmen w pi fò toujou an 2027.',
     priceHTG: 100,
     priceUSD: 2.99,
-    stampText: 'LANMOU',
-    stampColor: '#E86F88',
     confettiColors: ['#E86F88', '#FFFFFF', '#802B48', '#F2D8D8']
   }
 ];
+

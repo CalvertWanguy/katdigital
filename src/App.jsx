@@ -96,7 +96,7 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
           <div className="preview-bifold-container">
             <div className="preview-bifold-cover" style={{ background: `linear-gradient(135deg, ${template.coverColor || '#1E3326'} 0%, #122118 100%)`, borderColor: template.accentColor || '#D4AF37' }}>
               <div className="preview-bifold-spine" />
-              <div className="preview-bifold-star">2027</div>
+              <div className="preview-bifold-star" />
               <div className="preview-bifold-title">{template.title}</div>
               <div className="preview-bifold-gold-seal" />
             </div>
@@ -114,11 +114,6 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
             </div>
           </div>
         )}
-
-        {/* Timbre officiel */}
-        <div className="canva-card-stamp" style={{ color: template.stampColor, borderColor: template.stampColor }}>
-          {template.stampText}
-        </div>
 
         {/* Bouton 3 ti pwen (...) tankou sou Canva */}
         <div className="canva-card-dots-wrap" onClick={(e) => e.stopPropagation()}>
@@ -229,10 +224,15 @@ function CategoryCarouselSection({ cat, templates, onOpenDemo, onOpenCustomizer,
           <div className="canva-nav-arrows">
             <button
               type="button"
-              className={`canva-arrow-btn ${!canScrollLeft ? 'disabled' : ''}`}
+              className={`canva-arrow-btn ${!canScrollLeft ? 'disabled is-hidden' : ''}`}
               onClick={() => scroll('left')}
               disabled={!canScrollLeft}
-              style={{ opacity: canScrollLeft ? 1 : 0.35, cursor: canScrollLeft ? 'pointer' : 'default' }}
+              style={{
+                opacity: canScrollLeft ? 1 : 0,
+                pointerEvents: canScrollLeft ? 'auto' : 'none',
+                visibility: canScrollLeft ? 'visible' : 'hidden',
+                transition: 'opacity 0.25s ease, visibility 0.25s ease'
+              }}
               aria-label="Glise a goch"
               title="Glise a goch"
             >
@@ -240,10 +240,15 @@ function CategoryCarouselSection({ cat, templates, onOpenDemo, onOpenCustomizer,
             </button>
             <button
               type="button"
-              className={`canva-arrow-btn ${!canScrollRight ? 'disabled' : ''}`}
+              className={`canva-arrow-btn ${!canScrollRight ? 'disabled is-hidden' : ''}`}
               onClick={() => scroll('right')}
               disabled={!canScrollRight}
-              style={{ opacity: canScrollRight ? 1 : 0.35, cursor: canScrollRight ? 'pointer' : 'default' }}
+              style={{
+                opacity: canScrollRight ? 1 : 0,
+                pointerEvents: canScrollRight ? 'auto' : 'none',
+                visibility: canScrollRight ? 'visible' : 'hidden',
+                transition: 'opacity 0.25s ease, visibility 0.25s ease'
+              }}
               aria-label="Glise a dwat"
               title="Glise a dwat"
             >
@@ -269,27 +274,6 @@ function CategoryCarouselSection({ cat, templates, onOpenDemo, onOpenCustomizer,
             />
           ))}
         </div>
-
-        {/* Flèch Flotan sou Mobil : Pa parèt o debi, parèt sèlman lè gen kote pou retounen a gòch ! */}
-        <button
-          type="button"
-          className={`canva-floating-arrow canva-floating-arrow-prev ${canScrollLeft ? 'is-visible' : ''}`}
-          onClick={() => scroll('left')}
-          aria-label="Wè modèl anvan yo"
-          title="Wè modèl anvan yo"
-        >
-          <ChevronLeft size={16} />
-        </button>
-
-        <button
-          type="button"
-          className={`canva-floating-arrow canva-floating-arrow-next ${canScrollRight ? 'is-visible' : ''}`}
-          onClick={() => scroll('right')}
-          aria-label="Wè lòt modèl"
-          title="Wè lòt modèl"
-        >
-          <ChevronRight size={16} />
-        </button>
       </div>
     </section>
   );
@@ -374,7 +358,7 @@ export default function App() {
       case 'nouvel-an': return 'Bòn Ane 2027';
       case 'tradition': return '1ye Janvye & Tradisyon';
       case 'mennaj': return 'Mesaj Lanmou';
-      default: return 'Tout Koleksyon yo';
+      default: return 'Tout Modèl yo';
     }
   };
 
@@ -407,10 +391,9 @@ export default function App() {
           Chwazi yon modèl papetri, ekri pawòl ou ak tout kè w, epi pataje yon souvni inik kote w vle pou sèlman <strong>100 Goud</strong>.
         </p>
 
-        {/* Ba Rechèch & Koleksyon (Style Evite / Greenvelope) */}
+        {/* Ba Rechèch Éditrice */}
         <div className="search-collections-bar">
           <div className="search-bar-inner">
-            <span className="search-collections-badge">KOLEKSYON</span>
             <div className="search-input-box">
               <Search size={15} className="search-icon-svg" />
               <input
