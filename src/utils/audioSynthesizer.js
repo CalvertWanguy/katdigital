@@ -105,11 +105,11 @@ let isPlaying = false;
 /**
  * Prechaje odyo a davans pou lè itilizatè klike li pati imedyatman san tan datant
  */
-export function preloadHolidaySoundtrack(musicId = 'jingle_bells', customAudioUrl = null) {
+export function preloadHolidaySoundtrack(musicId = 'festif_violon', customAudioUrl = null) {
   if (musicId === 'none') return;
   const src = (customAudioUrl && typeof customAudioUrl === 'string' && customAudioUrl.trim())
     ? customAudioUrl.trim()
-    : (AUDIO_TRACKS[musicId] || AUDIO_TRACKS.jingle_bells);
+    : (AUDIO_TRACKS[musicId] || AUDIO_TRACKS.festif_violon);
 
   if (!src) return;
 
@@ -133,7 +133,7 @@ export function preloadHolidaySoundtrack(musicId = 'jingle_bells', customAudioUr
 /**
  * Jwe melodi fèt la imedyatman
  */
-export function playHolidaySoundtrack(musicId = 'jingle_bells', customAudioUrl = null) {
+export function playHolidaySoundtrack(musicId = 'festif_violon', customAudioUrl = null) {
   stopHolidaySoundtrack();
 
   if (musicId === 'none') {
@@ -145,7 +145,7 @@ export function playHolidaySoundtrack(musicId = 'jingle_bells', customAudioUrl =
   if (customAudioUrl && typeof customAudioUrl === 'string' && customAudioUrl.trim()) {
     src = customAudioUrl.trim();
   } else {
-    src = AUDIO_TRACKS[musicId] || AUDIO_TRACKS.jingle_bells;
+    src = AUDIO_TRACKS[musicId] || AUDIO_TRACKS.festif_violon;
   }
 
   if (!src) return false;

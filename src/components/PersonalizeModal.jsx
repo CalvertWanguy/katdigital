@@ -2,18 +2,15 @@ import React, { useState, useEffect } from 'react';
 import {
   X,
   User,
-  Edit3,
+  NotePencil,
   Eye,
-  Music,
-  Volume2,
-  VolumeX,
-  Upload,
-  Trash2,
-  Check,
-  ChevronRight,
-  Sparkles,
-  AlertCircle
-} from 'lucide-react';
+  MusicNotes,
+  SpeakerHigh,
+  SpeakerSlash,
+  UploadSimple,
+  Trash,
+  WarningCircle
+} from '@phosphor-icons/react';
 import { PRESET_MESSAGES } from '../data/templates';
 import { MUSIC_OPTIONS, playHolidaySoundtrack, stopHolidaySoundtrack } from '../utils/audioSynthesizer';
 
@@ -25,7 +22,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
   const [sender, setSender] = useState('');
   const [selectedPreset, setSelectedPreset] = useState('fanmi');
   const [customMessage, setCustomMessage] = useState(PRESET_MESSAGES[0].text);
-  const [selectedMusic, setSelectedMusic] = useState(template?.defaultMusic || 'jingle_bells');
+  const [selectedMusic, setSelectedMusic] = useState(template?.defaultMusic || 'festif_violon');
   const [customAudioUrl, setCustomAudioUrl] = useState('');
   const [uploadedFileName, setUploadedFileName] = useState('');
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
@@ -149,7 +146,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
             className="customizer-close-btn"
             aria-label="Fèmen"
           >
-            <X size={18} />
+            <X size={18} weight="bold" />
           </button>
         </div>
 
@@ -160,7 +157,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
             className={`customizer-tab-btn ${activeTab === 'message' ? 'active' : ''}`}
             onClick={() => setActiveTab('message')}
           >
-            <Edit3 size={14} />
+            <NotePencil size={15} weight="regular" />
             <span>1. Mesaj Kat la</span>
           </button>
 
@@ -169,7 +166,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
             className={`customizer-tab-btn ${activeTab === 'music' ? 'active' : ''}`}
             onClick={() => setActiveTab('music')}
           >
-            <Music size={14} />
+            <MusicNotes size={15} weight="regular" />
             <span>2. Mizik & Anbyans</span>
             {uploadedFileName && <span className="customizer-tab-badge-dot" />}
           </button>
@@ -177,7 +174,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
 
         {validationError && (
           <div className="customizer-error-banner" role="alert">
-            <AlertCircle size={16} className="error-banner-icon" />
+            <WarningCircle size={16} weight="regular" className="error-banner-icon" />
             <span className="error-banner-text">{validationError}</span>
             <button
               type="button"
@@ -185,7 +182,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
               onClick={() => setValidationError('')}
               aria-label="Fèmen"
             >
-              <X size={14} />
+              <X size={14} weight="bold" />
             </button>
           </div>
         )}
@@ -199,7 +196,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
                 <div className="form-field-wrap">
                   <div className="form-field-header-row">
                     <label className="form-field-label">
-                      <Edit3 size={13} style={{ color: 'var(--primary-green)' }} />
+                      <NotePencil size={14} weight="regular" style={{ color: 'var(--primary-green)' }} />
                       <span>Tit kat la (anlè a) :</span>
                     </label>
                     <span className="form-field-helper">Ou ka chanje tèks sa a tou</span>
@@ -219,7 +216,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
                 <div className="form-row-2">
                   <div className="form-field-wrap">
                     <label className="form-field-label">
-                      <User size={13} style={{ color: 'var(--primary-green)' }} />
+                      <User size={14} weight="regular" style={{ color: 'var(--primary-green)' }} />
                       <span>Pou ki moun ?</span>
                     </label>
                     <input
@@ -234,7 +231,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
 
                   <div className="form-field-wrap">
                     <label className="form-field-label">
-                      <User size={13} style={{ color: 'var(--primary-green)' }} />
+                      <User size={14} weight="regular" style={{ color: 'var(--primary-green)' }} />
                       <span>De ki moun ? (Non pa w)</span>
                     </label>
                     <input
@@ -290,7 +287,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
                           onClick={() => setCustomMessage('')}
                           title="Efase tout tèks la d'un coup"
                         >
-                          <Trash2 size={12} />
+                          <Trash size={13} weight="regular" />
                           <span>Efase tèks la</span>
                         </button>
                       )}
@@ -315,7 +312,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
                 {/* Tab 2 : Seleksyon Mizik & Melodi */}
                 <div className="music-section-intro">
                   <span className="form-field-label">
-                    <Music size={13} style={{ color: 'var(--primary-green)' }} />
+                    <MusicNotes size={14} weight="regular" style={{ color: 'var(--primary-green)' }} />
                     <span>Chwazi yon melodi fèt pou akonpaye ouvèti kat la :</span>
                   </span>
                 </div>
@@ -336,7 +333,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
                       >
                         <div className="music-option-left">
                           <div className={`music-icon-bubble ${isSelected ? 'selected' : ''}`}>
-                            {m.id === 'none' ? <VolumeX size={15} /> : <Music size={15} />}
+                            {m.id === 'none' ? <SpeakerSlash size={16} weight="regular" /> : <MusicNotes size={16} weight="regular" />}
                           </div>
                           <div className="music-option-text-wrap">
                             <div className="music-option-name">{m.label}</div>
@@ -353,7 +350,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
                               handleTogglePreviewAudio(m.id);
                             }}
                           >
-                            {isPlayingThis ? <Volume2 size={13} /> : <VolumeX size={13} />}
+                            {isPlayingThis ? <SpeakerHigh size={14} weight="regular" /> : <SpeakerSlash size={14} weight="regular" />}
                             <span>{isPlayingThis ? 'K ap jwe' : 'Koute'}</span>
                           </button>
                         )}
@@ -375,7 +372,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
                   {uploadedFileName ? (
                     <div className="uploaded-audio-banner">
                       <div className="uploaded-audio-meta">
-                        <Volume2 size={16} color="var(--primary-green)" />
+                        <SpeakerHigh size={17} weight="regular" color="var(--primary-green)" />
                         <span className="uploaded-audio-filename">{uploadedFileName}</span>
                       </div>
                       <div className="uploaded-audio-actions">
@@ -392,14 +389,14 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
                           onClick={handleRemoveUploadedAudio}
                           title="Retire dosye sa a"
                         >
-                          <Trash2 size={14} />
+                          <Trash size={15} weight="regular" />
                         </button>
                       </div>
                     </div>
                   ) : (
                     <label htmlFor="device-audio-upload" className="music-upload-dropzone">
                       <div className="upload-circle-icon">
-                        <Upload size={15} />
+                        <UploadSimple size={16} weight="regular" />
                       </div>
                       <div className="upload-text-group">
                         <strong>Oubyen telechaje yon vwa oswa mizik pa w</strong>
@@ -415,7 +412,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
           {/* Ba Aksyon Fikse anba (Sticky Footer - Toujou Vizib) */}
           <div className="customizer-footer">
             <button type="submit" className="btn-validate-modern">
-              <Eye size={17} />
+              <Eye size={17} weight="regular" />
               <span>Wè Kijan l ap Soti (Aperçu)</span>
             </button>
             <p className="customizer-footer-note">
