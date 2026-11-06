@@ -220,8 +220,8 @@ export default function App() {
       {/* 1. Antèt Navigasyon */}
       <header className="header-nav">
         <a href="/" className="brand-logo">
-          <span className="brand-name-main">KatDijital</span>{' '}
-          <span className="brand-name-sub">Koleksyon</span>
+          <span className="brand-kat">KAT</span>
+          <span className="brand-dijital">DIJITAL</span>
         </a>
         <div className="nav-tagline">Bèl Kat Vœux & Swè Dijital pou Tout Okazyon</div>
         <div>
@@ -488,13 +488,13 @@ export default function App() {
       <footer className="app-main-footer">
         <div className="footer-inner-content">
           <div className="footer-logo-text">
-            <span className="brand-name-main">KatDijital</span>{' '}
-            <span className="brand-name-sub">Koleksyon</span>
+            <span className="brand-kat">KAT</span>
+            <span className="brand-dijital">DIJITAL</span>
           </div>
           <div className="footer-slogan">Kat dijital pèsonalize pou tout okazyon</div>
 
           <div className="footer-sub-row">
-            <span>© 2026 KatDijital Koleksyon</span>
+            <span>© 2026 KAT DIJITAL</span>
             <span className="footer-bullet">•</span>
             <span>Fèt ak anpil fyète pou tout Ayisyen nan mond lan !</span>
           </div>

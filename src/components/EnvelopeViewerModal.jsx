@@ -413,7 +413,7 @@ export default function EnvelopeViewerModal({
     ctx.strokeRect(55, 55, canvas.width - 110, canvas.height - 110);
 
     ctx.fillStyle = template.envelopeColor;
-    ctx.font = 'bold 64px "Cormorant Garamond", Georgia, serif';
+    ctx.font = 'bold 54px "Montserrat", sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(title, canvas.width / 2, 220);
 
@@ -425,11 +425,11 @@ export default function EnvelopeViewerModal({
     ctx.stroke();
 
     ctx.fillStyle = '#111110';
-    ctx.font = 'bold 52px "Playfair Display", Georgia, serif';
+    ctx.font = 'bold 46px "Montserrat", sans-serif';
     ctx.fillText(`${recipient},`, canvas.width / 2, 420);
 
     ctx.fillStyle = '#222220';
-    ctx.font = 'italic 40px "Cormorant Garamond", Georgia, serif';
+    ctx.font = '500 34px "Montserrat", sans-serif';
 
     const words = message.split(' ');
     let line = '';
@@ -457,11 +457,11 @@ export default function EnvelopeViewerModal({
     ctx.fillText('AK TOUT AFEKSYON MWEN,', canvas.width / 2, sigY);
 
     ctx.fillStyle = template.envelopeColor;
-    ctx.font = 'bold 48px "Playfair Display", Georgia, serif';
+    ctx.font = 'bold 48px "Montserrat", sans-serif';
     ctx.fillText(sender, canvas.width / 2, sigY + 65);
 
     const link = document.createElement('a');
-    link.download = `KatDijitalKoleksyon_${recipient}.png`;
+    link.download = `KatDijital_${recipient}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   };
@@ -629,7 +629,7 @@ export default function EnvelopeViewerModal({
                   {/* Kontni tèks la */}
                   <div ref={cardRef} className="parchment-content-flow" style={{ opacity: 0 }}>
                     <div style={{ marginTop: 10, marginBottom: 4 }}>
-                      <h2 className="card-main-title" style={{ color: template.envelopeColor, fontFamily: 'Cormorant Garamond, serif' }}>
+                      <h2 className="card-main-title" style={{ color: template.envelopeColor }}>
                         {title}
                       </h2>
                       <div className="card-separator" style={{ background: template.accentColor || '#C99726' }} />
@@ -724,7 +724,7 @@ export default function EnvelopeViewerModal({
                           <svg viewBox="0 0 60 60" className="bifold-seal-svg">
                             <circle cx="30" cy="30" r="28" fill="#D4AF37" stroke="#8F711C" strokeWidth="1.5" />
                             <circle cx="30" cy="30" r="24" fill="none" stroke="#FFF5CC" strokeWidth="1" strokeDasharray="2,2" />
-                            <text x="30" y="35" fontSize="13" fontWeight="bold" textAnchor="middle" fill="#2E2003" fontFamily="Georgia, serif">
+                            <text x="30" y="35" fontSize="13" fontWeight="bold" textAnchor="middle" fill="#2E2003" fontFamily="'Montserrat', sans-serif">
                               {template.stampText || '2027'}
                             </text>
                           </svg>
@@ -771,16 +771,16 @@ export default function EnvelopeViewerModal({
                       </div>
 
                       <div className="bifold-art-text">
-                        <h4 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '18px', color: '#FFF8E7', fontStyle: 'italic', margin: '4px 0' }}>
+                        <h4 style={{ fontSize: '15px', color: '#FFF8E7', fontWeight: 700, margin: '4px 0' }}>
                           Bèl Swè ak Tout Kè Mwen
                         </h4>
-                        <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '13px', color: '#E2D7C3', lineHeight: '1.45', margin: '6px 0', fontStyle: 'italic' }}>
+                        <p style={{ fontSize: '12.5px', color: '#E2D7C3', lineHeight: '1.45', margin: '6px 0' }}>
                           « Se pou lajwa, lasante ak tout benediksyon klere chak jou nan lavi w nan nouvo ane 2027 la. »
                         </p>
                       </div>
 
                       <div className="bifold-art-bottom">
-                        <span className="bifold-art-badge">✦ KATDIJITAL KOLEKSYON ✦</span>
+                        <span className="bifold-art-badge">✦ KAT DIJITAL ✦</span>
                       </div>
                     </div>
                   </div>
@@ -980,7 +980,7 @@ export default function EnvelopeViewerModal({
                 <span className="customizer-badge" style={{ color: '#7A1F2D', background: '#7A1F2D14' }}>
                   Peman an Sekirite
                 </span>
-                <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 23, fontWeight: 700, color: '#2B4736', marginTop: 4 }}>
+                <h3 style={{ fontSize: 20, fontWeight: 700, color: '#2B4736', marginTop: 4 }}>
                   Debloke Kat pou {recipient}
                 </h3>
               </div>
@@ -1099,7 +1099,7 @@ export default function EnvelopeViewerModal({
               <CheckCircle2 size={32} color="#2E7D32" />
             </div>
 
-            <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 26, fontWeight: 700, color: '#2B4736', marginBottom: 8 }}>
+            <h3 style={{ fontSize: 22, fontWeight: 700, color: '#2B4736', marginBottom: 8 }}>
               Kat ou a Debloke ak Siksè !
             </h3>
 
