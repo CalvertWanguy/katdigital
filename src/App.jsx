@@ -388,7 +388,7 @@ export default function App() {
           <span className="brand-kat">KAT</span>
           <span className="brand-dijital">DIJITAL</span>
         </a>
-        <div className="nav-tagline">Bèl Kat Vè & Swè Dijital pou Tout Okazyon</div>
+        <div className="nav-tagline">Bèl Kat Ve & Swè Dijital pou Tout Okazyon</div>
         <div>
           <button
             onClick={() => handleOpenDemo(TEMPLATES[0])}
@@ -402,7 +402,8 @@ export default function App() {
       {/* 2. Bannyè & Rechèch Éditrice (Style Image 2) */}
       <section className="hero-section">
         <h1 className="hero-title">
-          Voye bèl kat ak mesaj pèsonalize,<br />tou dwat nan kè moun ou renmen yo.
+          <span className="hero-title-line">Voye bèl kat ak mesaj pèsonalize,</span>
+          <span className="hero-title-line">tou dwat nan kè moun ou renmen yo.</span>
         </h1>
         <p className="hero-desc">
           Chwazi yon modèl papetri, ekri pawòl ou ak tout kè w, epi pataje yon souvni inik kote w vle pou sèlman <strong>100 Goud</strong>.

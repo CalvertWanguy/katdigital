@@ -102,6 +102,10 @@ body {
   margin-bottom: 14px;
 }
 
+.hero-title-line {
+  display: block;
+}
+
 .hero-desc {
   font-size: 14px;
   color: var(--text-muted);
@@ -112,14 +116,21 @@ body {
 
 @media (max-width: 680px) {
   .hero-section {
-    padding: 22px 12px 14px;
+    padding: 20px 8px 14px;
   }
 
   .hero-title {
-    font-size: clamp(20px, 5.8vw, 25px);
-    line-height: 1.22;
+    font-size: clamp(13px, 4.25vw, 17.5px);
+    line-height: 1.28;
     margin-bottom: 10px;
-    word-break: normal;
+    letter-spacing: -0.2px;
+  }
+
+  .hero-title-line {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .hero-desc {
@@ -129,7 +140,7 @@ body {
 
 @media (max-width: 360px) {
   .hero-title {
-    font-size: 19px;
+    font-size: clamp(12px, 4vw, 14.5px);
   }
 }
 
