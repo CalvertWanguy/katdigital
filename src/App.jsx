@@ -343,12 +343,14 @@ export default function App() {
   });
 
   const handleOpenDemo = (template) => {
+    stopHolidaySoundtrack();
     setCustomData(null);
     setIsDirectRecipientView(false);
     setActiveTemplate(template);
   };
 
   const handleOpenCustomizer = (template) => {
+    stopHolidaySoundtrack();
     setCustomizerTemplate(template);
   };
 

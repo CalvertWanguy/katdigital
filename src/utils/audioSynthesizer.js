@@ -209,3 +209,20 @@ export function stopHolidaySoundtrack() {
 export function isSoundtrackPlaying() {
   return isPlaying && currentAudioElement !== null && !currentAudioElement.paused;
 }
+
+// Kanpe tout mizik otomatikman si itilizatè a chanje tab, kite sit la oswa minimize navigatè a
+if (typeof window !== 'undefined') {
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopHolidaySoundtrack();
+    }
+  });
+
+  window.addEventListener('pagehide', () => {
+    stopHolidaySoundtrack();
+  });
+
+  window.addEventListener('beforeunload', () => {
+    stopHolidaySoundtrack();
+  });
+}

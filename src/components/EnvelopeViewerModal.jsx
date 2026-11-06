@@ -978,42 +978,44 @@ export default function EnvelopeViewerModal({
           MODAL DE PAIEMENT EXPRESS (MONCASH / STRIPE)
           ========================================================== */}
       {showCheckoutModal && (
-        <div className="checkout-overlay">
-          <div className="checkout-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+        <div className="checkout-overlay" onClick={() => setShowCheckoutModal(false)}>
+          <div className="checkout-card" onClick={(e) => e.stopPropagation()}>
+            <div className="checkout-header-row">
               <div>
-                <span className="customizer-badge" style={{ color: '#7A1F2D', background: '#7A1F2D14' }}>
-                  Peman an Sekirite
+                <span className="checkout-badge">
+                  <ShieldCheck size={12} />
+                  <span>Peman an Sekirite</span>
                 </span>
-                <h3 style={{ fontSize: 20, fontWeight: 700, color: '#2B4736', marginTop: 4 }}>
+                <h3 className="checkout-title">
                   Debloke Kat pou {recipient}
                 </h3>
               </div>
               <button
+                type="button"
                 onClick={() => setShowCheckoutModal(false)}
                 className="customizer-close-btn"
                 aria-label="Fèmen"
               >
-                <X size={18} />
+                <X size={17} />
               </button>
             </div>
 
-            <p style={{ fontSize: 13, color: '#6B6864', lineHeight: 1.5, marginBottom: 18 }}>
+            <p className="checkout-desc">
               Chwazi mòd peman ou prefere a pou w ka voye lyen an sou WhatsApp ak telechaje foto kat la.
             </p>
 
             <form onSubmit={handleProcessPayment}>
-              <div className="payment-cards-grid" style={{ marginBottom: 16 }}>
+              <div className="payment-cards-grid">
                 <div
                   className={`payment-choice-card ${paymentMethod === 'moncash' ? 'active-moncash' : ''}`}
                   onClick={() => setPaymentMethod('moncash')}
                 >
-                  <div>
-                    <strong style={{ display: 'block', fontSize: 14, color: '#C41230' }}>MonCash</strong>
-                    <span style={{ fontSize: 12, color: '#555' }}>Ayiti • 100 HTG</span>
+                  <div className="payment-choice-text">
+                    <strong className="payment-name-moncash">MonCash</strong>
+                    <span className="payment-sub-text">Ayiti • 100 HTG</span>
                   </div>
                   <div className="payment-icon-box moncash-box">
-                    <Smartphone size={16} color="#C41230" />
+                    <Smartphone size={17} color="#C41230" />
                   </div>
                 </div>
 
@@ -1021,12 +1023,12 @@ export default function EnvelopeViewerModal({
                   className={`payment-choice-card ${paymentMethod === 'card' ? 'active-card' : ''}`}
                   onClick={() => setPaymentMethod('card')}
                 >
-                  <div>
-                    <strong style={{ display: 'block', fontSize: 14, color: '#2B4736' }}>Kat / Stripe</strong>
-                    <span style={{ fontSize: 12, color: '#555' }}>Diaspora • $2.99 USD</span>
+                  <div className="payment-choice-text">
+                    <strong className="payment-name-stripe">Kat / Stripe</strong>
+                    <span className="payment-sub-text">Diaspora • $2.99 USD</span>
                   </div>
                   <div className="payment-icon-box card-box">
-                    <CreditCard size={16} color="#2B4736" />
+                    <CreditCard size={17} color="#2B4736" />
                   </div>
                 </div>
               </div>
@@ -1037,15 +1039,18 @@ export default function EnvelopeViewerModal({
                     <Smartphone size={13} style={{ color: '#C41230' }} />
                     <span>Nimewo Telefòn MonCash :</span>
                   </label>
-                  <input
-                    type="tel"
-                    placeholder="Ex: +509 34 56 7890"
-                    className="form-input-clean"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    required
-                  />
-                  <span style={{ fontSize: 11, color: '#888', marginTop: 4, display: 'block' }}>
+                  <div className="phone-input-wrap">
+                    <span className="phone-prefix-badge">🇭🇹 +509</span>
+                    <input
+                      type="tel"
+                      placeholder="34 56 7890"
+                      className="form-input-clean form-input-phone"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <span className="payment-helper-note">
                     W ap resevwa yon notifikasyon pou apwouve 100 Goud la sou kont MonCash ou.
                   </span>
                 </div>
@@ -1061,7 +1066,7 @@ export default function EnvelopeViewerModal({
                     className="form-input-clean"
                     required
                   />
-                  <div className="form-row-2" style={{ marginTop: 8 }}>
+                  <div className="form-row-2" style={{ marginTop: 8, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     <input type="text" placeholder="MM / AA" className="form-input-clean" required />
                     <input type="text" placeholder="CVC" className="form-input-clean" required />
                   </div>
@@ -1070,12 +1075,8 @@ export default function EnvelopeViewerModal({
 
               <button
                 type="submit"
-                className="btn-validate-personalize"
+                className={`btn-checkout-confirm ${paymentMethod === 'moncash' ? 'is-moncash' : 'is-stripe'}`}
                 disabled={isProcessingPayment}
-                style={{
-                  background: paymentMethod === 'moncash' ? '#C41230' : 'var(--primary-green)',
-                  color: '#FFFFFF'
-                }}
               >
                 {isProcessingPayment ? (
                   <span>N ap trete peman an...</span>
@@ -1088,7 +1089,7 @@ export default function EnvelopeViewerModal({
               </button>
 
               <div className="security-footer-note">
-                <ShieldCheck size={13} color="#2B4736" />
+                <ShieldCheck size={14} color="#2B4736" />
                 <span>Peman 100% Sekirize • Otantifikasyon Enstantane</span>
               </div>
             </form>

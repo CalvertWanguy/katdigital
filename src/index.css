@@ -116,13 +116,13 @@ body {
 
 @media (max-width: 680px) {
   .hero-section {
-    padding: 20px 8px 14px;
+    padding: 34px 16px 26px; /* Desann plis ba, bay respire */
   }
 
   .hero-title {
-    font-size: clamp(13px, 4.25vw, 17.5px);
-    line-height: 1.28;
-    margin-bottom: 10px;
+    font-size: clamp(14px, 4.35vw, 18px);
+    line-height: 1.34;
+    margin-bottom: 24px; /* Espas jenere ant tit ak ba rechèch */
     letter-spacing: -0.2px;
   }
 
@@ -135,6 +135,30 @@ body {
 
   .hero-desc {
     display: none; /* Retire sou mobil pou pa pran twòp espas */
+  }
+
+  .search-collections-bar {
+    margin: 0 auto 18px;
+    gap: 12px;
+    padding: 0;
+  }
+
+  .search-breadcrumbs-row {
+    margin-top: 3px;
+    margin-bottom: 6px;
+    font-size: 11.5px;
+    gap: 6px;
+  }
+
+  .categories-bar {
+    gap: 9px;
+    margin-top: 8px;
+    padding: 0;
+  }
+
+  .category-pill {
+    padding: 8px 16px;
+    font-size: 12px;
   }
 }
 
@@ -2508,18 +2532,19 @@ body {
 }
 
 /* ==========================================================
-   CHECKOUT OVERLAY & CARD (MODAL DE PAIEMENT)
+   CHECKOUT OVERLAY & CARD (MODAL DE PAIEMENT EXPRESS)
    ========================================================== */
 .checkout-overlay {
   position: fixed;
   inset: 0;
   background: rgba(14, 18, 15, 0.88);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 200;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 15px;
+  padding: 16px;
   overscroll-behavior: contain;
 }
 
@@ -2528,10 +2553,250 @@ body {
   border-radius: 20px;
   width: 100%;
   max-width: 440px;
-  padding: 26px 22px;
+  padding: 24px 22px;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
   border: 1px solid #ECE7DE;
-  animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideUpModal 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.checkout-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.checkout-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(43, 71, 54, 0.08);
+  color: #2B4736;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 6px;
+}
+
+.checkout-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: #1F2922;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.checkout-desc {
+  font-size: 12.5px;
+  color: #6B6864;
+  line-height: 1.5;
+  margin: 0 0 18px 0;
+}
+
+.payment-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.payment-choice-card {
+  background: #FAF8F5;
+  border: 1.5px solid #DFD9CE;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.payment-choice-card:hover {
+  transform: translateY(-1px);
+  border-color: #2B4736;
+}
+
+.payment-choice-card.active-moncash {
+  border-color: #C41230;
+  background: #FFF5F6;
+  box-shadow: 0 0 0 2px rgba(196, 18, 48, 0.18);
+}
+
+.payment-choice-card.active-card {
+  border-color: #2B4736;
+  background: #F2F7F4;
+  box-shadow: 0 0 0 2px rgba(43, 71, 54, 0.18);
+}
+
+.payment-choice-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-name-moncash {
+  font-size: 14px;
+  font-weight: 700;
+  color: #C41230;
+  line-height: 1.2;
+}
+
+.payment-name-stripe {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2B4736;
+  line-height: 1.2;
+}
+
+.payment-sub-text {
+  font-size: 11px;
+  color: #736E65;
+  margin-top: 2px;
+}
+
+.payment-icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.form-group-clean {
+  margin-bottom: 16px;
+}
+
+.form-label-clean {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1F2922;
+  margin-bottom: 7px;
+}
+
+.phone-input-wrap {
+  display: flex;
+  align-items: stretch;
+  background: #FFFFFF;
+  border: 1.5px solid #DFD9CE;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.phone-input-wrap:focus-within {
+  border-color: #C41230;
+  box-shadow: 0 0 0 3px rgba(196, 18, 48, 0.1);
+}
+
+.phone-prefix-badge {
+  background: #FAF7F2;
+  color: #1F2922;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 12px;
+  border-right: 1px solid #DFD9CE;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.form-input-clean {
+  width: 100%;
+  border: 1.5px solid #DFD9CE;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13.5px;
+  color: #1F2922;
+  background: #FFFFFF;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input-clean:focus {
+  border-color: #2B4736;
+  box-shadow: 0 0 0 3px rgba(43, 71, 54, 0.1);
+}
+
+.form-input-phone {
+  border: none;
+  border-radius: 0;
+  padding: 10px 12px;
+  flex: 1;
+}
+
+.form-input-phone:focus {
+  box-shadow: none;
+}
+
+.payment-helper-note {
+  font-size: 11px;
+  color: #7A756B;
+  margin-top: 5px;
+  display: block;
+  line-height: 1.35;
+}
+
+.btn-checkout-confirm {
+  width: 100%;
+  padding: 13px;
+  border-radius: 30px;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  margin-top: 8px;
+}
+
+.btn-checkout-confirm.is-moncash {
+  background: #C41230;
+}
+.btn-checkout-confirm.is-moncash:hover {
+  background: #A30F28;
+  transform: translateY(-1px);
+}
+
+.btn-checkout-confirm.is-stripe {
+  background: #2B4736;
+}
+.btn-checkout-confirm.is-stripe:hover {
+  background: #1F3327;
+  transform: translateY(-1px);
+}
+
+.security-footer-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #7A756B;
+  margin-top: 14px;
+  font-weight: 500;
 }
 
 @keyframes slideUpModal {
@@ -3178,21 +3443,59 @@ body {
 }
 
 @media (max-width: 480px) {
+  .customizer-modal {
+    padding: 8px;
+    height: 100vh;
+    height: 100dvh;
+    box-sizing: border-box;
+  }
   .customizer-card {
-    max-height: 94vh;
+    max-height: calc(100dvh - 16px);
+    height: calc(100dvh - 16px);
     border-radius: 18px;
+    margin: auto;
   }
   .customizer-header {
-    padding: 14px 16px 12px;
+    padding: 12px 14px 10px;
   }
   .customizer-heading {
-    font-size: 19px;
+    font-size: 17px;
+  }
+  .customizer-tabs {
+    padding: 5px 10px;
+    gap: 6px;
+  }
+  .customizer-tab-btn {
+    padding: 7px 10px;
+    font-size: 11.5px;
   }
   .customizer-body {
-    padding: 14px 16px;
+    padding: 12px 14px 24px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .music-cards-list {
+    margin-bottom: 24px;
+    gap: 8px;
+  }
+  .music-option-card {
+    padding: 9px 10px;
+  }
+  .music-option-name {
+    font-size: 12px;
+  }
+  .music-option-desc {
+    font-size: 10px;
   }
   .customizer-footer {
-    padding: 12px 16px 14px;
+    padding: 10px 14px 12px;
+    background: #FFFFFF;
+  }
+  .btn-validate-modern {
+    padding: 11px;
+    font-size: 13.5px;
   }
 }
 
