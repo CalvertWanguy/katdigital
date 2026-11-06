@@ -24,3 +24,10 @@ dist-ssr
 *.sw?
 ~$*
 *.tmp
+
+# Environment & Secrets
+.env
+.env.*
+.dev.vars
+*.vars
+

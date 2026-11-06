@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "katdijital-backend",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-02-24",
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [
+    {
+      "pattern": "katdijital.ht/api/*",
+      "zone_name": "katdijital.ht"
+    },
+    {
+      "pattern": "katdijital.ht/c/*",
+      "zone_name": "katdijital.ht"
+    }
+  ],
+  "vars": {
+    "ENVIRONMENT": "production",
+    "FRONTEND_URL": "https://katdijital.ht"
+  }
+}
