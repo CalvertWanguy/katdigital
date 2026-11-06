@@ -176,7 +176,7 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
   );
 }
 
-function CategoryCarouselSection({ cat, templates, onOpenDemo, onOpenCustomizer }) {
+function CategoryCarouselSection({ cat, templates, onOpenDemo, onOpenCustomizer, onSelectCategory }) {
   const trackRef = React.useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -203,12 +203,15 @@ function CategoryCarouselSection({ cat, templates, onOpenDemo, onOpenCustomizer 
     setTimeout(checkScroll, 320);
   };
 
+  const IconComp = cat.icon;
+
   return (
-    <section key={cat.id} className="canva-category-section">
-      <div className="canva-section-header">
-        <div className="canva-header-left">
-          <div className="canva-icon-badge">
-            <cat.icon size={17} />
+    <section key={cat.id} className="canva-category-row">
+      {/* Antèt Rangée Canva : Tit a goch, Flèch a dwat sou Desktop */}
+      <div className="canva-row-header">
+        <div className="canva-row-title-wrap">
+          <div className="canva-cat-icon-badge">
+            <IconComp size={16} />
           </div>
           <div>
             <h2 className="canva-row-title">{cat.title}</h2>
@@ -216,14 +219,26 @@ function CategoryCarouselSection({ cat, templates, onOpenDemo, onOpenCustomizer 
           </div>
         </div>
 
-        <div className="canva-header-right">
+        <div className="canva-row-actions">
+          {onSelectCategory && (
+            <button
+              type="button"
+              className="canva-btn-view-all"
+              onClick={() => onSelectCategory(cat.id)}
+            >
+              Wè tout ({templates.length})
+            </button>
+          )}
+
           <div className="canva-nav-arrows">
             <button
               type="button"
               className={`canva-arrow-btn ${!canScrollLeft ? 'disabled' : ''}`}
               onClick={() => scroll('left')}
               disabled={!canScrollLeft}
-              aria-label="Glise a gòch"
+              style={{ opacity: canScrollLeft ? 1 : 0.35, cursor: canScrollLeft ? 'pointer' : 'default' }}
+              aria-label="Glise a goch"
+              title="Glise a goch"
             >
               <ChevronLeft size={16} />
             </button>
@@ -232,7 +247,9 @@ function CategoryCarouselSection({ cat, templates, onOpenDemo, onOpenCustomizer 
               className={`canva-arrow-btn ${!canScrollRight ? 'disabled' : ''}`}
               onClick={() => scroll('right')}
               disabled={!canScrollRight}
+              style={{ opacity: canScrollRight ? 1 : 0.35, cursor: canScrollRight ? 'pointer' : 'default' }}
               aria-label="Glise a dwat"
+              title="Glise a dwat"
             >
               <ChevronRight size={16} />
             </button>
@@ -548,6 +565,7 @@ export default function App() {
                   templates={catTemplates}
                   onOpenDemo={handleOpenDemo}
                   onOpenCustomizer={handleOpenCustomizer}
+                  onSelectCategory={setSelectedCategory}
                 />
               );
             })}
