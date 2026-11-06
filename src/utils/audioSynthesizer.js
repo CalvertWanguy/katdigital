@@ -4,14 +4,14 @@
 // Sipòte tou yon fichye odyo pèsonalize si itilizatè a telechaje pa l.
 
 export const AUDIO_TRACKS = {
-  jingle_bells: '/audio/jingle_bells.mp3',
-  we_wish_you: '/audio/we_wish_you.mp3',
-  deck_the_halls: '/audio/deck_the_halls.mp3',
+  jingle_bells: '/audio/jingle_bells.wav',
+  we_wish_you: '/audio/we_wish_you.wav',
+  deck_the_halls: '/audio/deck_the_halls.wav',
   silent_night: '/audio/silent_night.wav',
-  bon_ane: '/audio/radetzky_march.ogg',
+  bon_ane: '/audio/radetzky_march.wav',
   joy_to_the_world: '/audio/joy_to_the_world.wav',
-  auld_lang_syne: '/audio/auld_lang_syne.ogg',
-  romance: '/audio/canon_in_d.ogg',
+  auld_lang_syne: '/audio/auld_lang_syne.wav',
+  romance: '/audio/canon_in_d.wav',
   romance_piano: '/audio/romance_piano.wav',
   haitian_tradition: '/audio/haiti_1804.ogg',
   haiti_soup_joumou: '/audio/haiti_soup_joumou.wav'
@@ -23,21 +23,21 @@ export const MUSIC_OPTIONS = [
     label: 'Klòch Nwèl • Jingle Bells',
     desc: 'Melodi selebrasyon Nwèl ak ritm ak klòch fèt',
     category: 'noel',
-    src: '/audio/jingle_bells.mp3'
+    src: '/audio/jingle_bells.wav'
   },
   {
     id: 'we_wish_you',
     label: 'We Wish You a Merry Christmas',
     desc: 'Bèl klasik fèt Nwèl plen lajwa ak anbyans fanmi',
     category: 'noel',
-    src: '/audio/we_wish_you.mp3'
+    src: '/audio/we_wish_you.wav'
   },
   {
     id: 'deck_the_halls',
     label: 'Deck the Halls • Nwèl Fèt',
     desc: 'Tradisyon jwaye ak klòch Nwèl k ap sonnen',
     category: 'noel',
-    src: '/audio/deck_the_halls.mp3'
+    src: '/audio/deck_the_halls.wav'
   },
   {
     id: 'silent_night',
@@ -51,7 +51,7 @@ export const MUSIC_OPTIONS = [
     label: 'Bòn Ane 2027 • Radetzky March',
     desc: 'Bèl fanfare jwaye e plen enèji pou nouvo ane a',
     category: 'nouvel-an',
-    src: '/audio/radetzky_march.ogg'
+    src: '/audio/radetzky_march.wav'
   },
   {
     id: 'joy_to_the_world',
@@ -65,14 +65,14 @@ export const MUSIC_OPTIONS = [
     label: '31 Desanm • Auld Lang Syne',
     desc: 'Melodi tradisyonèl souvni ak pase men nan ane a',
     category: 'nouvel-an',
-    src: '/audio/auld_lang_syne.ogg'
+    src: '/audio/auld_lang_syne.wav'
   },
   {
     id: 'romance',
     label: 'Lanmou • Canon in D (Pachelbel)',
     desc: 'Pi popilè melodi amoure pou moun ou renmen',
     category: 'mennaj',
-    src: '/audio/canon_in_d.ogg'
+    src: '/audio/canon_in_d.wav'
   },
   {
     id: 'romance_piano',
@@ -104,10 +104,40 @@ export const MUSIC_OPTIONS = [
 ];
 
 let currentAudioElement = null;
+let preloadedAudio = null;
+let preloadedSrc = null;
 let isPlaying = false;
 
 /**
- * Jwe melodi fèt la selon ID mizik la oswa URL personnalisé a
+ * Prechaje odyo a davans pou lè itilizatè klike li pati imedyatman san tan datant
+ */
+export function preloadHolidaySoundtrack(musicId = 'jingle_bells', customAudioUrl = null) {
+  if (musicId === 'none') return;
+  const src = (customAudioUrl && typeof customAudioUrl === 'string' && customAudioUrl.trim())
+    ? customAudioUrl.trim()
+    : (AUDIO_TRACKS[musicId] || AUDIO_TRACKS.jingle_bells);
+
+  if (!src) return;
+
+  if (preloadedAudio && preloadedSrc === src) {
+    return;
+  }
+
+  try {
+    preloadedAudio = new Audio();
+    preloadedAudio.preload = 'auto';
+    preloadedAudio.src = src;
+    preloadedAudio.loop = true;
+    preloadedAudio.volume = 0.68;
+    preloadedSrc = src;
+    preloadedAudio.load();
+  } catch (e) {
+    console.warn('Preload audio error:', e);
+  }
+}
+
+/**
+ * Jwe melodi fèt la imedyatman
  */
 export function playHolidaySoundtrack(musicId = 'jingle_bells', customAudioUrl = null) {
   stopHolidaySoundtrack();
@@ -117,7 +147,6 @@ export function playHolidaySoundtrack(musicId = 'jingle_bells', customAudioUrl =
     return false;
   }
 
-  // Chwazi sous odyo a
   let src = null;
   if (customAudioUrl && typeof customAudioUrl === 'string' && customAudioUrl.trim()) {
     src = customAudioUrl.trim();
@@ -128,9 +157,16 @@ export function playHolidaySoundtrack(musicId = 'jingle_bells', customAudioUrl =
   if (!src) return false;
 
   try {
-    currentAudioElement = new Audio(src);
-    currentAudioElement.loop = true;
-    currentAudioElement.volume = 0.65;
+    if (preloadedAudio && preloadedSrc === src) {
+      currentAudioElement = preloadedAudio;
+      currentAudioElement.currentTime = 0;
+    } else {
+      currentAudioElement = new Audio(src);
+      currentAudioElement.loop = true;
+      currentAudioElement.volume = 0.68;
+      preloadedAudio = currentAudioElement;
+      preloadedSrc = src;
+    }
 
     const playPromise = currentAudioElement.play();
     if (playPromise !== undefined) {
@@ -139,7 +175,6 @@ export function playHolidaySoundtrack(musicId = 'jingle_bells', customAudioUrl =
           isPlaying = true;
         })
         .catch((err) => {
-          // Si navigatè a mande yon klik itilizatè anvan li kòmanse odyo a
           console.warn('Odyo a mande yon jès itilizatè pou demare:', err);
           isPlaying = false;
         });

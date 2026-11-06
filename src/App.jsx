@@ -69,13 +69,12 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
             <div className="preview-env-back" style={{ background: template.envelopeColor }} />
             <div className="preview-env-flap" style={{ borderBottomColor: template.flapColor || template.envelopeColor }} />
             <div className="preview-env-card">
-              <span className="preview-card-caption">{template.badge || 'KAT DE LUKS'}</span>
               <div className="preview-card-heading" style={{ color: template.envelopeColor }}>{template.title}</div>
               <div className="preview-card-divider" style={{ background: template.accentColor }} />
               <p className="preview-card-snippet">{template.defaultMessage.slice(0, 48)}...</p>
             </div>
             <div className="preview-env-front" style={{ borderBottomColor: template.envelopeColor }} />
-            <div className="preview-gold-seal">✦</div>
+            <div className="preview-gold-seal" />
           </div>
         )}
 
@@ -85,8 +84,7 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
             <div className="preview-parchment-roller preview-roller-top" style={{ background: template.rodColor || '#855A25' }} />
             <div className="preview-parchment-paper" style={{ background: template.parchmentBg || '#F5E6CA', borderColor: template.accentColor || '#C99726' }}>
               <div className="preview-parchment-seal-ribbon" />
-              <span className="preview-card-caption" style={{ color: template.accentColor || '#C99726' }}>PACHEMEN 1804</span>
-              <div className="preview-card-heading" style={{ color: template.envelopeColor }}>{template.title}</div>
+              <div className="preview-card-heading" style={{ color: template.envelopeColor, marginTop: 4 }}>{template.title}</div>
               <p className="preview-card-snippet" style={{ color: '#3A2714' }}>{template.defaultMessage.slice(0, 48)}...</p>
             </div>
             <div className="preview-parchment-roller preview-roller-bottom" style={{ background: template.rodColor || '#855A25' }} />
@@ -98,10 +96,9 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
           <div className="preview-bifold-container">
             <div className="preview-bifold-cover" style={{ background: `linear-gradient(135deg, ${template.coverColor || '#1E3326'} 0%, #122118 100%)`, borderColor: template.accentColor || '#D4AF37' }}>
               <div className="preview-bifold-spine" />
-              <div className="preview-bifold-badge">LIV PAPETRI</div>
-              <div className="preview-bifold-star">✦ 2027 ✦</div>
+              <div className="preview-bifold-star">2027</div>
               <div className="preview-bifold-title">{template.title}</div>
-              <div className="preview-bifold-gold-seal">★</div>
+              <div className="preview-bifold-gold-seal" />
             </div>
           </div>
         )}
@@ -112,8 +109,7 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
             <div className="preview-kraft-sheet" style={{ background: template.kraftColor || '#E8D5B7', borderColor: template.accentColor || '#B33951' }}>
               <div className="preview-kraft-top-flap" />
               <div className="preview-kraft-heart">♥</div>
-              <span className="preview-card-caption" style={{ color: '#6B3045' }}>LÈT DAMOU</span>
-              <div className="preview-card-heading" style={{ color: '#6B3045' }}>{template.title}</div>
+              <div className="preview-card-heading" style={{ color: '#6B3045', marginTop: 4 }}>{template.title}</div>
               <p className="preview-card-snippet" style={{ color: '#4A1D2B' }}>{template.defaultMessage.slice(0, 45)}...</p>
             </div>
           </div>

@@ -66,19 +66,13 @@ export default function AmbientEffects({ type = 'snow' }) {
       ctx.restore();
     };
 
-    const drawStar = (cx, cy, size, alpha) => {
+    const drawGlowDot = (cx, cy, size, alpha) => {
       ctx.save();
-      ctx.translate(cx, cy);
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = '#FFDF78';
-      ctx.shadowBlur = 6;
-      ctx.shadowColor = '#ECC880';
       ctx.beginPath();
-      for (let j = 0; j < 4; j++) {
-        ctx.lineTo(Math.cos(((j * 90 + 0) * Math.PI) / 180) * size * 1.6, Math.sin(((j * 90 + 0) * Math.PI) / 180) * size * 1.6);
-        ctx.lineTo(Math.cos(((j * 90 + 45) * Math.PI) / 180) * (size * 0.4), Math.sin(((j * 90 + 45) * Math.PI) / 180) * (size * 0.4));
-      }
-      ctx.closePath();
+      ctx.arc(cx, cy, Math.max(1, size * 0.7), 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(245, 215, 127, ${alpha * 0.6})`;
+      ctx.shadowBlur = 3;
+      ctx.shadowColor = '#F5D77F';
       ctx.fill();
       ctx.restore();
     };
@@ -111,7 +105,7 @@ export default function AmbientEffects({ type = 'snow' }) {
         } else if (type === 'hearts') {
           drawHeart(p.x, p.y, p.size, p.opacity);
         } else {
-          drawStar(p.x, p.y, p.size, p.opacity);
+          drawGlowDot(p.x, p.y, p.size, p.opacity);
         }
       });
 

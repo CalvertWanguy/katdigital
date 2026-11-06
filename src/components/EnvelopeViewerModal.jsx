@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import AmbientEffects from './AmbientEffects';
 import {
+  preloadHolidaySoundtrack,
   playHolidaySoundtrack,
   stopHolidaySoundtrack,
   isSoundtrackPlaying
@@ -117,6 +118,11 @@ export default function EnvelopeViewerModal({
   const title = customData?.heading || template.heading;
   const musicId = customData?.musicId || template.defaultMusic || 'jingle_bells';
   const customAudioUrl = customData?.customAudioUrl || null;
+
+  // Prechaje mizik la davans pou pa gen okenn reta lè itilizatè klike pou ouvri kat la
+  useEffect(() => {
+    preloadHolidaySoundtrack(musicId, customAudioUrl);
+  }, [musicId, customAudioUrl]);
 
   const currentHost = typeof window !== 'undefined' ? window.location.origin : 'https://katdigital.ht';
   const uniqueCardLink = `${currentHost}/?to=${encodeURIComponent(recipient)}&from=${encodeURIComponent(sender)}&theme=${template.id}&msg=${encodeURIComponent(message)}&h=${encodeURIComponent(title)}`;
@@ -506,12 +512,12 @@ export default function EnvelopeViewerModal({
         >
           <div ref={promptRef} className="open-prompt" onClick={openCard}>
             {format === 'parchment'
-              ? '✦ Touche pou w dewoule pachemen an ✦'
+              ? 'Touche pou w dewoule pachemen an'
               : format === 'bifold'
-              ? '✦ Touche pou w ouvri liv papetri a ✦'
+              ? 'Touche pou w ouvri liv papetri a'
               : format === 'kraft_sheet'
-              ? '✦ Touche pou w ouvri lèt la ✦'
-              : '✦ Touche pou w ouvri kat la ✉️ ✦'}
+              ? 'Touche pou w ouvri lèt la'
+              : 'Touche pou w ouvri kat la ✉️'}
           </div>
 
           <div className={`envelope-scene-box ${format === 'bifold' ? 'is-bifold-scene' : ''} ${format === 'parchment' ? 'is-parchment-scene' : ''}`}>
@@ -713,8 +719,7 @@ export default function EnvelopeViewerModal({
                     <div className="bifold-corner bifold-corner-br" />
 
                     <div className="bifold-cover-top">
-                      <span className="bifold-cover-badge">LIV PAPETRI • DE LUKS</span>
-                      <div className="bifold-cover-star">✦</div>
+                      <div className="bifold-cover-star" />
                     </div>
 
                     <div className="bifold-cover-center">
@@ -735,7 +740,7 @@ export default function EnvelopeViewerModal({
                     </div>
 
                     <div className="bifold-cover-bottom">
-                      <span className="bifold-tap-hint">✦ KLIKE SOU LIV LA POU W OUVERTI L ✦</span>
+                      <span className="bifold-tap-hint">KLIKE SOU LIV LA POU W OUVERTI L</span>
                     </div>
                   </div>
                 </div>
@@ -755,9 +760,7 @@ export default function EnvelopeViewerModal({
                   >
                     <div className="bifold-page-inner-border" style={{ borderColor: 'rgba(212, 175, 55, 0.45)' }}>
                       <div className="bifold-art-top">
-                        <span style={{ fontSize: 16, color: '#D4AF37' }}>✦</span>
                         <span className="bifold-art-year">2026 • 2027</span>
-                        <span style={{ fontSize: 16, color: '#D4AF37' }}>✦</span>
                       </div>
 
                       <div className="bifold-tree-illustration">
@@ -782,7 +785,7 @@ export default function EnvelopeViewerModal({
                       </div>
 
                       <div className="bifold-art-bottom">
-                        <span className="bifold-art-badge">✦ KAT DIJITAL ✦</span>
+                        <span className="bifold-art-badge">KAT DIJITAL</span>
                       </div>
                     </div>
                   </div>
