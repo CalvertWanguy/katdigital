@@ -203,6 +203,190 @@ export function stopHolidaySoundtrack() {
   }
 }
 
+let audioCtxInstance = null;
+
+function getAudioContext() {
+  if (typeof window === 'undefined') return null;
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtx) return null;
+  if (!audioCtxInstance || audioCtxInstance.state === 'closed') {
+    audioCtxInstance = new AudioCtx();
+  }
+  if (audioCtxInstance.state === 'suspended') {
+    audioCtxInstance.resume();
+  }
+  return audioCtxInstance;
+}
+
+/**
+ * Jwe yon son krake sele & ouvèti kat rich, pèsonalize pou chak fòma ak modèl
+ */
+export function playCardOpenSound(template = {}, format = 'envelope') {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+
+    // Diferansye son an selon fòma ak ID modèl la
+    if (format === 'parchment') {
+      // 1. PACHEMEN : Son dewoulman papye wayal ak ti klòch nòb
+      const bufSize = Math.floor(ctx.sampleRate * 0.35);
+      const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < bufSize; i++) {
+        const decay = Math.sin((i / bufSize) * Math.PI);
+        data[i] = (Math.random() * 2 - 1) * decay * 0.22;
+      }
+      const noiseNode = ctx.createBufferSource();
+      noiseNode.buffer = buf;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(650, now);
+      filter.frequency.exponentialRampToValueAtTime(320, now + 0.35);
+      filter.Q.value = 1.2;
+
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.28, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+
+      noiseNode.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+      noiseNode.start(now);
+
+      // Klòch wayal dous (587Hz & 880Hz)
+      [587.33, 880].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const oscGain = ctx.createGain();
+        osc.type = 'sine';
+        const st = now + 0.08 + idx * 0.06;
+        osc.frequency.setValueAtTime(freq, st);
+        oscGain.gain.setValueAtTime(0.18, st);
+        oscGain.gain.exponentialRampToValueAtTime(0.001, st + 0.85);
+        osc.connect(oscGain);
+        oscGain.connect(ctx.destination);
+        osc.start(st);
+        osc.stop(st + 0.9);
+      });
+    } else if (format === 'bifold') {
+      // 2. LIV PAPETRI FOLIO : Kouvèti k ap ouvri ak akò 3 nòt
+      const oscLow = ctx.createOscillator();
+      const oscLowGain = ctx.createGain();
+      oscLow.type = 'triangle';
+      oscLow.frequency.setValueAtTime(140, now);
+      oscLow.frequency.exponentialRampToValueAtTime(75, now + 0.22);
+      oscLowGain.gain.setValueAtTime(0.2, now);
+      oscLowGain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+      oscLow.connect(oscLowGain);
+      oscLowGain.connect(ctx.destination);
+      oscLow.start(now);
+      oscLow.stop(now + 0.23);
+
+      // Akò majik (D major: D5, F#5, A5)
+      [587.33, 739.99, 880].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        const startT = now + 0.04 + idx * 0.07;
+        osc.frequency.setValueAtTime(freq, startT);
+        g.gain.setValueAtTime(0.16, startT);
+        g.gain.exponentialRampToValueAtTime(0.001, startT + 0.85);
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start(startT);
+        osc.stop(startT + 0.9);
+      });
+    } else if (format === 'kraft_sheet') {
+      // 3. LÈT KRAFT : Pli papye delika ak ti kalimba
+      const bufSize = Math.floor(ctx.sampleRate * 0.22);
+      const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < bufSize; i++) {
+        d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.06)) * 0.2;
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buf;
+      const f = ctx.createBiquadFilter();
+      f.type = 'lowpass';
+      f.frequency.value = 1200;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.25, now);
+      g.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+      noise.connect(f);
+      f.connect(g);
+      g.connect(ctx.destination);
+      noise.start(now);
+
+      // Ti nòt dous lanmou (E5 & A5)
+      [659.25, 880].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const og = ctx.createGain();
+        osc.type = 'sine';
+        const st = now + 0.06 + idx * 0.08;
+        osc.frequency.setValueAtTime(freq, st);
+        og.gain.setValueAtTime(0.15, st);
+        og.gain.exponentialRampToValueAtTime(0.001, st + 0.7);
+        osc.connect(og);
+        og.connect(ctx.destination);
+        osc.start(st);
+        osc.stop(st + 0.75);
+      });
+    } else {
+      // 4. ANVLÒP DE LUKS : Krake sele an lasir ak sonorite kristal
+      const popOsc = ctx.createOscillator();
+      const popGain = ctx.createGain();
+      popOsc.type = 'sine';
+      popOsc.frequency.setValueAtTime(160, now);
+      popOsc.frequency.exponentialRampToValueAtTime(55, now + 0.09);
+      popGain.gain.setValueAtTime(0.28, now);
+      popGain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+      popOsc.connect(popGain);
+      popGain.connect(ctx.destination);
+      popOsc.start(now);
+      popOsc.stop(now + 0.1);
+
+      // Krake teksti (bandpass wax snap)
+      const bufSize = Math.floor(ctx.sampleRate * 0.09);
+      const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < bufSize; i++) {
+        d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.025)) * 0.22;
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buf;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 1800;
+      filter.Q.value = 1.5;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.22, now);
+      g.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+      noise.connect(filter);
+      filter.connect(g);
+      g.connect(ctx.destination);
+      noise.start(now);
+
+      // Klòch fèt kristal an lò (C6: 1046Hz, G6: 1568Hz)
+      const toneFreq = template.accentColor ? 1046.5 : 1174.66;
+      [toneFreq, toneFreq * 1.5].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const og = ctx.createGain();
+        osc.type = 'sine';
+        const st = now + 0.03 + idx * 0.05;
+        osc.frequency.setValueAtTime(freq, st);
+        og.gain.setValueAtTime(0.15, st);
+        og.gain.exponentialRampToValueAtTime(0.001, st + 0.75);
+        osc.connect(og);
+        og.connect(ctx.destination);
+        osc.start(st);
+        osc.stop(st + 0.8);
+      });
+    }
+  } catch (e) {
+    console.warn('Erè nan son ouvèti kat la:', e);
+  }
+}
+
 /**
  * Tcheke si gen mizik k ap jwe kounye a
  */

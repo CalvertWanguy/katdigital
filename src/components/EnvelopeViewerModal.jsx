@@ -17,6 +17,7 @@ import AmbientEffects from './AmbientEffects';
 import {
   preloadHolidaySoundtrack,
   playHolidaySoundtrack,
+  playCardOpenSound,
   stopHolidaySoundtrack,
   isSoundtrackPlaying
 } from '../utils/audioSynthesizer';
@@ -197,7 +198,7 @@ export default function EnvelopeViewerModal({
     if (isOpened) return;
     setIsOpened(true);
 
-    playWaxBreakAndChime();
+    playCardOpenSound(template, format);
 
     // Kòmanse jwe melodi fèt la si li pa an silans
     if (!isMusicMuted && musicId !== 'none') {
@@ -634,30 +635,30 @@ export default function EnvelopeViewerModal({
                 >
                   <div className="parchment-inner-border" style={{ borderColor: template.accentColor || '#C99726' }} />
 
-                  {/* Kontni tèks la */}
+                  {/* Kontni tèks la santre avèk balans pafè nan pachemen an */}
                   <div ref={cardRef} className="parchment-content-flow" style={{ opacity: 0 }}>
-                    <div style={{ marginTop: 10, marginBottom: 4 }}>
+                    <div className="parchment-top-heading-wrap">
                       <h2 className="card-main-title" style={{ color: template.envelopeColor }}>
                         {title}
                       </h2>
                       <div className="card-separator" style={{ background: template.accentColor || '#C99726' }} />
                     </div>
 
-                    <div className="card-message-area">
+                    <div className="card-message-area parchment-message-center">
                       <div className="card-destinataire" style={{ color: '#2B1A04' }}>{recipient},</div>
                       <p
                         className="card-text-body"
                         style={{
                           color: '#2D2012',
-                          fontSize: message.length > 280 ? '14.5px' : message.length > 190 ? '16px' : '17.5px',
-                          lineHeight: message.length > 280 ? 1.45 : message.length > 190 ? 1.52 : 1.6
+                          fontSize: message.length > 270 ? '12.5px' : message.length > 180 ? '14px' : '15.5px',
+                          lineHeight: message.length > 270 ? 1.4 : message.length > 180 ? 1.46 : 1.55
                         }}
                       >
                         {message}
                       </p>
                     </div>
 
-                    <div className="card-signature-box" style={{ borderTopColor: '#DECBB0' }}>
+                    <div className="card-signature-box parchment-signature-center" style={{ borderTopColor: '#DECBB0' }}>
                       <div className="card-signature-label">Ak tout afeksyon mwen,</div>
                       <div className="card-signature-name" style={{ color: template.envelopeColor }}>{sender}</div>
                     </div>

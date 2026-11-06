@@ -1634,6 +1634,51 @@ body {
   justify-content: space-between;
   text-align: center;
   z-index: 10;
+  padding: 6px 4px 4px;
+  box-sizing: border-box;
+}
+
+.parchment-top-heading-wrap {
+  margin-top: 4px;
+  margin-bottom: 2px;
+  flex-shrink: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.parchment-message-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  margin: auto 0;
+  padding: 4px 6px;
+  box-sizing: border-box;
+}
+
+.parchment-message-center .card-destinataire {
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.parchment-message-center .card-text-body {
+  text-align: center;
+  margin: 0 auto;
+  max-width: 100%;
+  font-style: italic;
+  padding: 0 4px;
+}
+
+.parchment-signature-center {
+  flex-shrink: 0;
+  margin-top: 2px;
+  padding-top: 6px;
+  border-top: 1px solid #DECBB0;
+  width: 100%;
+  text-align: center;
 }
 
 .parchment-closed-band {
