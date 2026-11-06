@@ -287,18 +287,38 @@ export default function App() {
   const [customData, setCustomData] = useState(null);
   const [isDirectRecipientView, setIsDirectRecipientView] = useState(false);
 
-  // Deteksyon yon lyen inik destinataire nan URL la
+  // Deteksyon yon lyen inik destinataire nan URL la (Supporte slug backend API ak query params)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
+      const cardSlug = params.get('c');
       const to = params.get('to');
       const from = params.get('from');
-      const themeId = params.get('theme');
-      const msg = params.get('msg');
-      const customH = params.get('h') || params.get('heading');
 
-      if (to && from) {
+      if (cardSlug) {
+        fetch(`/api/cards/${cardSlug}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data && data.order) {
+              const matchedTemplate = TEMPLATES.find((t) => t.id === data.order.template_id) || TEMPLATES[0];
+              setCustomData({
+                recipient: data.order.recipient_name,
+                sender: data.order.sender_name,
+                message: data.order.message_content,
+                heading: data.order.heading || matchedTemplate.heading,
+                musicId: data.order.music_id || matchedTemplate.defaultMusic
+              });
+              setActiveTemplate(matchedTemplate);
+              setIsDirectRecipientView(true);
+            }
+          })
+          .catch((err) => console.error('Erreur chargement carte API:', err));
+      } else if (to && from) {
+        const themeId = params.get('theme');
+        const msg = params.get('msg');
+        const customH = params.get('h') || params.get('heading');
         const matchedTemplate = TEMPLATES.find((t) => t.id === themeId) || TEMPLATES[0];
+
         setCustomData({
           recipient: decodeURIComponent(to),
           sender: decodeURIComponent(from),

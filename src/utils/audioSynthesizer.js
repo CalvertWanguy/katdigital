@@ -1,4 +1,4 @@
-// Sistèm Audio pou KatDigital
+// Sistèm Audio pou KatDijital
 // Jwe bèl mizik enstrimantal reyèl (otantik, san pawòl) pou chak okazyon :
 // Nwèl, Nouvèl Ane, Lanmou, ak Tradisyon Ayisyen 1804.
 // Sipòte tou yon fichye odyo pèsonalize si itilizatè a telechaje pa l.

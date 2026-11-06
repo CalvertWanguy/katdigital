@@ -115,7 +115,7 @@ export default function EnvelopeViewerModal({
     preloadHolidaySoundtrack(musicId, customAudioUrl);
   }, [musicId, customAudioUrl]);
 
-  const currentHost = typeof window !== 'undefined' ? window.location.origin : 'https://katdigital.ht';
+  const currentHost = typeof window !== 'undefined' ? window.location.origin : 'https://katdijital.ht';
   const uniqueCardLink = `${currentHost}/?to=${encodeURIComponent(recipient)}&from=${encodeURIComponent(sender)}&theme=${template.id}&msg=${encodeURIComponent(message)}&h=${encodeURIComponent(title)}`;
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
     `Ou resevwa yon bèl kat espesyal de ${sender} !\nKlike la a pou w ouvri kat ou a :\n${uniqueCardLink}`
@@ -387,17 +387,52 @@ export default function EnvelopeViewerModal({
     gsap.set(actionsRef.current, { opacity: 0, y: 20, pointerEvents: 'none' });
   };
 
-  const handleProcessPayment = (e) => {
+  const handleProcessPayment = async (e) => {
     e.preventDefault();
     setIsProcessingPayment(true);
 
-    setTimeout(() => {
-      setIsProcessingPayment(false);
-      setIsPaid(true);
-      setShowCheckoutModal(false);
-      setShowSuccessModal(true);
-      launchLuxuryConfetti();
-    }, 1200);
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          template_id: template.id,
+          sender_name: sender,
+          recipient_name: recipient,
+          message_content: message,
+          heading: title,
+          music_id: musicId,
+          gateway: paymentMethod === 'moncash' ? 'zafew' : 'stripe',
+          phone_number: phoneNumber
+        })
+      });
+
+      const data = await response.json();
+
+      if (data && data.payment_url) {
+        if (data.payment_url.startsWith('http') && !data.payment_url.includes('payment_status=success_demo')) {
+          window.location.href = data.payment_url;
+          return;
+        }
+      }
+
+      setTimeout(() => {
+        setIsProcessingPayment(false);
+        setIsPaid(true);
+        setShowCheckoutModal(false);
+        setShowSuccessModal(true);
+        launchLuxuryConfetti();
+      }, 1000);
+    } catch (err) {
+      console.error('Erreur traitement paiement API:', err);
+      setTimeout(() => {
+        setIsProcessingPayment(false);
+        setIsPaid(true);
+        setShowCheckoutModal(false);
+        setShowSuccessModal(true);
+        launchLuxuryConfetti();
+      }, 1000);
+    }
   };
 
   const handleDownloadCardImage = () => {

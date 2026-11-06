@@ -1,4 +1,4 @@
-# KatDigital
+# KatDijital
 
 Plateforme web de cartes de vœux et d'invitations digitales interactives, optimisée pour une distribution mobile et WhatsApp avec intégration de paiements locaux et internationaux.
 
@@ -6,7 +6,7 @@ Plateforme web de cartes de vœux et d'invitations digitales interactives, optim
 
 ## Vue d'ensemble
 
-KatDigital est une solution web orientée mobile conçue pour moderniser l'envoi de vœux lors des célébrations de fin d'année (Noël, Nouvel An 2027 et Fête Nationale du 1er Janvier). Le projet s'appuie sur les standards d'animation et de papeterie éditoriale haut de gamme inspirés de références du secteur telles que Greenvelope et Evite, combinant l'élégance du papier traditionnel à l'interactivité numérique.
+KatDijital est une solution web orientée mobile conçue pour moderniser l'envoi de vœux lors des célébrations de fin d'année (Noël, Nouvel An 2027 et Fête Nationale du 1er Janvier). Le projet s'appuie sur les standards d'animation et de papeterie éditoriale haut de gamme inspirés de références du secteur telles que Greenvelope et Evite, combinant l'élégance du papier traditionnel à l'interactivité numérique.
 
 ---
 
@@ -51,8 +51,8 @@ KatDigital est une solution web orientée mobile conçue pour moderniser l'envoi
 
 1. Cloner le dépôt :
 ```bash
-git clone https://github.com/CalvertWanguy/katdigital.git
-cd katdigital
+git clone https://github.com/CalvertWanguy/katdijital.git
+cd katdijital
 ```
 
 2. Installer les dépendances du projet :

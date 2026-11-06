@@ -1,4 +1,4 @@
-# KatDigital • Spécification Technique & Architecture Back-end (Supabase)
+# KatDijital • Spécification Technique & Architecture Back-end (Supabase)
 
 Document d'ingénierie logicielle pour l'intégration de la base de données PostgreSQL (Supabase), des Edge Functions et des passerelles de paiement (MonCash & Stripe).
 
@@ -6,11 +6,11 @@ Document d'ingénierie logicielle pour l'intégration de la base de données Pos
 
 ## 1. Schéma Visuel du Flux Global du Système
 
-![Schéma du Flux Technique KatDigital](./schema_flux_katdigital.png)
+![Schéma du Flux Technique KatDijital](./schema_flux_katdigital.png)
 
 ```
 +----------------------------------------------------------------------------------------------------+
-|                                 KATDIGITAL • FLUX TECHNIQUE GLOBAL                                 |
+|                                 KATDIJITAL • FLUX TECHNIQUE GLOBAL                                 |
 +----------------------------------------------------------------------------------------------------+
 
 [ 1. CLIENT (Front-end) ]        [ 2. PAIEMENT ]           [ 3. SUPABASE BACK-END ]    [ 4. DESTINATAIRE & VIRALITÉ ]
@@ -59,7 +59,7 @@ Document d'ingénierie logicielle pour l'intégration de la base de données Pos
 
 | Étape | Action Client | Comportement Front-end | Traitement Back-end (Supabase) |
 | :--- | :--- | :--- | :--- |
-| **1. Découverte** | Arrive sur katdigital.ht, consulte le catalogue et teste la démo animée 3D. | Affiche le catalogue de cartes en cache local. | Met à disposition la table `templates` avec les modèles actifs et leurs couleurs. |
+| **1. Découverte** | Arrive sur katdijital.ht, consulte le catalogue et teste la démo animée 3D. | Affiche le catalogue de cartes en cache local. | Met à disposition la table `templates` avec les modèles actifs et leurs couleurs. |
 | **2. Création** | Tape le nom du destinataire (Vanessa), son nom (David), et choisit son message. | Met à jour l'état local en direct. La carte est visualisée instantanément. | Aucune requête serveur (latence 0 pour l'utilisateur). |
 | **3. Paywall** | Clique sur *« Pataje sou WhatsApp »* ou *« Telechaje »*. Choisit MonCash (100 Goud) ou Carte ($2.99). | Déclenche `POST /api/orders/create` avec le payload de la carte personnalisée. | Edge Function `create-order` crée la ligne dans `orders` (status: `pending`) et génère le token MonCash ou la session Stripe. |
 | **4. Paiement** | Valide avec son PIN sur son téléphone (MonCash) ou entre sa carte sur Stripe Checkout. | Affiche un écran d'attente convivial avec polling ou écoute de l'événement. | Reçoit le webhook sécurisé de Digicel ou Stripe, certifie la signature cryptographique et passe `orders.payment_status = 'paid'`. |
@@ -116,7 +116,7 @@ Document d'ingénierie logicielle pour l'intégration de la base de données Pos
 | :--- | :--- | :--- | :--- |
 | `id` | UUID | **PRIMARY KEY DEFAULT gen_random_uuid()** | Identifiant technique interne. |
 | `order_id` | UUID | FK -> orders.id UNIQUE | Liaison stricte à la commande réglée. |
-| `slug` | VARCHAR(16) | **UNIQUE NOT NULL** | Code court du lien public (ex: `x7K9p2` pour `katdigital.ht/?c=x7K9p2`). |
+| `slug` | VARCHAR(16) | **UNIQUE NOT NULL** | Code court du lien public (ex: `x7K9p2` pour `katdijital.ht/?c=x7K9p2`). |
 | `views_count` | INT | DEFAULT 0 | Nombre d'ouvertures par le destinataire. |
 | `last_viewed_at` | TIMESTAMPTZ | NULLABLE | Date et heure de dernière ouverture. |
 | `created_at` | TIMESTAMPTZ | DEFAULT now() | Date d'activation de la carte. |
