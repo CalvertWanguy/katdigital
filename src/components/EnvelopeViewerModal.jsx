@@ -2,17 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import confetti from 'canvas-confetti';
 import {
-  RotateCcw,
+  ArrowCounterClockwise,
   X,
   Lock,
-  Download,
-  Smartphone,
+  DownloadSimple,
+  DeviceMobile,
   CreditCard,
   ShieldCheck,
-  CheckCircle2,
-  Volume2,
-  VolumeX
-} from 'lucide-react';
+  CheckCircle,
+  SpeakerHigh,
+  SpeakerSlash
+} from '@phosphor-icons/react';
 import AmbientEffects from './AmbientEffects';
 import {
   preloadHolidaySoundtrack,
@@ -107,7 +107,7 @@ export default function EnvelopeViewerModal({
   const sender = customData?.sender || 'David Jean';
   const message = customData?.message || template.defaultMessage;
   const title = customData?.heading || template.heading;
-  const musicId = customData?.musicId || template.defaultMusic || 'jingle_bells';
+  const musicId = customData?.musicId || template.defaultMusic || 'festif_violon';
   const customAudioUrl = customData?.customAudioUrl || null;
 
   // Prechaje mizik la davans pou pa gen okenn reta lè itilizatè klike pou ouvri kat la
@@ -134,29 +134,6 @@ export default function EnvelopeViewerModal({
     color: '#1F2922',
     border: '1px solid rgba(0, 0, 0, 0.15)',
     boxShadow: '0 1px 4px rgba(0, 0, 0, 0.06)'
-  };
-
-  const playWaxBreakAndChime = () => {
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      if (ctx.state === 'suspended') ctx.resume();
-
-      const bufferSize = ctx.sampleRate * 0.08;
-      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.02));
-      }
-      const noise = ctx.createBufferSource();
-      noise.buffer = buffer;
-      const noiseGain = ctx.createGain();
-      noiseGain.gain.setValueAtTime(0.3, ctx.currentTime);
-      noise.connect(noiseGain);
-      noiseGain.connect(ctx.destination);
-      noise.start(ctx.currentTime);
-    } catch (e) {}
   };
 
   const launchLuxuryConfetti = () => {
@@ -189,6 +166,25 @@ export default function EnvelopeViewerModal({
     setIsOpened(true);
 
     playCardOpenSound(template, format);
+
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      if (promptRef.current) promptRef.current.style.display = 'none';
+      if (sealContainerRef.current) sealContainerRef.current.style.display = 'none';
+      if (envelopeRef.current) envelopeRef.current.style.opacity = '0';
+      if (cardRef.current) {
+        gsap.set(cardRef.current, { opacity: 1, y: 0, scale: 1, pointerEvents: 'auto' });
+      }
+      if (actionsRef.current) {
+        gsap.set(actionsRef.current, { opacity: 1, y: 0, pointerEvents: 'auto' });
+      }
+      setIsOpened(true);
+      playHolidaySoundtrack(musicId, customAudioUrl);
+      return;
+    }
 
     confetti({
       particleCount: 22,
@@ -228,7 +224,7 @@ export default function EnvelopeViewerModal({
       tl.to(parchmentRibbonRef.current, { opacity: 0, scale: 0.9, duration: 0.25 }, 'crack')
         .fromTo(
           parchmentContainerRef.current,
-          { height: 60 },
+          { height: 78 },
           {
             height: targetParchmentHeight,
             duration: 0.6,
@@ -278,7 +274,7 @@ export default function EnvelopeViewerModal({
         .set(cardRef.current, { opacity: 1, pointerEvents: 'auto', zIndex: 50 }, '-=0.25')
         .fromTo(
           cardRef.current,
-          { scale: 0.95, opacity: 0.2, y: 15, clearProps: 'left,x,xPercent' },
+          { scale: 0.95, opacity: 0.2, y: 15 },
           {
             scale: 1,
             opacity: 1,
@@ -360,7 +356,7 @@ export default function EnvelopeViewerModal({
 
     if (format === 'parchment') {
       gsap.set(parchmentRibbonRef.current, { opacity: 1, scale: 1 });
-      gsap.set(parchmentContainerRef.current, { height: 60 });
+      gsap.set(parchmentContainerRef.current, { height: 78 });
       gsap.set(cardRef.current, { opacity: 0 });
     } else if (format === 'bifold') {
       if (bifoldCoverRef.current) {
@@ -374,7 +370,7 @@ export default function EnvelopeViewerModal({
       gsap.set(cardRef.current, { opacity: 1, pointerEvents: 'none' });
     } else if (format === 'kraft_sheet') {
       gsap.set([kraftTopFlapRef.current, kraftBottomFlapRef.current], { rotateX: 0, opacity: 1 });
-      gsap.set(cardRef.current, { opacity: 0, pointerEvents: 'none', clearProps: 'left,x,xPercent' });
+      gsap.set(cardRef.current, { opacity: 0, pointerEvents: 'none', y: 0, scale: 1 });
     } else {
       if (envelopeRef.current) {
         envelopeRef.current.style.display = 'block';
@@ -483,7 +479,7 @@ export default function EnvelopeViewerModal({
       <AmbientEffects type={template.ambientAnimation || 'snow'} />
 
       <button className="btn-close-modal" onClick={handleModalClose} aria-label="Fèmen">
-        <X size={20} />
+        <X size={20} weight="bold" />
       </button>
 
       {/* Kontwòl Mizik Flotan */}
@@ -494,7 +490,7 @@ export default function EnvelopeViewerModal({
           onClick={toggleSoundtrack}
           title={isMusicMuted ? 'Limen Mizik' : 'Koupe Mizik'}
         >
-          {isMusicMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+          {isMusicMuted ? <SpeakerSlash size={16} weight="regular" /> : <SpeakerHigh size={16} weight="regular" />}
           <span>{isMusicMuted ? 'Mizik Eten' : 'Mizik Limen'}</span>
         </button>
       )}
@@ -524,62 +520,119 @@ export default function EnvelopeViewerModal({
               <>
                 <div
                   ref={envelopeRef}
-                  className="real-envelope"
-                  style={{ background: template.envelopeColor }}
+                  className="tactile-envelope real-envelope"
+                  style={{
+                    '--env-bg': template.envelopeColor || '#7A1F2D',
+                    '--env-shadow': 'rgba(40, 10, 15, 0.45)',
+                    background: template.envelopeColor || '#7A1F2D'
+                  }}
                   onClick={openCard}
                 >
-                  <div className="real-liner" />
-
-                  <div className="envelope-front-pocket">
-                    <div className="envelope-fold-left" style={{ borderLeftColor: template.pocketColors?.left || '#6E1A27' }} />
-                    <div className="envelope-fold-right" style={{ borderRightColor: template.pocketColors?.right || '#631622' }} />
-                    <div className="envelope-fold-bottom" style={{ borderBottomColor: template.pocketColors?.bottom || '#7A1F2D' }} />
+                  {/* Couche 1 : Gorge intérieure avec papier doublure ivoire & motif or */}
+                  <div className="tactile-throat-interior">
+                    <div className="tactile-throat-liner real-liner" />
+                    <div className="tactile-throat-shadow" />
                   </div>
 
-                  <div ref={flapRef} className="real-envelope-flap" style={{ borderTopColor: template.flapColor || '#8B2535' }} />
+                  {/* Couche 2 : Poche avant à plis réalistes et ombres de contact */}
+                  <div className="tactile-pocket-layer envelope-front-pocket">
+                    <div className="tactile-fold-left" style={{ background: template.pocketColors?.left || '#101B2E' }} />
+                    <div className="tactile-fold-right" style={{ background: template.pocketColors?.right || '#0E1727' }} />
+                    <div className="tactile-fold-bottom" style={{ background: template.pocketColors?.bottom || template.envelopeColor }} />
+                    <div className="tactile-pocket-crease-shadow" />
+                  </div>
 
-                  <div ref={sealContainerRef} className="real-wax-seal" title="Kase sele an lò a">
-                    <div ref={sealLeftRef} className="seal-half seal-left">
-                      <svg viewBox="0 0 54 54" className="seal-svg">
+                  {/* Couche 3 : Rabat supérieur 3D complet à pli tactile */}
+                  <div
+                    ref={flapRef}
+                    className="tactile-flap-unit real-envelope-flap"
+                    style={{ background: template.flapColor || '#1D2E4D' }}
+                  >
+                    <div className="tactile-flap-crease-line" />
+                  </div>
+
+                  {/* Couche 4 : Sceau de cire d'artisan avec contour organique et empreinte KatDijital en creux */}
+                  <div ref={sealContainerRef} className="tactile-wax-seal-unit real-wax-seal" title="Kase sele an lasir la">
+                    <div ref={sealLeftRef} className="tactile-seal-half seal-half seal-left">
+                      <svg viewBox="0 0 64 64" className="tactile-seal-svg">
                         <defs>
-                          <radialGradient id="goldWaxGrad1" cx="35%" cy="30%" r="65%">
-                            <stop offset="0%" stopColor="#FFF4D0" />
-                            <stop offset="25%" stopColor="#F5D77F" />
-                            <stop offset="60%" stopColor="#C99726" />
-                            <stop offset="85%" stopColor="#966B12" />
-                            <stop offset="100%" stopColor="#543603" />
-                          </radialGradient>
+                          {template.id === 'noel-bordeaux' ? (
+                            <radialGradient id="envWaxGrad" cx="38%" cy="32%" r="65%">
+                              <stop offset="0%" stopColor="#A8283D" />
+                              <stop offset="45%" stopColor="#7E1C2B" />
+                              <stop offset="85%" stopColor="#55121D" />
+                              <stop offset="100%" stopColor="#360B12" />
+                            </radialGradient>
+                          ) : (
+                            <radialGradient id="envWaxGrad" cx="38%" cy="32%" r="65%">
+                              <stop offset="0%" stopColor="#F5D77F" />
+                              <stop offset="45%" stopColor="#C99726" />
+                              <stop offset="85%" stopColor="#8A5E12" />
+                              <stop offset="100%" stopColor="#543603" />
+                            </radialGradient>
+                          )}
+                          <filter id="sealDeboss" x="-20%" y="-20%" width="140%" height="140%">
+                            <feOffset dx="0" dy="1.2" />
+                            <feGaussianBlur stdDeviation="0.8" result="offset-blur" />
+                            <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse" />
+                            <feFlood floodColor="black" floodOpacity="0.65" result="color" />
+                            <feComposite operator="in" in="color" in2="inverse" result="shadow" />
+                            <feComposite operator="over" in="shadow" in2="SourceGraphic" />
+                          </filter>
                         </defs>
-                        <circle cx="27" cy="27" r="25" fill="url(#goldWaxGrad1)" stroke="#7A5207" strokeWidth="1.2" />
-                        <circle cx="27" cy="27" r="21" fill="none" stroke="#FFEAA0" strokeWidth="1" strokeDasharray="2,2" opacity="0.85" />
-                        <path d="M17 33h20v2.5H17zm1.5-3.5l1.5-7.5 4.5 4.5 2.5-6.5 2.5 6.5 4.5-4.5 1.5 7.5h-17z" fill="#FFF3C4" stroke="#5C3B04" strokeWidth="0.8" />
-                        <circle cx="27" cy="18" r="1.5" fill="#FFF" />
-                        <circle cx="20" cy="21" r="1.2" fill="#FFF" />
-                        <circle cx="34" cy="21" r="1.2" fill="#FFF" />
+                        <path
+                          d="M32 4 C46 3.5, 57 12, 59 26 C60.5 37, 54 50, 42 58 C32 62, 19 60, 10 52 C2 44, 3 30, 6 18 C9 9, 21 4.5, 32 4 Z"
+                          fill="url(#envWaxGrad)"
+                          stroke="#380913"
+                          strokeWidth="1.2"
+                        />
+                        <circle cx="32" cy="32" r="21.5" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2.2" opacity="0.65" />
+                        <circle cx="32" cy="32" r="18" fill={template.id === 'noel-bordeaux' ? '#6B1624' : '#80560F'} />
+                        <g filter="url(#sealDeboss)" fill="#FAF4EB" stroke="#FAF4EB" strokeWidth="0.5">
+                          <text x="32" y="37" textAnchor="middle" fontFamily="'Montserrat', serif" fontSize="15" fontWeight="bold" letterSpacing="1">
+                            KD
+                          </text>
+                          <path d="M22 23 L32 20 L42 23 L37 25 L32 22 L27 25 Z" opacity="0.85" />
+                          <circle cx="32" cy="18" r="1.2" />
+                        </g>
                       </svg>
                     </div>
 
-                    <div ref={sealRightRef} className="seal-half seal-right">
-                      <svg viewBox="0 0 54 54" className="seal-svg">
-                        <circle cx="27" cy="27" r="25" fill="url(#goldWaxGrad1)" stroke="#7A5207" strokeWidth="1.2" />
-                        <circle cx="27" cy="27" r="21" fill="none" stroke="#FFEAA0" strokeWidth="1" strokeDasharray="2,2" opacity="0.85" />
-                        <path d="M17 33h20v2.5H17zm1.5-3.5l1.5-7.5 4.5 4.5 2.5-6.5 2.5 6.5 4.5-4.5 1.5 7.5h-17z" fill="#FFF3C4" stroke="#5C3B04" strokeWidth="0.8" />
-                        <circle cx="27" cy="18" r="1.5" fill="#FFF" />
-                        <circle cx="20" cy="21" r="1.2" fill="#FFF" />
-                        <circle cx="34" cy="21" r="1.2" fill="#FFF" />
+                    <div ref={sealRightRef} className="tactile-seal-half seal-half seal-right">
+                      <svg viewBox="0 0 64 64" className="tactile-seal-svg">
+                        <path
+                          d="M32 4 C46 3.5, 57 12, 59 26 C60.5 37, 54 50, 42 58 C32 62, 19 60, 10 52 C2 44, 3 30, 6 18 C9 9, 21 4.5, 32 4 Z"
+                          fill="url(#envWaxGrad)"
+                          stroke="#380913"
+                          strokeWidth="1.2"
+                        />
+                        <circle cx="32" cy="32" r="21.5" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2.2" opacity="0.65" />
+                        <circle cx="32" cy="32" r="18" fill={template.id === 'noel-bordeaux' ? '#6B1624' : '#80560F'} />
+                        <g filter="url(#sealDeboss)" fill="#FAF4EB" stroke="#FAF4EB" strokeWidth="0.5">
+                          <text x="32" y="37" textAnchor="middle" fontFamily="'Montserrat', serif" fontSize="15" fontWeight="bold" letterSpacing="1">
+                            KD
+                          </text>
+                          <path d="M22 23 L32 20 L42 23 L37 25 L32 22 L27 25 Z" opacity="0.85" />
+                          <circle cx="32" cy="18" r="1.2" />
+                        </g>
                       </svg>
                     </div>
 
-                    <div ref={sealCrackLineRef} className="seal-crack-line" />
+                    <div ref={sealCrackLineRef} className="tactile-seal-crack-line seal-crack-line" />
                   </div>
                 </div>
 
-                {/* Kat papye ki glise soti nan anvlòp la */}
-                <div ref={cardRef} className="real-card">
-                  <div className="real-card-border" style={{ borderColor: template.accentColor || '#D4AF37' }} />
+                {/* Kat papye tactile ki glise soti nan anvlòp la */}
+                <div ref={cardRef} className="real-card tactile-paper-card">
+                  {/* Tranche de papier visible biseautée */}
+                  <div className="tactile-paper-edge" />
+                  {/* Grain papier subtil 320g */}
+                  <div className="tactile-card-grain" />
+                  {/* Filet or double cadre traditionnel */}
+                  <div className="tactile-card-inner-frame real-card-border" style={{ borderColor: template.accentColor || '#D4AF37' }} />
 
-                  <div style={{ marginTop: 6, marginBottom: 4 }}>
-                    <h2 className="card-main-title" style={{ color: template.envelopeColor }}>
+                  <div className="card-header-block" style={{ marginTop: 4, marginBottom: 4 }}>
+                    <h2 className="card-main-title" style={{ color: template.envelopeColor || '#7A1F2D' }}>
                       {title}
                     </h2>
                     <div className="card-separator" style={{ background: template.accentColor || '#D4AF37' }} />
@@ -590,7 +643,7 @@ export default function EnvelopeViewerModal({
                     <p
                       className="card-text-body"
                       style={{
-                        fontSize: message.length > 220 ? '13px' : message.length > 150 ? '14px' : '15.5px',
+                        fontSize: message.length > 220 ? '13px' : message.length > 150 ? '14px' : '15px',
                         lineHeight: message.length > 220 ? 1.38 : message.length > 150 ? 1.45 : 1.55
                       }}
                     >
@@ -658,26 +711,56 @@ export default function EnvelopeViewerModal({
                     </div>
                   </div>
 
-                  {/* Ruban ak sele an lò ki fèmen l anvan ouvèti */}
+                  {/* Ruban ak sele an lò wayal ki fèmen l anvan ouvèti */}
                   {!isOpened && (
                     <div ref={parchmentRibbonRef} className="parchment-closed-band">
                       <div className="parchment-ribbon-gold" />
-                      <div ref={sealContainerRef} className="real-wax-seal" style={{ position: 'relative', top: 0, left: 0, transform: 'none' }}>
-                        <div ref={sealLeftRef} className="seal-half seal-left">
-                          <svg viewBox="0 0 54 54" className="seal-svg">
-                            <circle cx="27" cy="27" r="25" fill="#C99726" stroke="#7A5207" strokeWidth="1.2" />
-                            <circle cx="27" cy="27" r="18" fill="none" stroke="#FFE79A" strokeWidth="1" strokeDasharray="3 2" />
-                            <circle cx="27" cy="27" r="7" fill="#E8B83D" stroke="#9E6D14" strokeWidth="1" />
+                      <div ref={sealContainerRef} className="tactile-wax-seal-unit parchment-seal-pos" title="Kase sele wayal la">
+                        <div ref={sealLeftRef} className="tactile-seal-half seal-half seal-left">
+                          <svg viewBox="0 0 64 64" className="tactile-seal-svg">
+                            <defs>
+                              <radialGradient id="parchmentGoldWax" cx="38%" cy="32%" r="65%">
+                                <stop offset="0%" stopColor="#F5D77F" />
+                                <stop offset="45%" stopColor="#C99726" />
+                                <stop offset="85%" stopColor="#8A5E12" />
+                                <stop offset="100%" stopColor="#543603" />
+                              </radialGradient>
+                            </defs>
+                            <path
+                              d="M32 4 C46 3.5, 57 12, 59 26 C60.5 37, 54 50, 42 58 C32 62, 19 60, 10 52 C2 44, 3 30, 6 18 C9 9, 21 4.5, 32 4 Z"
+                              fill="url(#parchmentGoldWax)"
+                              stroke="#543603"
+                              strokeWidth="1.2"
+                            />
+                            <circle cx="32" cy="32" r="21.5" fill="none" stroke="#FFEAA0" strokeWidth="2.2" opacity="0.75" />
+                            <circle cx="32" cy="32" r="18" fill="#80560F" />
+                            <g filter="url(#sealDeboss)" fill="#FFF5D6" stroke="#FFF5D6" strokeWidth="0.5">
+                              <text x="32" y="37" textAnchor="middle" fontFamily="'Montserrat', serif" fontSize="13" fontWeight="bold" letterSpacing="1">
+                                1804
+                              </text>
+                              <path d="M22 23 L32 20 L42 23 L37 25 L32 22 L27 25 Z" opacity="0.85" />
+                            </g>
                           </svg>
                         </div>
-                        <div ref={sealRightRef} className="seal-half seal-right">
-                          <svg viewBox="0 0 54 54" className="seal-svg">
-                            <circle cx="27" cy="27" r="25" fill="#C99726" stroke="#7A5207" strokeWidth="1.2" />
-                            <circle cx="27" cy="27" r="18" fill="none" stroke="#FFE79A" strokeWidth="1" strokeDasharray="3 2" />
-                            <circle cx="27" cy="27" r="7" fill="#E8B83D" stroke="#9E6D14" strokeWidth="1" />
+                        <div ref={sealRightRef} className="tactile-seal-half seal-half seal-right">
+                          <svg viewBox="0 0 64 64" className="tactile-seal-svg">
+                            <path
+                              d="M32 4 C46 3.5, 57 12, 59 26 C60.5 37, 54 50, 42 58 C32 62, 19 60, 10 52 C2 44, 3 30, 6 18 C9 9, 21 4.5, 32 4 Z"
+                              fill="url(#parchmentGoldWax)"
+                              stroke="#543603"
+                              strokeWidth="1.2"
+                            />
+                            <circle cx="32" cy="32" r="21.5" fill="none" stroke="#FFEAA0" strokeWidth="2.2" opacity="0.75" />
+                            <circle cx="32" cy="32" r="18" fill="#80560F" />
+                            <g filter="url(#sealDeboss)" fill="#FFF5D6" stroke="#FFF5D6" strokeWidth="0.5">
+                              <text x="32" y="37" textAnchor="middle" fontFamily="'Montserrat', serif" fontSize="13" fontWeight="bold" letterSpacing="1">
+                                1804
+                              </text>
+                              <path d="M22 23 L32 20 L42 23 L37 25 L32 22 L27 25 Z" opacity="0.85" />
+                            </g>
                           </svg>
                         </div>
-                        <div ref={sealCrackLineRef} className="seal-crack-line" />
+                        <div ref={sealCrackLineRef} className="tactile-seal-crack-line seal-crack-line" />
                       </div>
                     </div>
                   )}
@@ -696,18 +779,30 @@ export default function EnvelopeViewerModal({
                 ======================================================== */}
             {format === 'bifold' && (
               <div className="bifold-book-stage">
-                {/* 1. Kouvèti Fèmen (Vizib anvan klike) */}
+                {/* 1. Kouvèti Fèmen (Livre de luxe fermé palpable & tactile) */}
                 <div
                   ref={bifoldCoverRef}
                   className="bifold-closed-cover"
                   style={{
-                    background: `linear-gradient(135deg, ${template.coverColor || '#1E3326'} 0%, #122118 100%)`,
+                    background: `linear-gradient(135deg, ${template.coverColor || '#1E3326'} 0%, #101E16 100%)`,
                     borderColor: template.accentColor || '#D4AF37'
                   }}
                   onClick={openCard}
                   title="Klike pou w ouvri liv papetri a"
                 >
+                  {/* Tranche de papier doré du livre physique (épaisseur visible) */}
+                  <div className="bifold-pages-thickness" />
+                  <div className="bifold-pages-thickness-bottom" />
+
+                  {/* Dos & Mors de charnière de reliure d'art */}
                   <div className="bifold-spine-edge-left" />
+                  <div className="bifold-hinge-groove" />
+
+                  {/* Texture de cuir / buckram tactile */}
+                  <div className="bifold-cover-texture" />
+
+                  {/* Ruban de soie traversant */}
+                  <div className="bifold-silk-ribbon" />
 
                   <div className="bifold-cover-inner-border" style={{ borderColor: template.accentColor || '#D4AF37' }}>
                     <div className="bifold-corner bifold-corner-tl" />
@@ -716,7 +811,7 @@ export default function EnvelopeViewerModal({
                     <div className="bifold-corner bifold-corner-br" />
 
                     <div className="bifold-cover-top">
-                      <div className="bifold-cover-star" />
+                      <div className="bifold-cover-star">✦</div>
                     </div>
 
                     <div className="bifold-cover-center">
@@ -724,11 +819,31 @@ export default function EnvelopeViewerModal({
                       <p className="bifold-cover-subtitle">{title}</p>
 
                       <div className="bifold-seal-wrap">
-                        <div className="bifold-gold-seal">
-                          <svg viewBox="0 0 60 60" className="bifold-seal-svg">
-                            <circle cx="30" cy="30" r="28" fill="#D4AF37" stroke="#8F711C" strokeWidth="1.5" />
-                            <circle cx="30" cy="30" r="21" fill="none" stroke="#FFF5CC" strokeWidth="1" strokeDasharray="2,2" />
-                            <circle cx="30" cy="30" r="8" fill="#E8C35A" stroke="#99731E" strokeWidth="1" />
+                        {/* Sceau de cire atizanal de luxe avèk monogramme KD */}
+                        <div className="tactile-wax-seal-unit bifold-tactile-seal">
+                          <svg viewBox="0 0 64 64" className="tactile-seal-svg">
+                            <defs>
+                              <radialGradient id="bifoldWaxGrad" cx="38%" cy="32%" r="65%">
+                                <stop offset="0%" stopColor="#F5D77F" />
+                                <stop offset="45%" stopColor="#C99726" />
+                                <stop offset="85%" stopColor="#8A5E12" />
+                                <stop offset="100%" stopColor="#543603" />
+                              </radialGradient>
+                            </defs>
+                            <path
+                              d="M32 4 C46 3.5, 57 12, 59 26 C60.5 37, 54 50, 42 58 C32 62, 19 60, 10 52 C2 44, 3 30, 6 18 C9 9, 21 4.5, 32 4 Z"
+                              fill="url(#bifoldWaxGrad)"
+                              stroke="#543603"
+                              strokeWidth="1.2"
+                            />
+                            <circle cx="32" cy="32" r="21.5" fill="none" stroke="#FFEAA0" strokeWidth="2.2" opacity="0.75" />
+                            <circle cx="32" cy="32" r="18" fill="#80560F" />
+                            <g filter="url(#sealDeboss)" fill="#FFF5D6" stroke="#FFF5D6" strokeWidth="0.5">
+                              <text x="32" y="37" textAnchor="middle" fontFamily="'Montserrat', serif" fontSize="14" fontWeight="bold" letterSpacing="1">
+                                KD
+                              </text>
+                              <path d="M22 23 L32 20 L42 23 L37 25 L32 22 L27 25 Z" opacity="0.85" />
+                            </g>
                           </svg>
                         </div>
                       </div>
@@ -868,20 +983,45 @@ export default function EnvelopeViewerModal({
 
                 {!isOpened && (
                   <div className="kraft-seal-center">
-                    <div ref={sealContainerRef} className="real-wax-seal" style={{ position: 'relative', top: 0, left: 0, transform: 'none' }}>
-                      <div ref={sealLeftRef} className="seal-half seal-left">
-                        <svg viewBox="0 0 54 54" className="seal-svg">
-                          <circle cx="27" cy="27" r="25" fill="#B33951" stroke="#681525" strokeWidth="1.2" />
-                          <path d="M27 18 C27 18, 22 13, 17 17 C12 21, 15 28, 27 36 C39 28, 42 21, 37 17 C32 13, 27 18, 27 18 Z" fill="#FFF0F3" />
+                    <div ref={sealContainerRef} className="tactile-wax-seal-unit kraft-seal-pos" title="Kase sele lanmou an">
+                      <div ref={sealLeftRef} className="tactile-seal-half seal-half seal-left">
+                        <svg viewBox="0 0 64 64" className="tactile-seal-svg">
+                          <defs>
+                            <radialGradient id="kraftWaxGrad" cx="38%" cy="32%" r="65%">
+                              <stop offset="0%" stopColor="#C9425F" />
+                              <stop offset="50%" stopColor="#8C243B" />
+                              <stop offset="100%" stopColor="#4A0F1D" />
+                            </radialGradient>
+                          </defs>
+                          <path
+                            d="M32 4 C46 3.5, 57 12, 59 26 C60.5 37, 54 50, 42 58 C32 62, 19 60, 10 52 C2 44, 3 30, 6 18 C9 9, 21 4.5, 32 4 Z"
+                            fill="url(#kraftWaxGrad)"
+                            stroke="#380913"
+                            strokeWidth="1.2"
+                          />
+                          <circle cx="32" cy="32" r="21.5" fill="none" stroke="#FFA3B5" strokeWidth="2" opacity="0.65" />
+                          <circle cx="32" cy="32" r="18" fill="#751C30" />
+                          <g filter="url(#sealDeboss)" fill="#FFF0F3" stroke="#FFF0F3" strokeWidth="0.5">
+                            <path d="M32 23 C32 23, 27 18, 22 21 C17 25, 20 31, 32 39 C44 31, 47 25, 42 21 C37 18, 32 23, 32 23 Z" />
+                          </g>
                         </svg>
                       </div>
-                      <div ref={sealRightRef} className="seal-half seal-right">
-                        <svg viewBox="0 0 54 54" className="seal-svg">
-                          <circle cx="27" cy="27" r="25" fill="#B33951" stroke="#681525" strokeWidth="1.2" />
-                          <path d="M27 18 C27 18, 22 13, 17 17 C12 21, 15 28, 27 36 C39 28, 42 21, 37 17 C32 13, 27 18, 27 18 Z" fill="#FFF0F3" />
+                      <div ref={sealRightRef} className="tactile-seal-half seal-half seal-right">
+                        <svg viewBox="0 0 64 64" className="tactile-seal-svg">
+                          <path
+                            d="M32 4 C46 3.5, 57 12, 59 26 C60.5 37, 54 50, 42 58 C32 62, 19 60, 10 52 C2 44, 3 30, 6 18 C9 9, 21 4.5, 32 4 Z"
+                            fill="url(#kraftWaxGrad)"
+                            stroke="#380913"
+                            strokeWidth="1.2"
+                          />
+                          <circle cx="32" cy="32" r="21.5" fill="none" stroke="#FFA3B5" strokeWidth="2" opacity="0.65" />
+                          <circle cx="32" cy="32" r="18" fill="#751C30" />
+                          <g filter="url(#sealDeboss)" fill="#FFF0F3" stroke="#FFF0F3" strokeWidth="0.5">
+                            <path d="M32 23 C32 23, 27 18, 22 21 C17 25, 20 31, 32 39 C44 31, 47 25, 42 21 C37 18, 32 23, 32 23 Z" />
+                          </g>
                         </svg>
                       </div>
-                      <div ref={sealCrackLineRef} className="seal-crack-line" />
+                      <div ref={sealCrackLineRef} className="tactile-seal-crack-line seal-crack-line" />
                     </div>
                   </div>
                 )}
@@ -960,7 +1100,7 @@ export default function EnvelopeViewerModal({
               className="btn-stationery-link"
               onClick={replayAnimation}
             >
-              <RotateCcw size={12} style={{ display: 'inline', marginRight: 5, verticalAlign: 'middle' }} />
+              <ArrowCounterClockwise size={13} weight="regular" style={{ display: 'inline', marginRight: 5, verticalAlign: 'middle' }} />
               <span>Gade ouvèti a ankò</span>
             </button>
           </div>
@@ -976,7 +1116,7 @@ export default function EnvelopeViewerModal({
             <div className="checkout-header-row">
               <div>
                 <span className="checkout-badge">
-                  <ShieldCheck size={12} />
+                  <ShieldCheck size={14} weight="regular" />
                   <span>Peman an Sekirite</span>
                 </span>
                 <h3 className="checkout-title">
@@ -989,7 +1129,7 @@ export default function EnvelopeViewerModal({
                 className="customizer-close-btn"
                 aria-label="Fèmen"
               >
-                <X size={17} />
+                <X size={17} weight="bold" />
               </button>
             </div>
 
@@ -1008,7 +1148,7 @@ export default function EnvelopeViewerModal({
                     <span className="payment-sub-text">Ayiti • 100 HTG</span>
                   </div>
                   <div className="payment-icon-box moncash-box">
-                    <Smartphone size={17} color="#C41230" />
+                    <DeviceMobile size={18} weight="regular" color="#C41230" />
                   </div>
                 </div>
 
@@ -1021,7 +1161,7 @@ export default function EnvelopeViewerModal({
                     <span className="payment-sub-text">Diaspora • $2.99 USD</span>
                   </div>
                   <div className="payment-icon-box card-box">
-                    <CreditCard size={17} color="#2B4736" />
+                    <CreditCard size={18} weight="regular" color="#2B4736" />
                   </div>
                 </div>
               </div>
@@ -1029,7 +1169,7 @@ export default function EnvelopeViewerModal({
               {paymentMethod === 'moncash' ? (
                 <div className="form-group-clean">
                   <label className="form-label-clean">
-                    <Smartphone size={13} style={{ color: '#C41230' }} />
+                    <DeviceMobile size={14} weight="regular" style={{ color: '#C41230' }} />
                     <span>Nimewo Telefòn MonCash :</span>
                   </label>
                   <div className="phone-input-wrap">
@@ -1050,7 +1190,7 @@ export default function EnvelopeViewerModal({
               ) : (
                 <div className="form-group-clean">
                   <label className="form-label-clean">
-                    <CreditCard size={13} style={{ color: '#2B4736' }} />
+                    <CreditCard size={14} weight="regular" style={{ color: '#2B4736' }} />
                     <span>Nimewo Kat Kredi (Visa / Mastercard) :</span>
                   </label>
                   <input
@@ -1075,14 +1215,14 @@ export default function EnvelopeViewerModal({
                   <span>N ap trete peman an...</span>
                 ) : (
                   <>
-                    <Lock size={15} />
+                    <Lock size={15} weight="regular" />
                     <span>Konfime & Peye {paymentMethod === 'moncash' ? '100 Goud' : '$2.99 USD'}</span>
                   </>
                 )}
               </button>
 
               <div className="security-footer-note">
-                <ShieldCheck size={14} color="#2B4736" />
+                <ShieldCheck size={15} weight="regular" color="#2B4736" />
                 <span>Peman 100% Sekirize • Otantifikasyon Enstantane</span>
               </div>
             </form>
@@ -1095,7 +1235,7 @@ export default function EnvelopeViewerModal({
         <div className="checkout-overlay">
           <div className="checkout-card" style={{ textAlign: 'center' }}>
             <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#E8F5E9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-              <CheckCircle2 size={32} color="#2E7D32" />
+              <CheckCircle size={32} weight="fill" color="#2E7D32" />
             </div>
 
             <h3 style={{ fontSize: 22, fontWeight: 700, color: '#2B4736', marginBottom: 8 }}>
@@ -1127,7 +1267,7 @@ export default function EnvelopeViewerModal({
                   handleDownloadCardImage();
                 }}
               >
-                <Download size={14} style={{ marginRight: 6 }} />
+                <DownloadSimple size={15} weight="regular" style={{ marginRight: 6 }} />
                 <span>Telechaje Imaj Kat la (PNG)</span>
               </button>
 

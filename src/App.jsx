@@ -4,45 +4,44 @@ import EnvelopeViewerModal from './components/EnvelopeViewerModal';
 import PersonalizeModal from './components/PersonalizeModal';
 import { stopHolidaySoundtrack } from './utils/audioSynthesizer';
 import {
-  LayoutGrid,
-  Gift,
-  Star,
-  Bookmark,
-  Heart,
-  Search,
-  SlidersHorizontal,
+  SquaresFour,
+  TreeEvergreen,
+  Champagne,
+  Scroll,
+  HandHeart,
+  MagnifyingGlass,
   X,
-  ChevronLeft,
-  ChevronRight,
-  Edit3,
+  CaretLeft,
+  CaretRight,
+  NotePencil,
   Eye,
-  MoreHorizontal
-} from 'lucide-react';
+  DotsThree
+} from '@phosphor-icons/react';
 
 const CATEGORY_SECTIONS = [
   {
     id: 'noel',
     title: 'Nwèl Tradisyonèl',
     subtitle: 'Bèl kat Nwèl vlou, zetwal ak melodi fèt',
-    icon: Gift
+    icon: TreeEvergreen
   },
   {
     id: 'nouvel-an',
     title: 'Bòn Ane 2027 & Siksè',
     subtitle: 'Pachemen wayal, liv papetri folio ak swè siksè',
-    icon: Star
+    icon: Champagne
   },
   {
     id: 'tradition',
     title: '1ye Janvye & Tradisyon 1804',
     subtitle: 'Fèt Nasyonal, soup joumou ak lespri libète',
-    icon: Bookmark
+    icon: Scroll
   },
   {
     id: 'mennaj',
     title: 'Mesaj Lanmou & Romantik',
     subtitle: 'Lèt damou sou papye kraft ak kè k ap flote',
-    icon: Heart
+    icon: HandHeart
   }
 ];
 
@@ -69,12 +68,33 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
             <div className="preview-env-back" style={{ background: template.envelopeColor }} />
             <div className="preview-env-flap" style={{ borderBottomColor: template.flapColor || template.envelopeColor }} />
             <div className="preview-env-card">
+              <div className="preview-paper-edge" />
               <div className="preview-card-heading" style={{ color: template.envelopeColor }}>{template.title}</div>
               <div className="preview-card-divider" style={{ background: template.accentColor }} />
-              <p className="preview-card-snippet">{template.defaultMessage.slice(0, 48)}...</p>
+              <p className="preview-card-snippet">{template.defaultMessage.slice(0, 52)}...</p>
             </div>
             <div className="preview-env-front" style={{ borderBottomColor: template.envelopeColor }} />
-            <div className="preview-gold-seal" />
+            <div className="preview-tactile-seal">
+              <svg viewBox="0 0 40 40" className="preview-seal-svg">
+                <defs>
+                  <radialGradient id={`previewWax-${template.id}`} cx="38%" cy="32%" r="65%">
+                    <stop offset="0%" stopColor="#E2BD6E" />
+                    <stop offset="55%" stopColor="#A67417" />
+                    <stop offset="100%" stopColor="#543603" />
+                  </radialGradient>
+                </defs>
+                <path
+                  d="M20 3 C29 2.5, 36 8, 37 17 C38 24, 34 32, 26 37 C20 40, 12 38, 6 33 C1 28, 2 19, 4 11 C6 5, 13 3, 20 3 Z"
+                  fill={`url(#previewWax-${template.id})`}
+                  stroke="#4A2E03"
+                  strokeWidth="0.8"
+                />
+                <circle cx="20" cy="20" r="11" fill="#754A07" />
+                <text x="20" y="23.5" textAnchor="middle" fill="#FFF3CD" fontSize="8.5" fontWeight="bold" fontFamily="'Montserrat', sans-serif">
+                  KD
+                </text>
+              </svg>
+            </div>
           </div>
         )}
 
@@ -124,7 +144,7 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
             aria-label="Opsyon kat sa a"
             title="Opsyon"
           >
-            <MoreHorizontal size={15} />
+            <DotsThree size={16} weight="bold" />
           </button>
 
           {showMenu && (
@@ -136,7 +156,7 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
                   onOpenDemo();
                 }}
               >
-                <Eye size={13} />
+                <Eye size={14} weight="regular" />
                 <span>Ouvri Démo</span>
               </button>
               <button
@@ -146,7 +166,7 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
                   onOpenCustomizer();
                 }}
               >
-                <Edit3 size={13} />
+                <NotePencil size={14} weight="regular" />
                 <span>Pèsonalize</span>
               </button>
             </div>
@@ -236,7 +256,7 @@ function CategoryCarouselSection({ cat, templates, onOpenDemo, onOpenCustomizer,
               aria-label="Glise a goch"
               title="Glise a goch"
             >
-              <ChevronLeft size={16} />
+              <CaretLeft size={16} weight="bold" />
             </button>
             <button
               type="button"
@@ -252,7 +272,7 @@ function CategoryCarouselSection({ cat, templates, onOpenDemo, onOpenCustomizer,
               aria-label="Glise a dwat"
               title="Glise a dwat"
             >
-              <ChevronRight size={16} />
+              <CaretRight size={16} weight="bold" />
             </button>
           </div>
         </div>
@@ -394,7 +414,7 @@ export default function App() {
         <div className="search-collections-bar">
           <div className="search-bar-inner">
             <div className="search-input-box">
-              <Search size={15} className="search-icon-svg" />
+              <MagnifyingGlass size={16} weight="regular" className="search-icon-svg" />
               <input
                 type="text"
                 placeholder="Chèche yon modèl, tèm, koulè oswa mesaj..."
@@ -408,7 +428,7 @@ export default function App() {
                   onClick={() => setSearchQuery('')}
                   className="btn-search-clear"
                 >
-                  <X size={14} />
+                  <X size={14} weight="bold" />
                 </button>
               )}
             </div>
@@ -422,7 +442,7 @@ export default function App() {
             className={`category-pill category-pill-all ${selectedCategory === 'all' ? 'active' : ''}`}
             onClick={() => setSelectedCategory('all')}
           >
-            <LayoutGrid size={13} />
+            <SquaresFour size={15} weight="regular" />
             <span>Tout Modèl yo</span>
           </button>
 
@@ -431,7 +451,7 @@ export default function App() {
               className={`category-pill ${selectedCategory === 'noel' ? 'active' : ''}`}
               onClick={() => setSelectedCategory('noel')}
             >
-              <Gift size={13} />
+              <TreeEvergreen size={15} weight="regular" />
               <span>Nwèl Tradisyonèl</span>
             </button>
 
@@ -440,7 +460,7 @@ export default function App() {
               className={`category-pill ${selectedCategory === 'nouvel-an' ? 'active' : ''}`}
               onClick={() => setSelectedCategory('nouvel-an')}
             >
-              <Star size={13} />
+              <Champagne size={15} weight="regular" />
               <span>Bòn Ane 2027</span>
             </button>
 
@@ -449,7 +469,7 @@ export default function App() {
               className={`category-pill ${selectedCategory === 'tradition' ? 'active' : ''}`}
               onClick={() => setSelectedCategory('tradition')}
             >
-              <Bookmark size={13} />
+              <Scroll size={15} weight="regular" />
               <span>1ye Janvye & Tradisyon</span>
             </button>
 
@@ -458,7 +478,7 @@ export default function App() {
               className={`category-pill ${selectedCategory === 'mennaj' ? 'active' : ''}`}
               onClick={() => setSelectedCategory('mennaj')}
             >
-              <Heart size={13} />
+              <HandHeart size={15} weight="regular" />
               <span>Mesaj Lanmou</span>
             </button>
           </div>

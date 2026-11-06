@@ -150,35 +150,38 @@ body {
   }
 
   .categories-bar {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
     gap: 8px !important;
     width: 100% !important;
-    max-width: 380px !important;
-    margin: 6px auto 16px !important;
-    padding: 0 !important;
+    max-width: 100vw !important;
+    margin: 6px 0 16px !important;
+    padding: 4px 16px !important;
     box-sizing: border-box !important;
-    overflow: visible !important;
+    justify-content: flex-start !important;
+  }
+  .categories-bar::-webkit-scrollbar {
+    display: none !important;
   }
 
   .category-pill.category-pill-all {
-    grid-column: 1 / -1 !important;
-    justify-self: center !important;
-    min-width: 160px !important;
-    max-width: 220px !important;
-    margin: 0 auto 2px !important;
+    margin: 0 !important;
   }
 
   .category-pill {
-    width: 100% !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
     min-height: 38px !important;
     height: 38px !important;
-    padding: 0 10px !important;
-    font-size: 11.5px !important;
+    padding: 0 13px !important;
+    font-size: 12px !important;
     gap: 6px !important;
-    border-radius: 9999px !important;
+    border-radius: 0px !important;
     white-space: nowrap !important;
-    overflow: hidden !important;
+    overflow: visible !important;
     box-sizing: border-box !important;
     display: inline-flex !important;
     align-items: center !important;
@@ -188,8 +191,8 @@ body {
   }
 
   .category-pill svg {
-    width: 13px !important;
-    height: 13px !important;
+    width: 14px !important;
+    height: 14px !important;
     flex-shrink: 0 !important;
   }
 }
@@ -412,7 +415,7 @@ body {
   gap: 6px;
   background: #FFFFFF;
   border: 1px solid #DFD9CE;
-  border-radius: 9999px;
+  border-radius: 0px !important;
   padding: 7px 13px;
   font-size: 11.8px;
   font-weight: 600;
@@ -641,28 +644,29 @@ body {
 
 .preview-card-heading {
   font-family: 'Montserrat', sans-serif;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  line-height: 1.25;
-  margin-bottom: 4px;
+  line-height: 1.22;
+  margin-bottom: 2px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  max-height: 25px;
 }
 
 .preview-card-divider {
-  width: 22px;
+  width: 20px;
   height: 1.5px;
-  margin: 3px auto;
-  border-radius: 1px;
+  margin: 2px auto 3px;
+  border-radius: 0;
 }
 
 .preview-card-snippet {
   font-family: 'Montserrat', sans-serif;
   font-size: 8px;
-  line-height: 1.35;
-  color: #736E65;
+  line-height: 1.32;
+  color: #555047;
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -685,8 +689,8 @@ body {
   bottom: 0;
   width: 165px;
   height: 110px;
-  border-radius: 6px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+  border-radius: 0px !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
 }
 
 .preview-env-flap {
@@ -699,18 +703,19 @@ body {
   border-right: 82.5px solid transparent;
   border-bottom: 50px solid;
   opacity: 0.95;
+  filter: drop-shadow(0 -1px 2px rgba(0, 0, 0, 0.15));
 }
 
 .preview-env-card {
   position: absolute;
-  bottom: 24px;
-  width: 145px;
-  height: 115px;
-  background: #FFFDF9;
-  border-radius: 4px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
-  border: 1px solid #E5DEC9;
-  padding: 8px 7px;
+  bottom: 30px;
+  width: 146px;
+  height: 122px;
+  background: #FAF8F5;
+  border-radius: 0px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  border: 1px solid #E5DCCE;
+  padding: 8px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -718,6 +723,16 @@ body {
   z-index: 2;
   animation: envelopeCardPeek 4s ease-in-out infinite;
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-sizing: border-box;
+}
+
+.preview-paper-edge {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95),
+              inset 1px 0 0 rgba(255, 255, 255, 0.8),
+              inset 0 -1px 0 rgba(160, 145, 125, 0.35);
+  pointer-events: none;
 }
 
 .canva-template-card:hover .preview-env-card {
@@ -744,26 +759,24 @@ body {
   border-right: 82.5px solid transparent;
   border-bottom: 60px solid;
   z-index: 3;
-  filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.08));
+  filter: drop-shadow(0 -2px 5px rgba(0, 0, 0, 0.15));
 }
 
-.preview-gold-seal {
+.preview-tactile-seal {
   position: absolute;
-  bottom: 48px;
+  bottom: 44px;
   left: 50%;
   transform: translateX(-50%);
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #FFEAA0 0%, #C99726 65%, #7A5207 100%);
-  color: #2E1E02;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-  font-weight: 800;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  width: 30px;
+  height: 30px;
   z-index: 4;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.38));
+}
+
+.preview-seal-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 /* FÒMA 2 : PACHEMEN WAYAL */
@@ -1503,14 +1516,14 @@ body {
 .parchment-scroll-unit {
   position: relative;
   width: 320px;
-  height: 60px; /* Commence fermé comme un rouleau */
+  height: 78px; /* Commence fermé comme un rouleau */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   z-index: 25;
   cursor: pointer;
-  overflow: hidden;
+  overflow: visible;
   transition: box-shadow 0.3s;
 }
 
@@ -1617,16 +1630,35 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 35;
+  overflow: visible;
 }
 
 .parchment-ribbon-gold {
   position: absolute;
   width: 100%;
-  height: 38px;
-  background: linear-gradient(90deg, #966B12 0%, #ECC880 50%, #966B12 100%);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-  border-top: 1px solid #FFF3C4;
-  border-bottom: 1px solid #7A5207;
+  height: 46px;
+  background: linear-gradient(90deg, #7A5207 0%, #D4AF37 25%, #FFF0BA 50%, #D4AF37 75%, #7A5207 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  border-top: 1.5px solid #FFF8D6;
+  border-bottom: 1.5px solid #5C3C04;
+}
+
+.parchment-seal-pos,
+.kraft-seal-pos {
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  width: 58px !important;
+  height: 58px !important;
+  z-index: 38 !important;
+  margin: 0 auto !important;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.48)) !important;
+}
+
+.parchment-seal-pos:hover,
+.kraft-seal-pos:hover {
+  transform: scale(1.05) !important;
 }
 
 .roller-knob-left, .roller-knob-right {
@@ -1655,15 +1687,15 @@ body {
   min-height: 425px;
 }
 
-/* 1. Kouvèti Fèmen (Livre de luxe fermé) */
+/* 1. Kouvèti Fèmen (Livre de luxe fermé palpable & tactile) */
 .bifold-closed-cover {
   width: 310px;
   max-width: 90vw;
   height: 415px;
   flex-shrink: 0;
-  border-radius: 8px;
+  border-radius: 0px !important;
   cursor: pointer;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(212, 175, 55, 0.4);
+  box-shadow: -6px 0 16px rgba(0, 0, 0, 0.45), 20px 30px 70px rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(212, 175, 55, 0.45);
   padding: 18px;
   display: flex;
   flex-direction: column;
@@ -1672,28 +1704,98 @@ body {
   user-select: none;
   box-sizing: border-box;
   margin: 0 auto;
+  position: relative;
+  overflow: visible !important;
 }
 .bifold-closed-cover:hover {
   transform: translateY(-5px) scale(1.015);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65), 0 0 15px rgba(212, 175, 55, 0.3);
+  box-shadow: -8px 0 20px rgba(0, 0, 0, 0.5), 24px 36px 80px rgba(0, 0, 0, 0.75), inset 0 0 0 1px rgba(255, 230, 140, 0.6);
 }
 
-/* Tranche de reliure en cuir / pli doré sur le côté gauche */
+/* Tranche de papier doré du livre physique (épaisseur visible à droite et en bas) */
+.bifold-pages-thickness {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  right: -9px;
+  width: 10px;
+  background: repeating-linear-gradient(to right, #B89230 0px, #FFF5CC 1.5px, #D4AF37 3px, #7A570C 4px);
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.5);
+  border-right: 1px solid #5A4008;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bifold-pages-thickness-bottom {
+  position: absolute;
+  left: 18px;
+  right: 1px;
+  bottom: -8px;
+  height: 9px;
+  background: repeating-linear-gradient(to bottom, #B89230 0px, #FFF5CC 1.5px, #D4AF37 3px, #7A570C 4px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid #5A4008;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Dos de reliure en cuir avec nervures */
 .bifold-spine-edge-left {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
-  width: 14px;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.55), rgba(212, 175, 55, 0.45) 60%, rgba(0, 0, 0, 0.25));
-  border-radius: 8px 0 0 8px;
-  box-shadow: inset 1px 0 3px rgba(255, 255, 255, 0.2);
+  width: 18px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(212, 175, 55, 0.5) 45%, rgba(0, 0, 0, 0.35) 100%);
+  border-radius: 0px !important;
+  box-shadow: inset 1.5px 0 3px rgba(255, 255, 255, 0.25);
+  z-index: 5;
 }
 
-/* Cadre intérieur doré travaillé */
+/* Mors de charnière (rainure où le carton de couverture plie) */
+.bifold-hinge-groove {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 22px;
+  width: 3px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.65) 0%, rgba(255, 255, 255, 0.2) 40%, rgba(0, 0, 0, 0.5) 100%);
+  box-shadow: inset 1px 0 2px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* Texture de reliure buckram / cuir fin */
+.bifold-cover-texture {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 5px 5px;
+  pointer-events: none;
+  opacity: 0.85;
+  z-index: 2;
+}
+
+/* Ruban de satin horizontal scellé */
+.bifold-silk-ribbon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 52%;
+  transform: translateY(-50%);
+  height: 26px;
+  background: linear-gradient(180deg, #8A6414 0%, #ECC880 30%, #FFF4BD 50%, #ECC880 70%, #6E4F0B 100%);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid rgba(70, 48, 6, 0.6);
+  z-index: 8;
+  pointer-events: none;
+}
+
+/* Cadre intérieur doré travaillé en dorure à chaud */
 .bifold-cover-inner-border {
-  border: 2px solid #D4AF37;
-  border-radius: 6px;
+  border: 1.5px solid #D4AF37;
+  border-radius: 0px !important;
   width: 100%;
   height: 100%;
   display: flex;
@@ -1705,12 +1807,13 @@ body {
   position: relative;
   background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 80%);
   box-sizing: border-box;
+  z-index: 3;
 }
 
 .bifold-corner {
   position: absolute;
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-color: #D4AF37;
   border-style: solid;
 }
@@ -1725,17 +1828,10 @@ body {
   align-items: center;
   gap: 4px;
 }
-.bifold-cover-badge {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #ECC880;
-  font-weight: 700;
-}
 .bifold-cover-star {
   color: #ECC880;
   font-size: 16px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .bifold-cover-center {
@@ -1743,6 +1839,7 @@ body {
   flex-direction: column;
   align-items: center;
   margin: auto 0;
+  z-index: 10;
 }
 .bifold-cover-main-title {
   font-family: 'Montserrat', sans-serif;
@@ -1751,7 +1848,7 @@ body {
   color: #FFFDF9;
   letter-spacing: 0.5px;
   margin: 0 0 4px 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 1px #FFE494;
 }
 .bifold-cover-subtitle {
   font-family: 'Montserrat', sans-serif;
@@ -1760,30 +1857,34 @@ body {
   letter-spacing: 1.5px;
   text-transform: uppercase;
   margin: 0 0 16px 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 .bifold-seal-wrap {
   margin-top: 4px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 12;
 }
 .bifold-seal-wrap:hover {
   transform: scale(1.08);
 }
-.bifold-gold-seal {
-  width: 58px;
-  height: 58px;
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5));
-}
-.bifold-seal-svg {
-  width: 100%;
-  height: 100%;
+
+.bifold-tactile-seal {
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  width: 62px !important;
+  height: 62px !important;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.55)) !important;
 }
 
 .bifold-cover-bottom {
   border-top: 1px solid rgba(212, 175, 55, 0.35);
   width: 85%;
   padding-top: 10px;
+  z-index: 4;
 }
 .bifold-tap-hint {
   font-family: 'Montserrat', sans-serif;
@@ -1793,6 +1894,7 @@ body {
   color: #ECC880;
   font-weight: 700;
   display: block;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 /* 2. Liv Papetri Ouvri (Double Page de Luxe 3D) */
@@ -1971,6 +2073,7 @@ body {
   position: relative !important;
   top: 0 !important;
   left: 0 !important;
+  margin: 0 auto !important;
   transform: none !important;
   width: 326px !important;
   max-width: calc(100vw - 32px) !important;
@@ -2130,128 +2233,273 @@ body {
   line-height: 1.2;
 }
 
-.envelope-front-pocket {
+/* ==========================================================
+   PROTOTYPE PAPETERIE DIGITALE TACTILE (NWÈL VLOU BÒDO)
+   ========================================================== */
+.tactile-envelope {
+  position: relative;
+  width: 326px;
+  height: 224px;
+  border-radius: 10px;
+  background: var(--env-bg, #7A1F2D);
+  box-shadow: 0 16px 42px var(--env-shadow, rgba(40, 10, 15, 0.45)), 0 3px 10px rgba(0, 0, 0, 0.22);
+  cursor: pointer;
+  z-index: 10;
+  overflow: visible;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-sizing: border-box;
+}
+
+.tactile-envelope:hover {
+  transform: translateY(-2px);
+}
+
+/* 1. Gorge intérieure avec papier doublure ivoire & motif or */
+.tactile-throat-interior {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.tactile-throat-liner {
+  position: absolute;
+  inset: 0;
+  background-color: #F8F5EE;
+  background-image: radial-gradient(#C9A050 0.8px, transparent 0.8px);
+  background-size: 14px 14px;
+  clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
+  border-radius: 8px;
+}
+
+.tactile-throat-shadow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 4, 7, 0.6) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* 2. Poche avant à rabats pliés et ombres de contact */
+.tactile-pocket-layer {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   z-index: 3;
   pointer-events: none;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
-.envelope-fold-left {
+.tactile-fold-left {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 0;
-  border-top: 110px solid transparent;
-  border-bottom: 110px solid transparent;
-  border-left: 165px solid;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0 0, 50% 50%, 0 100%);
   z-index: 3;
+  filter: drop-shadow(2px 0 3px rgba(0, 0, 0, 0.2));
 }
 
-.envelope-fold-right {
+.tactile-fold-right {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  border-top: 110px solid transparent;
-  border-bottom: 110px solid transparent;
-  border-right: 165px solid;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(100% 0, 50% 50%, 100% 100%);
   z-index: 3;
+  filter: drop-shadow(-2px 0 3px rgba(0, 0, 0, 0.22));
 }
 
-.envelope-fold-bottom {
+.tactile-fold-bottom {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0 100%, 50% 48%, 100% 100%);
+  z-index: 4;
+  filter: drop-shadow(0 -3px 5px rgba(0, 0, 0, 0.25));
+}
+
+.tactile-pocket-crease-shadow {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 0;
-  height: 0;
-  border-left: 160px solid transparent;
-  border-right: 160px solid transparent;
-  border-bottom: 125px solid;
+  right: 0;
+  height: 16px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0%, transparent 100%);
   z-index: 4;
+  pointer-events: none;
 }
 
-.real-envelope-flap {
+/* 3. Rabat supérieur 3D complet à pli tactile */
+.tactile-flap-unit {
   position: absolute;
   top: 0;
   left: 0;
-  width: 0;
-  height: 0;
-  border-left: 160px solid transparent;
-  border-right: 160px solid transparent;
-  border-top: 125px solid;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0 0, 50% 56%, 100% 0);
   transform-origin: top center;
   z-index: 5;
-  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.38));
 }
 
-/* ==========================================================
-   SCEAU DE CIRE EN OR IMPÉRIAL AVEC EFFET DE FISSURE
-   ========================================================== */
-.real-wax-seal {
+.tactile-flap-crease-line {
   position: absolute;
-  top: 110px;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* 4. Sceau de cire d'artisan (organique, empreinte en creux, fracture nette) */
+.tactile-wax-seal-unit {
+  position: absolute;
+  top: 56%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 56px;
-  height: 56px;
+  width: 62px;
+  height: 62px;
   z-index: 6;
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  animation: sealPulse 2.4s infinite ease-in-out;
-}
-.real-wax-seal:hover {
-  transform: translate(-50%, -50%) scale(1.08);
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
 }
 
-@keyframes sealPulse {
-  0%, 100% {
-    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 0 rgba(212, 175, 55, 0));
-  }
-  50% {
-    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 12px rgba(212, 175, 55, 0.8));
-  }
+.tactile-wax-seal-unit:hover {
+  transform: translate(-50%, -50%) scale(1.05);
 }
 
-.seal-half {
+.tactile-seal-half {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
 
-.seal-left {
+.tactile-seal-left {
   clip-path: polygon(0 0, 52% 0, 48% 100%, 0 100%);
 }
 
-.seal-right {
+.tactile-seal-right {
   clip-path: polygon(52% 0, 100% 0, 100% 100%, 48% 100%);
 }
 
-.seal-svg {
+.tactile-seal-svg {
   width: 100%;
   height: 100%;
   display: block;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
 }
 
-.seal-crack-line {
+.tactile-seal-crack-line {
   position: absolute;
   top: 2px;
   left: 49%;
-  width: 2px;
-  height: 52px;
-  background: #FFF8D6;
-  box-shadow: 0 0 8px #FFD700;
+  width: 1.5px;
+  height: 56px;
+  background: rgba(255, 240, 225, 0.8);
+  box-shadow: 0 0 4px rgba(255, 215, 0, 0.6);
   opacity: 0;
   pointer-events: none;
-  transform: rotate(-2deg);
+  transform: rotate(-1.5deg);
+}
+
+/* 5. Carte papier Vélin 320g & tranche visible biseautée */
+.tactile-paper-card {
+  background: #FAF8F5 !important;
+  border-radius: 12px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.42), 0 3px 12px rgba(0, 0, 0, 0.12) !important;
+  border: 1px solid #E5DCCE !important;
+  position: relative;
+}
+
+/* Tranche de papier visible (highlight lumière en haut/gauche, ombre de contact en bas/droite) */
+.tactile-paper-edge {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  pointer-events: none;
+  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.9),
+              inset 1.5px 0 0 rgba(255, 255, 255, 0.7),
+              inset 0 -1.5px 0 rgba(160, 145, 125, 0.35),
+              inset -1.5px 0 0 rgba(160, 145, 125, 0.25);
+  z-index: 52;
+}
+
+/* Grain papier subtil 320g */
+.tactile-card-grain {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background-image: radial-gradient(rgba(120, 105, 90, 0.08) 1px, transparent 1px);
+  background-size: 8px 8px;
+  pointer-events: none;
+  z-index: 51;
+  opacity: 0.7;
+}
+
+/* Filet or double cadre traditionnel raffiné */
+.tactile-card-inner-frame {
+  position: absolute;
+  inset: 7px;
+  border: 1.5px solid #D4AF37;
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 52;
+}
+.tactile-card-inner-frame::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 0.75px solid rgba(212, 175, 55, 0.45);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+/* Règle d'or de mise en page : Lorsque la carte est ouverte, elle dicte la hauteur et ne chevauche JAMAIS les boutons */
+.envelope-scene-box.is-opened {
+  min-height: auto !important;
+  height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+.envelope-scene-box.is-opened .real-card {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  margin: 0 auto !important;
+  width: 326px !important;
+  max-width: calc(100vw - 32px) !important;
+  min-height: 385px !important;
+  height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+}
+
+/* Accessibilité : Mouvements réduits */
+@media (prefers-reduced-motion: reduce) {
+  .real-wax-seal,
+  .tactile-wax-seal-unit,
+  .real-envelope-flap,
+  .tactile-flap-unit,
+  .real-card,
+  .tactile-paper-card {
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 /* ==========================================================
@@ -3628,4 +3876,70 @@ body {
   .footer-bullet {
     font-size: 9px;
   }
+}
+
+/* ==========================================================
+   DIRECTIVE ATELIER PAPETERIE : BORDS CARRÉS SUR TOUT LE SITE
+   ========================================================== */
+.category-pill,
+.canva-template-card,
+.canva-card-mockup,
+.canva-card-dots-btn,
+.canva-card-dropdown-menu,
+.canva-card-dropdown-menu button,
+.btn-header-demo,
+.search-bar-inner,
+.search-input-box,
+.btn-search-clear,
+.btn-stationery-primary,
+.btn-stationery-secondary,
+.btn-stationery-link,
+.btn-stationery-whatsapp,
+.btn-stationery-sub,
+.real-card,
+.tactile-paper-card,
+.tactile-paper-edge,
+.tactile-card-inner-frame,
+.tactile-envelope,
+.real-envelope,
+.tactile-throat-interior,
+.tactile-throat-liner,
+.tactile-pocket-layer,
+.envelope-front-pocket,
+.bifold-closed-cover,
+.bifold-left-page,
+.bifold-right-page,
+.bifold-book-wrapper,
+.card-kraft-texture,
+.preview-env-back,
+.preview-env-card,
+.preview-env-front,
+.preview-bifold-cover,
+.preview-kraft-sheet,
+.customizer-dialog,
+.customizer-modal,
+.customizer-tab-btn,
+.customizer-close-btn,
+.music-option-card,
+.music-icon-bubble,
+.music-preview-btn,
+.uploaded-audio-banner,
+.music-upload-dropzone,
+.btn-validate-modern,
+.preset-chip,
+.preset-chip-all,
+.form-field-wrap input,
+.form-field-wrap textarea,
+.customizer-error-banner,
+.checkout-card,
+.checkout-badge,
+.checkout-method-tab,
+.checkout-phone-input,
+.btn-pay-confirm,
+.success-card,
+.success-check-badge,
+.open-prompt,
+.music-btn-floating,
+.close-btn-floating {
+  border-radius: 0px !important;
 }
