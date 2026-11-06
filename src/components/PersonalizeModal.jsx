@@ -11,7 +11,8 @@ import {
   Trash2,
   Check,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  AlertCircle
 } from 'lucide-react';
 import { PRESET_MESSAGES } from '../data/templates';
 import { MUSIC_OPTIONS, playHolidaySoundtrack, stopHolidaySoundtrack } from '../utils/audioSynthesizer';
@@ -28,6 +29,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
   const [customAudioUrl, setCustomAudioUrl] = useState('');
   const [uploadedFileName, setUploadedFileName] = useState('');
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
+  const [validationError, setValidationError] = useState('');
 
   // Kalkile limit tèks optimal selon fòma ak tèm kat la
   const maxChars = template?.maxChars || (
@@ -102,7 +104,8 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
     e.preventDefault();
     if (!recipient.trim() || !sender.trim()) {
       setActiveTab('message');
-      alert('Tanpri mete non moun k ap resevwa kat la ak non pa w.');
+      setValidationError('Tanpri mete non moun k ap resevwa kat la ak non pa w.');
+      setTimeout(() => setValidationError(''), 4500);
       return;
     }
 
@@ -171,6 +174,21 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
             {uploadedFileName && <span className="customizer-tab-badge-dot" />}
           </button>
         </div>
+
+        {validationError && (
+          <div className="customizer-error-banner" role="alert">
+            <AlertCircle size={16} className="error-banner-icon" />
+            <span className="error-banner-text">{validationError}</span>
+            <button
+              type="button"
+              className="btn-banner-close"
+              onClick={() => setValidationError('')}
+              aria-label="Fèmen"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        )}
 
         <form onSubmit={handleValidate} className="customizer-form-wrap">
           {/* Zòn Fòmilè a ak Défilement Pwòp */}

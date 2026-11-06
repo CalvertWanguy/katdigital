@@ -278,10 +278,11 @@ export default function EnvelopeViewerModal({
         .set(cardRef.current, { opacity: 1, pointerEvents: 'auto', zIndex: 50 }, '-=0.25')
         .fromTo(
           cardRef.current,
-          { scale: 0.96, opacity: 0.5 },
+          { scale: 0.95, opacity: 0.2, y: 15, clearProps: 'left,x,xPercent' },
           {
             scale: 1,
             opacity: 1,
+            y: 0,
             duration: 0.45,
             ease: 'power2.out',
             onComplete: () => launchLuxuryConfetti()
@@ -373,7 +374,7 @@ export default function EnvelopeViewerModal({
       gsap.set(cardRef.current, { opacity: 1, pointerEvents: 'none' });
     } else if (format === 'kraft_sheet') {
       gsap.set([kraftTopFlapRef.current, kraftBottomFlapRef.current], { rotateX: 0, opacity: 1 });
-      gsap.set(cardRef.current, { opacity: 0, pointerEvents: 'none' });
+      gsap.set(cardRef.current, { opacity: 0, pointerEvents: 'none', clearProps: 'left,x,xPercent' });
     } else {
       if (envelopeRef.current) {
         envelopeRef.current.style.display = 'block';
@@ -514,7 +515,7 @@ export default function EnvelopeViewerModal({
               : 'Touche pou w ouvri kat la'}
           </div>
 
-          <div className={`envelope-scene-box ${isOpened ? 'is-opened' : ''} ${format === 'bifold' ? 'is-bifold-scene' : ''} ${format === 'parchment' ? 'is-parchment-scene' : ''}`}>
+          <div className={`envelope-scene-box ${isOpened ? 'is-opened' : ''} ${format === 'bifold' ? 'is-bifold-scene' : ''} ${format === 'parchment' ? 'is-parchment-scene' : ''} ${format === 'kraft_sheet' ? 'is-kraft-scene' : ''}`}>
             
             {/* ========================================================
                 FORMAT 1 : ANVLÒP DE LUKS (TRADISYONÈL)
