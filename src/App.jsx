@@ -431,14 +431,14 @@ export default function App() {
 
         {/* Filtè Kategori an Pilil Éditrice */}
         <div className="categories-bar">
-            <button
-              type="button"
-              className={`category-pill ${selectedCategory === 'all' ? 'active' : ''}`}
-              onClick={() => setSelectedCategory('all')}
-            >
-              <LayoutGrid size={13} />
-              <span>Tout Modèl yo</span>
-            </button>
+          <button
+            type="button"
+            className={`category-pill category-pill-all ${selectedCategory === 'all' ? 'active' : ''}`}
+            onClick={() => setSelectedCategory('all')}
+          >
+            <LayoutGrid size={13} />
+            <span>Tout Modèl yo</span>
+          </button>
 
             <button
               type="button"
