@@ -282,7 +282,6 @@ function CategoryCarouselSection({ cat, templates, onOpenDemo, onOpenCustomizer,
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [showFilters, setShowFilters] = useState(true);
   const [activeTemplate, setActiveTemplate] = useState(null);
   const [customizerTemplate, setCustomizerTemplate] = useState(null);
   const [customData, setCustomData] = useState(null);
@@ -427,21 +426,11 @@ export default function App() {
             <span>Kat Dijital</span>
             <span className="crumb-sep">/</span>
             <strong className="crumb-active">{getCategoryLabel()}</strong>
-
-            <button
-              type="button"
-              className={`btn-stationery-filter ${showFilters ? 'active' : ''}`}
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              <SlidersHorizontal size={12} />
-              <span>FILTÈ</span>
-            </button>
           </div>
         </div>
 
         {/* Filtè Kategori an Pilil Éditrice */}
-        {showFilters && (
-          <div className="categories-bar">
+        <div className="categories-bar">
             <button
               type="button"
               className={`category-pill ${selectedCategory === 'all' ? 'active' : ''}`}
@@ -487,7 +476,6 @@ export default function App() {
               <span>Mesaj Lanmou</span>
             </button>
           </div>
-        )}
       </section>
 
       {/* 3. Katalòg Kat (Style Canva Templates) */}
