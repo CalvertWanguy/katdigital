@@ -413,20 +413,6 @@ export default function App() {
               )}
             </div>
           </div>
-
-          <div className="search-breadcrumbs-row">
-            <button
-              type="button"
-              className="crumb-btn"
-              onClick={() => { setSelectedCategory('all'); setSearchQuery(''); }}
-            >
-              Tout Modèl
-            </button>
-            <span className="crumb-sep">/</span>
-            <span>Kat Dijital</span>
-            <span className="crumb-sep">/</span>
-            <strong className="crumb-active">{getCategoryLabel()}</strong>
-          </div>
         </div>
 
         {/* Filtè Kategori an Pilil Éditrice */}

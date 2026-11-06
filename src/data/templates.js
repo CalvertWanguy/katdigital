@@ -41,7 +41,7 @@ export const TEMPLATES = [
     category: 'noel',
     format: 'envelope',
     ambientAnimation: 'snow',
-    defaultMusic: 'jingle_bells',
+    defaultMusic: 'festif_violon',
     envelopeColor: '#7A1F2D',
     pocketColors: {
       left: '#6E1A27',

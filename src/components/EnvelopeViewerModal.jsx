@@ -589,8 +589,8 @@ export default function EnvelopeViewerModal({
                     <p
                       className="card-text-body"
                       style={{
-                        fontSize: message.length > 250 ? '14.5px' : message.length > 170 ? '16px' : '17.5px',
-                        lineHeight: message.length > 250 ? 1.45 : message.length > 170 ? 1.52 : 1.6
+                        fontSize: message.length > 220 ? '13px' : message.length > 150 ? '14px' : '15.5px',
+                        lineHeight: message.length > 220 ? 1.38 : message.length > 150 ? 1.45 : 1.55
                       }}
                     >
                       {message}
@@ -772,7 +772,7 @@ export default function EnvelopeViewerModal({
                           Bèl Swè ak Tout Kè Mwen
                         </h4>
                         <p style={{ fontSize: '12.5px', color: '#E2D7C3', lineHeight: '1.45', margin: '6px 0' }}>
-                          « Se pou lajwa, lasante ak tout benediksyon klere chak jou nan lavi w nan nouvo ane 2027 la. »
+                          « Se pou lajwa, lasante ak tout benediksyon klere chak jou nan lavi w nan nouvo ane a. »
                         </p>
                       </div>
 
@@ -801,8 +801,8 @@ export default function EnvelopeViewerModal({
                       <p
                         className="card-text-body"
                         style={{
-                          fontSize: message.length > 260 ? '14.5px' : message.length > 180 ? '16px' : '17.5px',
-                          lineHeight: message.length > 260 ? 1.45 : message.length > 180 ? 1.52 : 1.6
+                          fontSize: message.length > 220 ? '13px' : message.length > 150 ? '14px' : '15.5px',
+                          lineHeight: message.length > 220 ? 1.38 : message.length > 150 ? 1.45 : 1.55
                         }}
                       >
                         {message}
@@ -851,8 +851,8 @@ export default function EnvelopeViewerModal({
                       className="card-text-body"
                       style={{
                         color: '#3A1E27',
-                        fontSize: message.length > 250 ? '14.5px' : message.length > 170 ? '16px' : '17.5px',
-                        lineHeight: message.length > 250 ? 1.45 : message.length > 170 ? 1.52 : 1.6
+                        fontSize: message.length > 220 ? '13px' : message.length > 150 ? '14px' : '15.5px',
+                        lineHeight: message.length > 220 ? 1.38 : message.length > 150 ? 1.45 : 1.55
                       }}
                     >
                       {message}

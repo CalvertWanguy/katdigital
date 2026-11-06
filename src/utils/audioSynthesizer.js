@@ -4,7 +4,8 @@
 // Sipòte tou yon fichye odyo pèsonalize si itilizatè a telechaje pa l.
 
 export const AUDIO_TRACKS = {
-  jingle_bells: '/audio/jingle_bells.wav',
+  festif_violon: '/audio/deck_the_halls.wav',
+  jingle_bells: '/audio/deck_the_halls.wav', // fallback pou ansyen kat
   we_wish_you: '/audio/we_wish_you.wav',
   deck_the_halls: '/audio/deck_the_halls.wav',
   silent_night: '/audio/silent_night.wav',
@@ -19,11 +20,11 @@ export const AUDIO_TRACKS = {
 
 export const MUSIC_OPTIONS = [
   {
-    id: 'jingle_bells',
-    label: 'Klòch Nwèl • Jingle Bells',
-    desc: 'Melodi selebrasyon Nwèl ak ritm ak klòch fèt',
+    id: 'festif_violon',
+    label: 'Senfoni Nwèl • Violon & Fèt',
+    desc: 'Bèl melodi violon tradisyonèl Nwèl ak anbyans kokennchenn fèt',
     category: 'noel',
-    src: '/audio/jingle_bells.wav'
+    src: '/audio/deck_the_halls.wav'
   },
   {
     id: 'we_wish_you',
@@ -31,13 +32,6 @@ export const MUSIC_OPTIONS = [
     desc: 'Bèl klasik fèt Nwèl plen lajwa ak anbyans fanmi',
     category: 'noel',
     src: '/audio/we_wish_you.wav'
-  },
-  {
-    id: 'deck_the_halls',
-    label: 'Deck the Halls • Nwèl Fèt',
-    desc: 'Tradisyon jwaye ak klòch Nwèl k ap sonnen',
-    category: 'noel',
-    src: '/audio/deck_the_halls.wav'
   },
   {
     id: 'silent_night',

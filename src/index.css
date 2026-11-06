@@ -400,21 +400,21 @@ body {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   margin: 0 auto;
-  padding: 0 10px;
+  padding: 0 8px;
 }
 
 .category-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 6px;
   background: #FFFFFF;
   border: 1px solid #DFD9CE;
   border-radius: 9999px;
-  padding: 8px 16px;
-  font-size: 12.5px;
+  padding: 7px 13px;
+  font-size: 11.8px;
   font-weight: 600;
   color: #38423B;
   cursor: pointer;
@@ -422,7 +422,7 @@ body {
   font-family: inherit;
   transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-  letter-spacing: 0.2px;
+  letter-spacing: 0.15px;
 }
 
 .category-pill:hover {
@@ -1358,7 +1358,8 @@ body {
 }
 
 .envelope-scene-box.is-opened {
-  height: 380px;
+  min-height: 385px;
+  height: auto;
 }
 
 .envelope-scene-box.is-bifold-scene {
@@ -1386,7 +1387,8 @@ body {
     height: 260px;
   }
   .envelope-scene-box.is-opened {
-    height: 375px;
+    min-height: 385px;
+    height: auto;
   }
   .envelope-scene-box.is-parchment-scene {
     width: 100%;
@@ -1958,16 +1960,6 @@ body {
   left: 0 !important;
 }
 
-/* Conteneur de scène pour l'enveloppe et la carte indépendante */
-.envelope-scene-box {
-  position: relative;
-  width: 320px;
-  height: 290px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 /* Enveloppe 3D physique */
 .real-envelope {
   position: relative;
@@ -2000,11 +1992,12 @@ body {
   transform: translateX(-50%);
   width: 326px;
   max-width: calc(100vw - 32px);
-  height: 380px;
-  max-height: calc(100dvh - 190px);
+  min-height: 385px;
+  height: auto;
+  max-height: calc(100dvh - 170px);
   background: #FFFFFF;
   border-radius: 12px;
-  padding: 24px 18px 20px;
+  padding: 18px 16px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2017,62 +2010,67 @@ body {
   opacity: 0; /* IMPÉRATIF : Masquée avant l'ouverture de l'enveloppe */
   pointer-events: none;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .real-card-border {
   position: absolute;
-  inset: 8px;
+  inset: 6px;
   border: 1.5px solid #D4AF37;
   border-radius: 8px;
   pointer-events: none;
 }
 
 .card-top-caption {
-  font-size: 10px;
-  letter-spacing: 3px;
+  font-size: 9.5px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   color: #C39D5E;
   font-weight: 700;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 .card-main-title {
   font-family: 'Montserrat', sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   line-height: 1.25;
-  margin: 4px 0 6px;
+  margin: 2px 0 4px;
   letter-spacing: -0.2px;
 }
 
 .card-separator {
-  width: 36px;
+  width: 32px;
   height: 1.5px;
   background: #D4AF37;
-  margin: 6px auto;
+  margin: 4px auto;
 }
 
 .card-message-area {
-  margin: 8px 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 4px 0 6px;
   padding: 0 4px;
 }
 
 .card-destinataire {
   font-family: 'Montserrat', sans-serif;
-  font-size: 19px;
+  font-size: 16.5px;
   color: #111110;
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   -webkit-font-smoothing: antialiased;
 }
 
 .card-text-body {
   font-family: 'Montserrat', sans-serif;
-  font-size: 14.5px;
-  line-height: 1.6;
+  font-size: 13.5px;
+  line-height: 1.48;
   color: #2D2A26;
   font-weight: 500;
-  padding: 0 4px;
+  padding: 0 2px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -2081,22 +2079,25 @@ body {
 .card-signature-box {
   border-top: 1px solid #E8DECC;
   width: 100%;
-  padding-top: 10px;
-  margin-top: 6px;
+  padding-top: 6px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+  flex-shrink: 0;
 }
 .card-signature-label {
-  font-size: 9.5px;
-  letter-spacing: 2px;
+  font-size: 8.5px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   color: #7A756B;
   font-weight: 600;
 }
 .card-signature-name {
   font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   color: var(--primary-green);
   font-weight: 700;
-  margin-top: 3px;
+  margin-top: 2px;
+  line-height: 1.2;
 }
 
 .envelope-front-pocket {
