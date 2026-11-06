@@ -228,12 +228,14 @@ export default function EnvelopeViewerModal({
 
     // 3. ANIMATION SYMETRIQUE SELON LE FORMAT (Rapid, Fluid & Majestueux)
     if (format === 'parchment') {
+      const isCompactScreen = typeof window !== 'undefined' && (window.innerHeight < 760 || window.innerWidth < 420);
+      const targetParchmentHeight = isCompactScreen ? 335 : 380;
       tl.to(parchmentRibbonRef.current, { opacity: 0, scale: 0.9, duration: 0.25 }, 'crack')
         .fromTo(
           parchmentContainerRef.current,
           { height: 60 },
           {
-            height: 400,
+            height: targetParchmentHeight,
             duration: 0.6,
             ease: 'power2.out',
             onComplete: () => launchLuxuryConfetti()
@@ -512,7 +514,7 @@ export default function EnvelopeViewerModal({
               : '✦ Touche pou w ouvri kat la ✉️ ✦'}
           </div>
 
-          <div className={`envelope-scene-box ${format === 'bifold' ? 'is-bifold-scene' : ''}`}>
+          <div className={`envelope-scene-box ${format === 'bifold' ? 'is-bifold-scene' : ''} ${format === 'parchment' ? 'is-parchment-scene' : ''}`}>
             
             {/* ========================================================
                 FORMAT 1 : ANVLÒP DE LUKS (TRADISYONÈL)

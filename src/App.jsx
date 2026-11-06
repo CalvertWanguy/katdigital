@@ -60,22 +60,64 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
 
   return (
     <div className="canva-template-card" onClick={onOpenDemo}>
-      {/* Mockup vizyèl */}
-      <div className="canva-card-mockup">
-        <div
-          className="canva-mockup-bg"
-          style={{ background: template.envelopeColor }}
-        />
-
-        <div className="canva-mockup-sheet">
-          <span className="canva-sheet-subtitle">{template.subtitle}</span>
-          <div className="canva-sheet-title" style={{ color: template.envelopeColor }}>
-            {template.title}
+      {/* Mockup vizyèl espesifik selon fòma kat la (Anvlòp, Pachemen, Liv, Lèt Kraft) */}
+      <div className={`canva-card-mockup is-format-${template.format || 'envelope'}`}>
+        
+        {/* FÒMA 1 : ANVLÒP DE LUKS AK KAT KI GLISE SOTI AN DEDAN L */}
+        {(!template.format || template.format === 'envelope') && (
+          <div className="preview-envelope-container">
+            <div className="preview-env-back" style={{ background: template.envelopeColor }} />
+            <div className="preview-env-flap" style={{ borderBottomColor: template.flapColor || template.envelopeColor }} />
+            <div className="preview-env-card">
+              <span className="preview-card-caption">{template.badge || 'KAT DE LUKS'}</span>
+              <div className="preview-card-heading" style={{ color: template.envelopeColor }}>{template.title}</div>
+              <div className="preview-card-divider" style={{ background: template.accentColor }} />
+              <p className="preview-card-snippet">{template.defaultMessage.slice(0, 48)}...</p>
+            </div>
+            <div className="preview-env-front" style={{ borderBottomColor: template.envelopeColor }} />
+            <div className="preview-gold-seal">✦</div>
           </div>
-          <p className="canva-sheet-text">
-            {template.defaultMessage.slice(0, 52)}...
-          </p>
-        </div>
+        )}
+
+        {/* FÒMA 2 : PACHEMEN WAYAL AK DE WOULE ANWO AK ANBA */}
+        {template.format === 'parchment' && (
+          <div className="preview-parchment-container">
+            <div className="preview-parchment-roller preview-roller-top" style={{ background: template.rodColor || '#855A25' }} />
+            <div className="preview-parchment-paper" style={{ background: template.parchmentBg || '#F5E6CA', borderColor: template.accentColor || '#C99726' }}>
+              <div className="preview-parchment-seal-ribbon" />
+              <span className="preview-card-caption" style={{ color: template.accentColor || '#C99726' }}>PACHEMEN 1804</span>
+              <div className="preview-card-heading" style={{ color: template.envelopeColor }}>{template.title}</div>
+              <p className="preview-card-snippet" style={{ color: '#3A2714' }}>{template.defaultMessage.slice(0, 48)}...</p>
+            </div>
+            <div className="preview-parchment-roller preview-roller-bottom" style={{ background: template.rodColor || '#855A25' }} />
+          </div>
+        )}
+
+        {/* FÒMA 3 : LIV PAPETRI FOLIO DE LUKS */}
+        {template.format === 'bifold' && (
+          <div className="preview-bifold-container">
+            <div className="preview-bifold-cover" style={{ background: `linear-gradient(135deg, ${template.coverColor || '#1E3326'} 0%, #122118 100%)`, borderColor: template.accentColor || '#D4AF37' }}>
+              <div className="preview-bifold-spine" />
+              <div className="preview-bifold-badge">LIV PAPETRI</div>
+              <div className="preview-bifold-star">✦ 2027 ✦</div>
+              <div className="preview-bifold-title">{template.title}</div>
+              <div className="preview-bifold-gold-seal">★</div>
+            </div>
+          </div>
+        )}
+
+        {/* FÒMA 4 : LÈT KRAFT AK KÈ K AP FLOTE */}
+        {template.format === 'kraft_sheet' && (
+          <div className="preview-kraft-container">
+            <div className="preview-kraft-sheet" style={{ background: template.kraftColor || '#E8D5B7', borderColor: template.accentColor || '#B33951' }}>
+              <div className="preview-kraft-top-flap" />
+              <div className="preview-kraft-heart">♥</div>
+              <span className="preview-card-caption" style={{ color: '#6B3045' }}>LÈT DAMOU</span>
+              <div className="preview-card-heading" style={{ color: '#6B3045' }}>{template.title}</div>
+              <p className="preview-card-snippet" style={{ color: '#4A1D2B' }}>{template.defaultMessage.slice(0, 45)}...</p>
+            </div>
+          </div>
+        )}
 
         {/* Timbre officiel */}
         <div className="canva-card-stamp" style={{ color: template.stampColor, borderColor: template.stampColor }}>
@@ -131,6 +173,112 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function CategoryCarouselSection({ cat, templates, onOpenDemo, onOpenCustomizer }) {
+  const trackRef = React.useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkScroll = () => {
+    const el = trackRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanScrollLeft(scrollLeft > 15);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 15);
+  };
+
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener('resize', checkScroll);
+    return () => window.removeEventListener('resize', checkScroll);
+  }, [templates]);
+
+  const scroll = (direction) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const amount = direction === 'left' ? -280 : 280;
+    el.scrollBy({ left: amount, behavior: 'smooth' });
+    setTimeout(checkScroll, 320);
+  };
+
+  return (
+    <section key={cat.id} className="canva-category-section">
+      <div className="canva-section-header">
+        <div className="canva-header-left">
+          <div className="canva-icon-badge">
+            <cat.icon size={17} />
+          </div>
+          <div>
+            <h2 className="canva-row-title">{cat.title}</h2>
+            <p className="canva-row-desc">{cat.subtitle}</p>
+          </div>
+        </div>
+
+        <div className="canva-header-right">
+          <div className="canva-nav-arrows">
+            <button
+              type="button"
+              className={`canva-arrow-btn ${!canScrollLeft ? 'disabled' : ''}`}
+              onClick={() => scroll('left')}
+              disabled={!canScrollLeft}
+              aria-label="Glise a gòch"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              type="button"
+              className={`canva-arrow-btn ${!canScrollRight ? 'disabled' : ''}`}
+              onClick={() => scroll('right')}
+              disabled={!canScrollRight}
+              aria-label="Glise a dwat"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="canva-carousel-wrapper">
+        <div
+          ref={trackRef}
+          id={`carousel-${cat.id}`}
+          className="canva-carousel-track"
+          onScroll={checkScroll}
+        >
+          {templates.map((template) => (
+            <TemplateCard
+              key={template.id}
+              template={template}
+              onOpenDemo={() => onOpenDemo(template)}
+              onOpenCustomizer={() => onOpenCustomizer(template)}
+            />
+          ))}
+        </div>
+
+        {/* Flèch Flotan sou Mobil : Pa parèt o debi, parèt sèlman lè gen kote pou retounen a gòch ! */}
+        <button
+          type="button"
+          className={`canva-floating-arrow canva-floating-arrow-prev ${canScrollLeft ? 'is-visible' : ''}`}
+          onClick={() => scroll('left')}
+          aria-label="Wè modèl anvan yo"
+          title="Wè modèl anvan yo"
+        >
+          <ChevronLeft size={16} />
+        </button>
+
+        <button
+          type="button"
+          className={`canva-floating-arrow canva-floating-arrow-next ${canScrollRight ? 'is-visible' : ''}`}
+          onClick={() => scroll('right')}
+          aria-label="Wè lòt modèl"
+          title="Wè lòt modèl"
+        >
+          <ChevronRight size={16} />
+        </button>
+      </div>
+    </section>
   );
 }
 
@@ -223,7 +371,7 @@ export default function App() {
           <span className="brand-kat">KAT</span>
           <span className="brand-dijital">DIJITAL</span>
         </a>
-        <div className="nav-tagline">Bèl Kat Vœux & Swè Dijital pou Tout Okazyon</div>
+        <div className="nav-tagline">Bèl Kat Vè & Swè Dijital pou Tout Okazyon</div>
         <div>
           <button
             onClick={() => handleOpenDemo(TEMPLATES[0])}
@@ -392,92 +540,15 @@ export default function App() {
             {CATEGORY_SECTIONS.map((cat) => {
               const catTemplates = TEMPLATES.filter((t) => t.category === cat.id);
               if (catTemplates.length === 0) return null;
-              const IconComp = cat.icon;
 
               return (
-                <section key={cat.id} className="canva-category-row">
-                  {/* Antèt Rangée Canva */}
-                  <div className="canva-row-header">
-                    <div className="canva-row-title-wrap">
-                      <div className="canva-cat-icon-badge">
-                        <IconComp size={16} />
-                      </div>
-                      <div>
-                        <h2 className="canva-row-title">{cat.title}</h2>
-                        <p className="canva-row-desc">{cat.subtitle}</p>
-                      </div>
-                    </div>
-
-                    <div className="canva-row-actions">
-                      <button
-                        type="button"
-                        className="canva-btn-view-all"
-                        onClick={() => setSelectedCategory(cat.id)}
-                      >
-                        Wè tout ({catTemplates.length})
-                      </button>
-
-                      <div className="canva-nav-arrows">
-                        <button
-                          type="button"
-                          className="canva-arrow-btn"
-                          onClick={() => scrollCarousel(cat.id, 'left')}
-                          aria-label="Glise a goch"
-                          title="Glise a goch"
-                        >
-                          <ChevronLeft size={16} />
-                        </button>
-                        <button
-                          type="button"
-                          className="canva-arrow-btn"
-                          onClick={() => scrollCarousel(cat.id, 'right')}
-                          aria-label="Glise a dwat"
-                          title="Glise a dwat"
-                        >
-                          <ChevronRight size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Piste Carrousel Glisman Orizontal (Slide pour voir tankou Canva) */}
-                  <div className="canva-carousel-wrapper">
-                    <div
-                      id={`carousel-${cat.id}`}
-                      className="canva-carousel-track"
-                    >
-                      {catTemplates.map((template) => (
-                        <TemplateCard
-                          key={template.id}
-                          template={template}
-                          onOpenDemo={() => handleOpenDemo(template)}
-                          onOpenCustomizer={() => handleOpenCustomizer(template)}
-                        />
-                      ))}
-                    </div>
-
-                    {/* Flèch sikilè Canva (Gòch ak Dwat) pou gide itilizatè yo sou mobil */}
-                    <button
-                      type="button"
-                      className="canva-floating-arrow canva-floating-arrow-prev"
-                      onClick={() => scrollCarousel(cat.id, 'left')}
-                      aria-label="Wè modèl anvan yo"
-                      title="Wè modèl anvan yo"
-                    >
-                      <ChevronLeft size={16} />
-                    </button>
-
-                    <button
-                      type="button"
-                      className="canva-floating-arrow canva-floating-arrow-next"
-                      onClick={() => scrollCarousel(cat.id, 'right')}
-                      aria-label="Wè lòt modèl"
-                      title="Wè lòt modèl"
-                    >
-                      <ChevronRight size={16} />
-                    </button>
-                  </div>
-                </section>
+                <CategoryCarouselSection
+                  key={cat.id}
+                  cat={cat}
+                  templates={catTemplates}
+                  onOpenDemo={handleOpenDemo}
+                  onOpenCustomizer={handleOpenCustomizer}
+                />
               );
             })}
           </div>

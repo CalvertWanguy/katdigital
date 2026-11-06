@@ -258,15 +258,28 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
                   </div>
                 </div>
 
-                {/* 4. Tèks Mesaj la ak kontè karaktè */}
+                {/* 4. Tèks Mesaj la ak bouton Efase rapid */}
                 <div className="form-field-wrap" style={{ marginBottom: 4, flex: 1, display: 'flex', flexDirection: 'column' }}>
                   <div className="form-field-header-row">
                     <label className="form-field-label">
                       <span>Tèks kat la :</span>
                     </label>
-                    <span className="form-field-helper" style={{ fontWeight: 600, color: customMessage.length >= maxChars ? '#C41230' : '#8C877D' }}>
-                      {customMessage.length} / {maxChars} karaktè
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      {customMessage && (
+                        <button
+                          type="button"
+                          className="btn-clear-textarea"
+                          onClick={() => setCustomMessage('')}
+                          title="Efase tout tèks la d'un coup"
+                        >
+                          <Trash2 size={12} />
+                          <span>Efase tèks la</span>
+                        </button>
+                      )}
+                      <span className="form-field-helper" style={{ fontWeight: 600, color: customMessage.length >= maxChars ? '#C41230' : '#8C877D' }}>
+                        {customMessage.length} / {maxChars}
+                      </span>
+                    </div>
                   </div>
                   <textarea
                     rows={5}
@@ -307,7 +320,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
                           <div className={`music-icon-bubble ${isSelected ? 'selected' : ''}`}>
                             {m.id === 'none' ? <VolumeX size={15} /> : <Music size={15} />}
                           </div>
-                          <div>
+                          <div className="music-option-text-wrap">
                             <div className="music-option-name">{m.label}</div>
                             <div className="music-option-desc">{m.desc}</div>
                           </div>

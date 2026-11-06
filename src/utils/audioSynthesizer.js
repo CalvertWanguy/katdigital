@@ -6,46 +6,94 @@
 export const AUDIO_TRACKS = {
   jingle_bells: '/audio/jingle_bells.mp3',
   we_wish_you: '/audio/we_wish_you.mp3',
+  deck_the_halls: '/audio/deck_the_halls.mp3',
+  silent_night: '/audio/silent_night.wav',
   bon_ane: '/audio/radetzky_march.ogg',
+  joy_to_the_world: '/audio/joy_to_the_world.wav',
+  auld_lang_syne: '/audio/auld_lang_syne.ogg',
   romance: '/audio/canon_in_d.ogg',
-  haitian_tradition: '/audio/haiti_1804.ogg'
+  romance_piano: '/audio/romance_piano.wav',
+  haitian_tradition: '/audio/haiti_1804.ogg',
+  haiti_soup_joumou: '/audio/haiti_soup_joumou.wav'
 };
 
 export const MUSIC_OPTIONS = [
   {
     id: 'jingle_bells',
-    label: 'Klòch Nwèl • Jingle Bells (Enstrimantal)',
+    label: 'Klòch Nwèl • Jingle Bells',
     desc: 'Melodi selebrasyon Nwèl ak ritm ak klòch fèt',
     category: 'noel',
     src: '/audio/jingle_bells.mp3'
   },
   {
     id: 'we_wish_you',
-    label: 'We Wish You a Merry Christmas (Enstrimantal)',
+    label: 'We Wish You a Merry Christmas',
     desc: 'Bèl klasik fèt Nwèl plen lajwa ak anbyans fanmi',
     category: 'noel',
     src: '/audio/we_wish_you.mp3'
   },
   {
+    id: 'deck_the_halls',
+    label: 'Deck the Halls • Nwèl Fèt',
+    desc: 'Tradisyon jwaye ak klòch Nwèl k ap sonnen',
+    category: 'noel',
+    src: '/audio/deck_the_halls.mp3'
+  },
+  {
+    id: 'silent_night',
+    label: 'Douce Nuit • Silent Night',
+    desc: 'Melodi selès dous e trankil pou lapè ak lafwa',
+    category: 'noel',
+    src: '/audio/silent_night.wav'
+  },
+  {
     id: 'bon_ane',
-    label: 'Swè Bòn Ane 2027 • Selebrasyon & Lajwa (Fanfare)',
-    desc: 'Bèl fanfare jwaye e plen enèji pou akeyi nouvo ane 2027 la',
+    label: 'Bòn Ane 2027 • Radetzky March',
+    desc: 'Bèl fanfare jwaye e plen enèji pou nouvo ane a',
     category: 'nouvel-an',
     src: '/audio/radetzky_march.ogg'
   },
   {
+    id: 'joy_to_the_world',
+    label: 'Joy to the World • Selebrasyon',
+    desc: 'Fanfare ak klòch viktwa ak kokennchenn lajwa',
+    category: 'nouvel-an',
+    src: '/audio/joy_to_the_world.wav'
+  },
+  {
+    id: 'auld_lang_syne',
+    label: '31 Desanm • Auld Lang Syne',
+    desc: 'Melodi tradisyonèl souvni ak pase men nan ane a',
+    category: 'nouvel-an',
+    src: '/audio/auld_lang_syne.ogg'
+  },
+  {
     id: 'romance',
-    label: 'Melodi Lanmou • Canon in D - Pachelbel (Pyano)',
-    desc: 'Pi popilè melodi amoure ak dousè pou moun ou renmen',
+    label: 'Lanmou • Canon in D (Pachelbel)',
+    desc: 'Pi popilè melodi amoure pou moun ou renmen',
     category: 'mennaj',
     src: '/audio/canon_in_d.ogg'
   },
   {
+    id: 'romance_piano',
+    label: 'Dousè Lanmou • Pyano Romantik',
+    desc: 'Melodi pyano amoure dous e delika',
+    category: 'mennaj',
+    src: '/audio/romance_piano.wav'
+  },
+  {
     id: 'haitian_tradition',
-    label: 'Omaj 1804 & Tradisyon • La Dessalinienne (Fanfare)',
-    desc: 'Im nasyonal ak grandè zansèt yo pou 1ye Janvye & Soup Joumou',
+    label: 'Omaj 1804 • La Dessalinienne',
+    desc: 'Im nasyonal ak grandè zansèt yo pou 1ye Janvye',
     category: 'tradition',
     src: '/audio/haiti_1804.ogg'
+  },
+  {
+    id: 'haiti_soup_joumou',
+    label: 'Soup Joumou • Fanfare 1ye Janvye',
+    desc: 'Melodi fèt nasyonal ak chalè soup joumou',
+    category: 'tradition',
+    src: '/audio/haiti_soup_joumou.wav'
   },
   {
     id: 'none',
