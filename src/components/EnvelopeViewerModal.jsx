@@ -190,11 +190,6 @@ export default function EnvelopeViewerModal({
 
     playCardOpenSound(template, format);
 
-    // Kòmanse jwe melodi fèt la si li pa an silans
-    if (!isMusicMuted && musicId !== 'none') {
-      playHolidaySoundtrack(musicId, customAudioUrl);
-    }
-
     confetti({
       particleCount: 22,
       spread: 50,
@@ -306,24 +301,23 @@ export default function EnvelopeViewerModal({
       .set(cardRef.current, { opacity: 1, pointerEvents: 'auto', zIndex: 50 }, '-=0.25')
       .fromTo(
         cardRef.current,
-        { y: 20, opacity: 0.2, scale: 0.95, left: '50%', xPercent: -50 },
+        { y: 35, opacity: 0.2, scale: 0.94, left: '50%', xPercent: -50 },
         {
-          y: -105,
+          y: 0,
           opacity: 1,
           scale: 1,
           left: '50%',
           xPercent: -50,
-          duration: 0.58,
+          duration: 0.55,
           ease: 'power2.out',
           onComplete: () => launchLuxuryConfetti()
         },
-        '-=0.2'
+        '-=0.18'
       )
       .to(envelopeRef.current, {
-        y: 40,
         opacity: 0,
-        scale: 0.9,
-        duration: 0.4,
+        scale: 0.92,
+        duration: 0.35,
         ease: 'power2.out',
         onComplete: () => {
           if (envelopeRef.current) envelopeRef.current.style.display = 'none';
@@ -339,10 +333,18 @@ export default function EnvelopeViewerModal({
       duration: 0.35,
       ease: 'power2.out'
     }, '-=0.1');
+
+    // 5. Melodi fèt la kòmanse sèlman APRÈ lèt la fin parèt devan je moun nan
+    tl.add(() => {
+      if (!isMusicMuted && musicId !== 'none') {
+        playHolidaySoundtrack(musicId, customAudioUrl);
+      }
+    }, '+=0.05');
   };
 
   const replayAnimation = () => {
     setIsOpened(false);
+    stopHolidaySoundtrack();
     gsap.killTweensOf('*');
     if (promptRef.current) {
       promptRef.current.style.visibility = 'visible';
@@ -512,7 +514,7 @@ export default function EnvelopeViewerModal({
               : 'Touche pou w ouvri kat la'}
           </div>
 
-          <div className={`envelope-scene-box ${format === 'bifold' ? 'is-bifold-scene' : ''} ${format === 'parchment' ? 'is-parchment-scene' : ''}`}>
+          <div className={`envelope-scene-box ${isOpened ? 'is-opened' : ''} ${format === 'bifold' ? 'is-bifold-scene' : ''} ${format === 'parchment' ? 'is-parchment-scene' : ''}`}>
             
             {/* ========================================================
                 FORMAT 1 : ANVLÒP DE LUKS (TRADISYONÈL)

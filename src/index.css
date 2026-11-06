@@ -1271,15 +1271,15 @@ body {
   inset: 0;
   height: 100vh;
   height: 100dvh;
-  background: radial-gradient(circle at 50% 32%, rgba(28, 42, 33, 0.95) 0%, rgba(10, 14, 11, 0.98) 100%);
+  background: radial-gradient(circle at 50% 48%, rgba(24, 38, 29, 0.98) 0%, rgba(8, 12, 9, 0.99) 100%);
   backdrop-filter: blur(14px);
   z-index: 100;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px;
-  overflow: hidden; /* SANS AUCUN DÉFILEMENT */
+  justify-content: center; /* Santre nèt vètikalman pou simetri pafè */
+  padding: 16px 14px;
+  overflow-y: auto;
   box-sizing: border-box;
   overscroll-behavior: contain;
 }
@@ -1288,7 +1288,7 @@ body {
   position: fixed;
   top: 16px;
   right: 16px;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.22);
   border: none;
   color: #FFF;
   width: 40px;
@@ -1309,13 +1309,13 @@ body {
 
 .viewer-scroll-container {
   width: 100%;
-  height: 100%;
-  max-width: 520px;
+  max-width: 440px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 0;
+  justify-content: center; /* Santre santiman ak kat la */
+  margin: auto 0;
+  padding: 12px 0;
   box-sizing: border-box;
 }
 
@@ -1326,11 +1326,18 @@ body {
 
 .envelope-scene-box {
   position: relative;
-  width: 320px;
-  height: 290px;
+  width: 326px;
+  max-width: calc(100vw - 32px);
+  height: 270px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.envelope-scene-box.is-opened {
+  height: 380px;
 }
 
 .envelope-scene-box.is-bifold-scene {
@@ -1353,6 +1360,13 @@ body {
 }
 
 @media (max-width: 680px) {
+  .envelope-scene-box {
+    width: 320px;
+    height: 260px;
+  }
+  .envelope-scene-box.is-opened {
+    height: 375px;
+  }
   .envelope-scene-box.is-parchment-scene {
     width: 100%;
     max-width: 330px;
@@ -1375,7 +1389,7 @@ body {
 }
 
 .viewer-stage {
-  flex: 1;
+  flex: 0 0 auto;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -1960,25 +1974,28 @@ body {
 /* CARTE PAPIER TEXTURÉE HAUTE QUALITÉ & LUMINEUSE (100% OPAQUE) */
 .real-card {
   position: absolute;
-  top: -38px;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 336px;
-  height: 395px;
+  width: 326px;
+  max-width: calc(100vw - 32px);
+  height: 380px;
+  max-height: calc(100dvh - 190px);
   background: #FFFFFF;
   border-radius: 12px;
-  padding: 22px 20px 18px;
+  padding: 24px 18px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   text-align: center;
-  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.42), 0 4px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4), 0 4px 14px rgba(0, 0, 0, 0.12);
   border: 1px solid #EAE0D0;
   z-index: 50;
   transform-origin: center center;
   opacity: 0; /* IMPÉRATIF : Masquée avant l'ouverture de l'enveloppe */
   pointer-events: none;
+  box-sizing: border-box;
 }
 
 .real-card-border {
@@ -1987,17 +2004,6 @@ body {
   border: 1.5px solid #D4AF37;
   border-radius: 8px;
   pointer-events: none;
-}
-.real-card-border::after {
-  content: '✦';
-  position: absolute;
-  top: -9px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #FFFFFF;
-  padding: 0 8px;
-  color: var(--gold-accent);
-  font-size: 13px;
 }
 
 .card-top-caption {
@@ -2369,8 +2375,9 @@ body {
 @media (max-width: 480px) {
   .card-actions-panel {
     width: 100%;
-    max-width: 336px;
-    margin-top: 22px;
+    max-width: 326px;
+    margin-top: 14px;
+    margin-bottom: 4px;
   }
   .stationery-main-btns-row {
     display: flex;
@@ -2379,7 +2386,7 @@ body {
     align-items: center;
     gap: 10px;
     width: 100%;
-    max-width: 336px;
+    max-width: 326px;
   }
   .btn-stationery-primary, .btn-stationery-secondary {
     flex: 1;
@@ -2400,61 +2407,18 @@ body {
 /* Desktop & Grand Écran : Kat la vin pi gwo, pi majesteuz ak tèks klè & lisib */
 @media (min-width: 900px) and (min-height: 750px) {
   .envelope-scene-box {
-    transform: scale(1.22);
+    transform: scale(1.15);
     transform-origin: center center;
-    margin-bottom: 24px;
+    margin-bottom: 18px;
   }
   .card-actions-panel {
-    margin-top: 36px;
-    max-width: 420px;
+    margin-top: 24px;
+    max-width: 400px;
   }
   .btn-stationery-primary, .btn-stationery-secondary {
     max-width: 185px;
     font-size: 13px;
     padding: 9px 18px;
-  }
-}
-
-@media (min-width: 1200px) and (min-height: 850px) {
-  .envelope-scene-box {
-    transform: scale(1.32);
-    transform-origin: center center;
-    margin-bottom: 30px;
-  }
-  .card-actions-panel {
-    margin-top: 42px;
-    max-width: 440px;
-  }
-  .btn-stationery-primary, .btn-stationery-secondary {
-    max-width: 195px;
-    font-size: 13.5px;
-    padding: 10px 20px;
-  }
-}
-
-@media (max-width: 380px) {
-  .envelope-scene-box {
-    transform: scale(0.92);
-    transform-origin: center center;
-  }
-}
-@media (max-width: 340px) {
-  .envelope-scene-box {
-    transform: scale(0.84);
-    transform-origin: center center;
-  }
-}
-
-@media (max-height: 720px) {
-  .envelope-scene-box {
-    transform: scale(0.85);
-    transform-origin: center center;
-  }
-}
-@media (max-height: 600px) {
-  .envelope-scene-box {
-    transform: scale(0.74);
-    transform-origin: center center;
   }
 }
 

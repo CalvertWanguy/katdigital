@@ -332,55 +332,85 @@ export function playCardOpenSound(template = {}, format = 'envelope') {
         osc.stop(st + 0.75);
       });
     } else {
-      // 4. ANVLÒP DE LUKS : Krake sele an lasir ak sonorite kristal
+      // 4. ANVLÒP DE LUKS : Vrè son krake sele an lasir fizik (Otantik & Satifèzan)
+      // A. Premye krak sèk lasir la (High-frequency Brittle Wax Snap)
+      const snapBufSize = Math.floor(ctx.sampleRate * 0.04);
+      const snapBuf = ctx.createBuffer(1, snapBufSize, ctx.sampleRate);
+      const snapData = snapBuf.getChannelData(0);
+      for (let i = 0; i < snapBufSize; i++) {
+        snapData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.006));
+      }
+      const snapSource = ctx.createBufferSource();
+      snapSource.buffer = snapBuf;
+      const snapFilter = ctx.createBiquadFilter();
+      snapFilter.type = 'bandpass';
+      snapFilter.frequency.setValueAtTime(3600, now);
+      snapFilter.Q.value = 3.2;
+      const snapGain = ctx.createGain();
+      snapGain.gain.setValueAtTime(0.42, now);
+      snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+      snapSource.connect(snapFilter);
+      snapFilter.connect(snapGain);
+      snapGain.connect(ctx.destination);
+      snapSource.start(now);
+
+      // B. Dezyèm mikwo-krak lasir la (Secondary micro-fracture split)
+      const crack2Time = now + 0.016;
+      const crack2BufSize = Math.floor(ctx.sampleRate * 0.035);
+      const crack2Buf = ctx.createBuffer(1, crack2BufSize, ctx.sampleRate);
+      const crack2Data = crack2Buf.getChannelData(0);
+      for (let i = 0; i < crack2BufSize; i++) {
+        crack2Data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.005));
+      }
+      const crack2Source = ctx.createBufferSource();
+      crack2Source.buffer = crack2Buf;
+      const crack2Filter = ctx.createBiquadFilter();
+      crack2Filter.type = 'bandpass';
+      crack2Filter.frequency.setValueAtTime(2400, crack2Time);
+      crack2Filter.Q.value = 2.8;
+      const crack2Gain = ctx.createGain();
+      crack2Gain.gain.setValueAtTime(0.28, crack2Time);
+      crack2Gain.gain.exponentialRampToValueAtTime(0.001, crack2Time + 0.03);
+      crack2Source.connect(crack2Filter);
+      crack2Filter.connect(crack2Gain);
+      crack2Gain.connect(ctx.destination);
+      crack2Source.start(crack2Time);
+
+      // C. Enpilsyon kò anvlòp la (Warm cavity pop)
       const popOsc = ctx.createOscillator();
       const popGain = ctx.createGain();
-      popOsc.type = 'sine';
-      popOsc.frequency.setValueAtTime(160, now);
-      popOsc.frequency.exponentialRampToValueAtTime(55, now + 0.09);
-      popGain.gain.setValueAtTime(0.28, now);
-      popGain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+      popOsc.type = 'triangle';
+      popOsc.frequency.setValueAtTime(190, now);
+      popOsc.frequency.exponentialRampToValueAtTime(45, now + 0.065);
+      popGain.gain.setValueAtTime(0.35, now);
+      popGain.gain.exponentialRampToValueAtTime(0.001, now + 0.065);
       popOsc.connect(popGain);
       popGain.connect(ctx.destination);
       popOsc.start(now);
-      popOsc.stop(now + 0.1);
+      popOsc.stop(now + 0.07);
 
-      // Krake teksti (bandpass wax snap)
-      const bufSize = Math.floor(ctx.sampleRate * 0.09);
-      const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
-      const d = buf.getChannelData(0);
-      for (let i = 0; i < bufSize; i++) {
-        d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.025)) * 0.22;
+      // D. Friksyon papye k ap dekole (Paper unstick & flap release texture)
+      const tearBufSize = Math.floor(ctx.sampleRate * 0.12);
+      const tearBuf = ctx.createBuffer(1, tearBufSize, ctx.sampleRate);
+      const tearData = tearBuf.getChannelData(0);
+      for (let i = 0; i < tearBufSize; i++) {
+        const env = Math.exp(-i / (ctx.sampleRate * 0.035));
+        tearData[i] = (Math.random() * 2 - 1) * env * 0.25;
       }
-      const noise = ctx.createBufferSource();
-      noise.buffer = buf;
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.value = 1800;
-      filter.Q.value = 1.5;
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0.22, now);
-      g.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
-      noise.connect(filter);
-      filter.connect(g);
-      g.connect(ctx.destination);
-      noise.start(now);
-
-      // Klòch fèt kristal an lò (C6: 1046Hz, G6: 1568Hz)
-      const toneFreq = template.accentColor ? 1046.5 : 1174.66;
-      [toneFreq, toneFreq * 1.5].forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const og = ctx.createGain();
-        osc.type = 'sine';
-        const st = now + 0.03 + idx * 0.05;
-        osc.frequency.setValueAtTime(freq, st);
-        og.gain.setValueAtTime(0.15, st);
-        og.gain.exponentialRampToValueAtTime(0.001, st + 0.75);
-        osc.connect(og);
-        og.connect(ctx.destination);
-        osc.start(st);
-        osc.stop(st + 0.8);
-      });
+      const tearSource = ctx.createBufferSource();
+      tearSource.buffer = tearBuf;
+      const tearFilter = ctx.createBiquadFilter();
+      tearFilter.type = 'bandpass';
+      tearFilter.frequency.setValueAtTime(1100, now + 0.01);
+      tearFilter.frequency.exponentialRampToValueAtTime(650, now + 0.12);
+      tearFilter.Q.value = 1.4;
+      const tearGain = ctx.createGain();
+      tearGain.gain.setValueAtTime(0.25, now + 0.01);
+      tearGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+      tearSource.connect(tearFilter);
+      tearFilter.connect(tearGain);
+      tearGain.connect(ctx.destination);
+      tearSource.start(now + 0.01);
     }
   } catch (e) {
     console.warn('Erè nan son ouvèti kat la:', e);
