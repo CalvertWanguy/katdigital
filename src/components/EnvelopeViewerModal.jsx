@@ -110,9 +110,15 @@ export default function EnvelopeViewerModal({
   const musicId = customData?.musicId || template.defaultMusic || 'deck_the_halls';
   const customAudioUrl = customData?.customAudioUrl || null;
 
-  // Prechaje mizik la davans pou pa gen okenn reta lè itilizatè klike pou ouvri kat la
+  // Lè itilizatè a louvri nenpòt modèl, mizik tèm nan kòmanse jwe imedyatman
   useEffect(() => {
     preloadHolidaySoundtrack(musicId, customAudioUrl);
+    if (!isMusicMuted && musicId !== 'none') {
+      playHolidaySoundtrack(musicId, customAudioUrl);
+    }
+    return () => {
+      stopHolidaySoundtrack(true);
+    };
   }, [musicId, customAudioUrl]);
 
   const currentHost = typeof window !== 'undefined' ? window.location.origin : 'https://katdijital.ht';
@@ -164,6 +170,10 @@ export default function EnvelopeViewerModal({
   const openCard = () => {
     if (isOpened) return;
     setIsOpened(true);
+
+    if (!isMusicMuted && musicId !== 'none') {
+      playHolidaySoundtrack(musicId, customAudioUrl);
+    }
 
     playCardOpenSound(template, format);
 
@@ -333,7 +343,7 @@ export default function EnvelopeViewerModal({
 
     // 5. Melodi fèt la kòmanse sèlman APRÈ lèt la fin parèt devan je moun nan
     tl.add(() => {
-      if (!isMusicMuted && musicId !== 'none') {
+      if (!isMusicMuted && musicId !== 'none' && !isSoundtrackPlaying()) {
         playHolidaySoundtrack(musicId, customAudioUrl);
       }
     }, '+=0.05');

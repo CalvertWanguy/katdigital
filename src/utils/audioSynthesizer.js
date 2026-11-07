@@ -9,33 +9,33 @@ export const AUDIO_TRACKS = {
   festif_violon: '/audio/deck_the_halls.mp3',
 
   // 2. Pachemen Libète 1804 - Im Nasyonal Ayisyen "La Dessalinienne"
-  haitian_tradition: '/audio/haiti_national_anthem.ogg',
+  haitian_tradition: '/audio/haiti_national_anthem.mp3',
 
   // 3. Folio Pye Sapen & Zétwal - Johann Strauss Radetzky March (Fanfare Triyonfal)
-  bon_ane: '/audio/radetzky_march.ogg',
+  bon_ane: '/audio/radetzky_march.mp3',
 
   // 4. Lèt Damou Sou Papye Kraft - Canon in D (Pachelbel) Kòd & Vyolonsèl
-  romance: '/audio/canon_in_d.ogg',
+  romance: '/audio/canon_in_d.mp3',
 
   // 5. Dekrè Wayal Bòn Ane 2027 - Joy to the World (Klòch & Fanfare Viktwa)
   joy_to_the_world: '/audio/joy_to_the_world.mp3',
 
   // 6. Nwèl Ble Nwi & Poud Zétwal - Douce Nuit / Silent Night (Pyano Selès)
-  silent_night: '/audio/silent_night.ogg',
+  silent_night: '/audio/silent_night.mp3',
 
   // 7. Nwèl Vèt Sapen & Or - The First Noel (Senfoni Nwèl Chalere)
   the_first_noel: '/audio/the_first_noel.mp3',
 
   // 8. Bòn Ane 2027 Klere & Siksè - Auld Lang Syne (31 Desanm Minwi)
-  auld_lang_syne: '/audio/auld_lang_syne.ogg',
+  auld_lang_syne: '/audio/auld_lang_syne.mp3',
 
   // 9. Soup Joumou 1804 & Diyite - O Holy Night / Cantique de Noël (Senfoni Majestyez)
   o_holy_night: '/audio/o_holy_night.mp3',
   haiti_soup_joumou: '/audio/o_holy_night.mp3',
 
   // 10. Kè Damou & Dousè Fen Dane - Clair de Lune (Claude Debussy Pyano Solo)
-  clair_de_lune: '/audio/clair_de_lune.ogg',
-  romance_piano: '/audio/clair_de_lune.ogg',
+  clair_de_lune: '/audio/clair_de_lune.mp3',
+  romance_piano: '/audio/clair_de_lune.mp3',
 
   // Opsyon adisyonèl nan pèsonalizasyon
   we_wish_you: '/audio/we_wish_you.mp3',
@@ -62,7 +62,7 @@ export const MUSIC_OPTIONS = [
     label: 'Douce Nuit • Silent Night (Pyano)',
     desc: 'Bèl pyano selès, dous e kalm pou lapè nan kè ak nan kay la',
     category: 'noel',
-    src: '/audio/silent_night.ogg'
+    src: '/audio/silent_night.mp3'
   },
   {
     id: 'we_wish_you',
@@ -83,7 +83,7 @@ export const MUSIC_OPTIONS = [
     label: 'Omaj 1804 • La Dessalinienne',
     desc: 'Im nasyonal ofisyèl fèt 1ye Janvye, libète zansèt ak diyite ayisyen',
     category: 'tradition',
-    src: '/audio/haiti_national_anthem.ogg'
+    src: '/audio/haiti_national_anthem.mp3'
   },
   {
     id: 'o_holy_night',
@@ -97,7 +97,7 @@ export const MUSIC_OPTIONS = [
     label: 'Bòn Ane 2027 • Radetzky March',
     desc: 'Mache triyonfal jwaye e plen grandè pou ouvri nouvo ane a',
     category: 'nouvel-an',
-    src: '/audio/radetzky_march.ogg'
+    src: '/audio/radetzky_march.mp3'
   },
   {
     id: 'joy_to_the_world',
@@ -111,21 +111,21 @@ export const MUSIC_OPTIONS = [
     label: '31 Desanm • Auld Lang Syne',
     desc: 'Melodi tradisyonèl 31 desanm minwi pou akeyi nouvo ane a',
     category: 'nouvel-an',
-    src: '/audio/auld_lang_syne.ogg'
+    src: '/audio/auld_lang_syne.mp3'
   },
   {
     id: 'romance',
     label: 'Lanmou • Canon in D (Pachelbel)',
     desc: 'Pi gwo klasik amoure nan mond lan ak kòd ak vyolonsèl pou moun ou renmen',
     category: 'mennaj',
-    src: '/audio/canon_in_d.ogg'
+    src: '/audio/canon_in_d.mp3'
   },
   {
     id: 'clair_de_lune',
     label: 'Dousè Lanmou • Clair de Lune (Debussy)',
     desc: 'Chèfdèv pyano solo amoure, dous, powetik e delika',
     category: 'mennaj',
-    src: '/audio/clair_de_lune.ogg'
+    src: '/audio/clair_de_lune.mp3'
   },
   {
     id: 'none',
@@ -139,7 +139,9 @@ let currentAudioElement = null;
 let preloadedAudio = null;
 let preloadedSrc = null;
 let isPlaying = false;
-let fadeInterval = null;
+let currentFadeInterval = null;
+let currentFadeOutInterval = null;
+let unlockListenerAdded = false;
 
 /**
  * Prechaje odyo a davans pou lè itilizatè klike li pati imedyatman san tan datant
@@ -161,7 +163,7 @@ export function preloadHolidaySoundtrack(musicId = 'deck_the_halls', customAudio
     preloadedAudio.preload = 'auto';
     preloadedAudio.src = src;
     preloadedAudio.loop = true;
-    preloadedAudio.volume = 0.70;
+    preloadedAudio.volume = 0.65;
     preloadedSrc = src;
     preloadedAudio.load();
   } catch (e) {
@@ -170,10 +172,10 @@ export function preloadHolidaySoundtrack(musicId = 'deck_the_halls', customAudio
 }
 
 /**
- * Jwe melodi fèt la imedyatman ak yon bèl fondu gradyèl (fade-in) pou yon anbyans dou e liksye
+ * Jwe melodi fèt la imedyatman ak yon bèl kalite odyo klè e fiyab
  */
 export function playHolidaySoundtrack(musicId = 'deck_the_halls', customAudioUrl = null) {
-  stopHolidaySoundtrack();
+  stopHolidaySoundtrack(true); // Kanpe san reta nenpòt lòt mizik ki te ka ap jwe
 
   if (musicId === 'none') {
     isPlaying = false;
@@ -190,45 +192,50 @@ export function playHolidaySoundtrack(musicId = 'deck_the_halls', customAudioUrl
   if (!src) return false;
 
   try {
+    let audio;
     if (preloadedAudio && preloadedSrc === src) {
-      currentAudioElement = preloadedAudio;
-      currentAudioElement.currentTime = 0;
+      audio = preloadedAudio;
+      audio.currentTime = 0;
     } else {
-      currentAudioElement = new Audio(src);
-      currentAudioElement.loop = true;
-      preloadedAudio = currentAudioElement;
+      audio = new Audio(src);
+      audio.loop = true;
+      preloadedAudio = audio;
       preloadedSrc = src;
     }
 
-    // Kòmanse nan volim zewo pou fè yon fondu sonò natirèl
-    currentAudioElement.volume = 0;
+    audio.volume = 0.65; // Volim klè e odib touswit
+    currentAudioElement = audio;
 
-    const playPromise = currentAudioElement.play();
+    const playPromise = audio.play();
     if (playPromise !== undefined) {
       playPromise
         .then(() => {
           isPlaying = true;
-          // Fondu sonò dous (Fade-in sou 600ms)
-          if (fadeInterval) clearInterval(fadeInterval);
-          let currentVol = 0;
-          const targetVol = 0.72;
-          fadeInterval = setInterval(() => {
-            if (!currentAudioElement || !isPlaying) {
-              clearInterval(fadeInterval);
-              return;
-            }
-            currentVol += 0.06;
-            if (currentVol >= targetVol) {
-              currentAudioElement.volume = targetVol;
-              clearInterval(fadeInterval);
-            } else {
-              currentAudioElement.volume = currentVol;
-            }
-          }, 35);
         })
         .catch((err) => {
-          console.warn('Odyo a mande yon jès itilizatè pou demare:', err);
+          console.warn('Navigatè mande yon jès itilizatè (klik/touch) pou kòmanse odyo a:', err);
           isPlaying = false;
+
+          // Si navigatè a te bloke lekti otomatik la, nou debloke li nan premye klik oswa touche sou ekran an
+          if (typeof window !== 'undefined' && !unlockListenerAdded) {
+            unlockListenerAdded = true;
+            const unlockAudio = () => {
+              if (currentAudioElement && !isPlaying) {
+                currentAudioElement.play()
+                  .then(() => {
+                    isPlaying = true;
+                  })
+                  .catch(() => {});
+              }
+              window.removeEventListener('pointerdown', unlockAudio);
+              window.removeEventListener('click', unlockAudio);
+              window.removeEventListener('touchstart', unlockAudio);
+              unlockListenerAdded = false;
+            };
+            window.addEventListener('pointerdown', unlockAudio, { once: true });
+            window.addEventListener('click', unlockAudio, { once: true });
+            window.addEventListener('touchstart', unlockAudio, { once: true });
+          }
         });
     }
 
@@ -242,30 +249,49 @@ export function playHolidaySoundtrack(musicId = 'deck_the_halls', customAudioUrl
 }
 
 /**
- * Koupe oswa kanpe mizik la ak yon fondu dous (Fade-out) pou evite nenpòt krakman brid sou kou
+ * Koupe oswa kanpe mizik la san okenn konfli ni reta
  */
-export function stopHolidaySoundtrack() {
+export function stopHolidaySoundtrack(immediate = false) {
   isPlaying = false;
-  if (fadeInterval) {
-    clearInterval(fadeInterval);
-    fadeInterval = null;
+
+  if (currentFadeInterval) {
+    clearInterval(currentFadeInterval);
+    currentFadeInterval = null;
   }
+  if (currentFadeOutInterval) {
+    clearInterval(currentFadeOutInterval);
+    currentFadeOutInterval = null;
+  }
+
   if (currentAudioElement) {
     const el = currentAudioElement;
     currentAudioElement = null;
-    let vol = el.volume;
-    const fadeOutInterval = setInterval(() => {
-      vol -= 0.12;
-      if (vol <= 0) {
-        clearInterval(fadeOutInterval);
-        try {
-          el.pause();
-          el.currentTime = 0;
-        } catch (e) {}
-      } else {
-        el.volume = vol;
-      }
-    }, 25);
+
+    if (immediate) {
+      try {
+        el.pause();
+        el.currentTime = 0;
+      } catch (e) {}
+    } else {
+      let vol = el.volume;
+      currentFadeOutInterval = setInterval(() => {
+        vol -= 0.15;
+        if (vol <= 0) {
+          if (currentFadeOutInterval) {
+            clearInterval(currentFadeOutInterval);
+            currentFadeOutInterval = null;
+          }
+          try {
+            el.pause();
+            el.currentTime = 0;
+          } catch (e) {}
+        } else {
+          try {
+            el.volume = Math.max(0, vol);
+          } catch (e) {}
+        }
+      }, 25);
+    }
   }
 }
 
