@@ -374,7 +374,7 @@ export default function EnvelopeViewerModal({
     } else {
       if (envelopeRef.current) {
         envelopeRef.current.style.display = 'block';
-        gsap.set(envelopeRef.current, { y: 0, opacity: 1, scale: 1 });
+        gsap.set(envelopeRef.current, { y: 0, x: 0, xPercent: 0, opacity: 1, scale: 1 });
       }
       gsap.set(flapRef.current, { rotateX: 0, zIndex: 4 });
       gsap.set(cardRef.current, { y: 0, scale: 1, zIndex: 2, opacity: 0, left: '50%', xPercent: -50, pointerEvents: 'none' });
@@ -559,7 +559,8 @@ export default function EnvelopeViewerModal({
                   style={{
                     '--env-bg': template.envelopeColor || '#7A1F2D',
                     '--env-shadow': 'rgba(40, 10, 15, 0.45)',
-                    background: template.envelopeColor || '#7A1F2D'
+                    background: template.envelopeColor || '#7A1F2D',
+                    margin: '0 auto'
                   }}
                   onClick={openCard}
                 >
