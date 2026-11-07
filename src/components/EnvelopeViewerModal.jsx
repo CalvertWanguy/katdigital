@@ -107,7 +107,7 @@ export default function EnvelopeViewerModal({
   const sender = customData?.sender || 'David Jean';
   const message = customData?.message || template.defaultMessage;
   const title = customData?.heading || template.heading;
-  const musicId = customData?.musicId || template.defaultMusic || 'festif_violon';
+  const musicId = customData?.musicId || template.defaultMusic || 'deck_the_halls';
   const customAudioUrl = customData?.customAudioUrl || null;
 
   // Prechaje mizik la davans pou pa gen okenn reta lè itilizatè klike pou ouvri kat la

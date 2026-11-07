@@ -1,98 +1,136 @@
 // Sistèm Audio pou KatDijital
-// Jwe bèl mizik enstrimantal reyèl (otantik, san pawòl) pou chak okazyon :
+// Jwe bèl mizik enstrimantal reyèl (otantik, san pawòl, kalite siperyè) pou chak okazyon :
 // Nwèl, Nouvèl Ane, Lanmou, ak Tradisyon Ayisyen 1804.
 // Sipòte tou yon fichye odyo pèsonalize si itilizatè a telechaje pa l.
 
 export const AUDIO_TRACKS = {
-  festif_violon: '/audio/deck_the_halls.wav',
-  jingle_bells: '/audio/deck_the_halls.wav', // fallback pou ansyen kat
-  we_wish_you: '/audio/we_wish_you.wav',
-  deck_the_halls: '/audio/deck_the_halls.wav',
-  silent_night: '/audio/silent_night.wav',
-  bon_ane: '/audio/radetzky_march.wav',
-  joy_to_the_world: '/audio/joy_to_the_world.wav',
-  auld_lang_syne: '/audio/auld_lang_syne.wav',
-  romance: '/audio/canon_in_d.wav',
-  romance_piano: '/audio/romance_piano.wav',
-  haitian_tradition: '/audio/haiti_1804.ogg',
-  haiti_soup_joumou: '/audio/haiti_soup_joumou.wav'
+  // 1. Nwèl Vlou Bòdo - Violon & Òkès Fèt Nwèl
+  deck_the_halls: '/audio/deck_the_halls.mp3',
+  festif_violon: '/audio/deck_the_halls.mp3',
+
+  // 2. Pachemen Libète 1804 - Im Nasyonal Ayisyen "La Dessalinienne"
+  haitian_tradition: '/audio/haiti_national_anthem.ogg',
+
+  // 3. Folio Pye Sapen & Zétwal - Johann Strauss Radetzky March (Fanfare Triyonfal)
+  bon_ane: '/audio/radetzky_march.ogg',
+
+  // 4. Lèt Damou Sou Papye Kraft - Canon in D (Pachelbel) Kòd & Vyolonsèl
+  romance: '/audio/canon_in_d.ogg',
+
+  // 5. Dekrè Wayal Bòn Ane 2027 - Joy to the World (Klòch & Fanfare Viktwa)
+  joy_to_the_world: '/audio/joy_to_the_world.mp3',
+
+  // 6. Nwèl Ble Nwi & Poud Zétwal - Douce Nuit / Silent Night (Pyano Selès)
+  silent_night: '/audio/silent_night.ogg',
+
+  // 7. Nwèl Vèt Sapen & Or - The First Noel (Senfoni Nwèl Chalere)
+  the_first_noel: '/audio/the_first_noel.mp3',
+
+  // 8. Bòn Ane 2027 Klere & Siksè - Auld Lang Syne (31 Desanm Minwi)
+  auld_lang_syne: '/audio/auld_lang_syne.ogg',
+
+  // 9. Soup Joumou 1804 & Diyite - O Holy Night / Cantique de Noël (Senfoni Majestyez)
+  o_holy_night: '/audio/o_holy_night.mp3',
+  haiti_soup_joumou: '/audio/o_holy_night.mp3',
+
+  // 10. Kè Damou & Dousè Fen Dane - Clair de Lune (Claude Debussy Pyano Solo)
+  clair_de_lune: '/audio/clair_de_lune.ogg',
+  romance_piano: '/audio/clair_de_lune.ogg',
+
+  // Opsyon adisyonèl nan pèsonalizasyon
+  we_wish_you: '/audio/we_wish_you.mp3',
+  jingle_bells: '/audio/jingle_bells.mp3'
 };
 
 export const MUSIC_OPTIONS = [
   {
-    id: 'festif_violon',
-    label: 'Senfoni Nwèl • Violon & Fèt',
-    desc: 'Bèl melodi violon tradisyonèl Nwèl ak anbyans kokennchenn fèt',
+    id: 'deck_the_halls',
+    label: 'Senfoni Nwèl • Violon & Òkès',
+    desc: 'Bèl melodi klasik fèt Nwèl ak violon fèt ak anbyans kokennchenn',
     category: 'noel',
-    src: '/audio/deck_the_halls.wav'
+    src: '/audio/deck_the_halls.mp3'
+  },
+  {
+    id: 'the_first_noel',
+    label: 'Premye Nwèl • The First Noel',
+    desc: 'Melodi fèt trè dous e chalere pou fete ak tout fanmi an',
+    category: 'noel',
+    src: '/audio/the_first_noel.mp3'
+  },
+  {
+    id: 'silent_night',
+    label: 'Douce Nuit • Silent Night (Pyano)',
+    desc: 'Bèl pyano selès, dous e kalm pou lapè nan kè ak nan kay la',
+    category: 'noel',
+    src: '/audio/silent_night.ogg'
   },
   {
     id: 'we_wish_you',
     label: 'We Wish You a Merry Christmas',
-    desc: 'Bèl klasik fèt Nwèl plen lajwa ak anbyans fanmi',
+    desc: 'Klasik Nwèl plen lajwa, souri ak bon enèji fèt',
     category: 'noel',
-    src: '/audio/we_wish_you.wav'
+    src: '/audio/we_wish_you.mp3'
   },
   {
-    id: 'silent_night',
-    label: 'Douce Nuit • Silent Night',
-    desc: 'Melodi selès dous e trankil pou lapè ak lafwa',
+    id: 'jingle_bells',
+    label: 'Jingle Bells • Fanfare & Big Band',
+    desc: 'Klasik vivan ak ritm djaz fèt pou danse ak selebre',
     category: 'noel',
-    src: '/audio/silent_night.wav'
-  },
-  {
-    id: 'bon_ane',
-    label: 'Bòn Ane 2027 • Radetzky March',
-    desc: 'Bèl fanfare jwaye e plen enèji pou nouvo ane a',
-    category: 'nouvel-an',
-    src: '/audio/radetzky_march.wav'
-  },
-  {
-    id: 'joy_to_the_world',
-    label: 'Joy to the World • Selebrasyon',
-    desc: 'Fanfare ak klòch viktwa ak kokennchenn lajwa',
-    category: 'nouvel-an',
-    src: '/audio/joy_to_the_world.wav'
-  },
-  {
-    id: 'auld_lang_syne',
-    label: '31 Desanm • Auld Lang Syne',
-    desc: 'Melodi tradisyonèl souvni ak pase men nan ane a',
-    category: 'nouvel-an',
-    src: '/audio/auld_lang_syne.wav'
-  },
-  {
-    id: 'romance',
-    label: 'Lanmou • Canon in D (Pachelbel)',
-    desc: 'Pi popilè melodi amoure pou moun ou renmen',
-    category: 'mennaj',
-    src: '/audio/canon_in_d.wav'
-  },
-  {
-    id: 'romance_piano',
-    label: 'Dousè Lanmou • Pyano Romantik',
-    desc: 'Melodi pyano amoure dous e delika',
-    category: 'mennaj',
-    src: '/audio/romance_piano.wav'
+    src: '/audio/jingle_bells.mp3'
   },
   {
     id: 'haitian_tradition',
     label: 'Omaj 1804 • La Dessalinienne',
-    desc: 'Im nasyonal ak grandè zansèt yo pou 1ye Janvye',
+    desc: 'Im nasyonal ofisyèl fèt 1ye Janvye, libète zansèt ak diyite ayisyen',
     category: 'tradition',
-    src: '/audio/haiti_1804.ogg'
+    src: '/audio/haiti_national_anthem.ogg'
   },
   {
-    id: 'haiti_soup_joumou',
-    label: 'Soup Joumou • Fanfare 1ye Janvye',
-    desc: 'Melodi fèt nasyonal ak chalè soup joumou',
+    id: 'o_holy_night',
+    label: 'Soup Joumou • Senfoni Majestyez',
+    desc: 'Bèl senfoni fèt nasyonal 1ye Janvye ak chalè tradisyon soup joumou',
     category: 'tradition',
-    src: '/audio/haiti_soup_joumou.wav'
+    src: '/audio/o_holy_night.mp3'
+  },
+  {
+    id: 'bon_ane',
+    label: 'Bòn Ane 2027 • Radetzky March',
+    desc: 'Mache triyonfal jwaye e plen grandè pou ouvri nouvo ane a',
+    category: 'nouvel-an',
+    src: '/audio/radetzky_march.ogg'
+  },
+  {
+    id: 'joy_to_the_world',
+    label: 'Joy to the World • Selebrasyon',
+    desc: 'Fanfare ak klòch viktwa, grandè ak selebrasyon lajwa 2027',
+    category: 'nouvel-an',
+    src: '/audio/joy_to_the_world.mp3'
+  },
+  {
+    id: 'auld_lang_syne',
+    label: '31 Desanm • Auld Lang Syne',
+    desc: 'Melodi tradisyonèl 31 desanm minwi pou akeyi nouvo ane a',
+    category: 'nouvel-an',
+    src: '/audio/auld_lang_syne.ogg'
+  },
+  {
+    id: 'romance',
+    label: 'Lanmou • Canon in D (Pachelbel)',
+    desc: 'Pi gwo klasik amoure nan mond lan ak kòd ak vyolonsèl pou moun ou renmen',
+    category: 'mennaj',
+    src: '/audio/canon_in_d.ogg'
+  },
+  {
+    id: 'clair_de_lune',
+    label: 'Dousè Lanmou • Clair de Lune (Debussy)',
+    desc: 'Chèfdèv pyano solo amoure, dous, powetik e delika',
+    category: 'mennaj',
+    src: '/audio/clair_de_lune.ogg'
   },
   {
     id: 'none',
     label: 'San Mizik (Mòd Silans)',
-    desc: 'Ouvri kat la dousman an silans san mizik',
+    desc: 'Ouvri kat la dousman an silans san okenn mizik',
     category: 'silent'
   }
 ];
@@ -101,15 +139,16 @@ let currentAudioElement = null;
 let preloadedAudio = null;
 let preloadedSrc = null;
 let isPlaying = false;
+let fadeInterval = null;
 
 /**
  * Prechaje odyo a davans pou lè itilizatè klike li pati imedyatman san tan datant
  */
-export function preloadHolidaySoundtrack(musicId = 'festif_violon', customAudioUrl = null) {
+export function preloadHolidaySoundtrack(musicId = 'deck_the_halls', customAudioUrl = null) {
   if (musicId === 'none') return;
   const src = (customAudioUrl && typeof customAudioUrl === 'string' && customAudioUrl.trim())
     ? customAudioUrl.trim()
-    : (AUDIO_TRACKS[musicId] || AUDIO_TRACKS.festif_violon);
+    : (AUDIO_TRACKS[musicId] || AUDIO_TRACKS.deck_the_halls);
 
   if (!src) return;
 
@@ -122,7 +161,7 @@ export function preloadHolidaySoundtrack(musicId = 'festif_violon', customAudioU
     preloadedAudio.preload = 'auto';
     preloadedAudio.src = src;
     preloadedAudio.loop = true;
-    preloadedAudio.volume = 0.68;
+    preloadedAudio.volume = 0.70;
     preloadedSrc = src;
     preloadedAudio.load();
   } catch (e) {
@@ -131,9 +170,9 @@ export function preloadHolidaySoundtrack(musicId = 'festif_violon', customAudioU
 }
 
 /**
- * Jwe melodi fèt la imedyatman
+ * Jwe melodi fèt la imedyatman ak yon bèl fondu gradyèl (fade-in) pou yon anbyans dou e liksye
  */
-export function playHolidaySoundtrack(musicId = 'festif_violon', customAudioUrl = null) {
+export function playHolidaySoundtrack(musicId = 'deck_the_halls', customAudioUrl = null) {
   stopHolidaySoundtrack();
 
   if (musicId === 'none') {
@@ -145,7 +184,7 @@ export function playHolidaySoundtrack(musicId = 'festif_violon', customAudioUrl 
   if (customAudioUrl && typeof customAudioUrl === 'string' && customAudioUrl.trim()) {
     src = customAudioUrl.trim();
   } else {
-    src = AUDIO_TRACKS[musicId] || AUDIO_TRACKS.festif_violon;
+    src = AUDIO_TRACKS[musicId] || AUDIO_TRACKS.deck_the_halls;
   }
 
   if (!src) return false;
@@ -157,16 +196,35 @@ export function playHolidaySoundtrack(musicId = 'festif_violon', customAudioUrl 
     } else {
       currentAudioElement = new Audio(src);
       currentAudioElement.loop = true;
-      currentAudioElement.volume = 0.68;
       preloadedAudio = currentAudioElement;
       preloadedSrc = src;
     }
+
+    // Kòmanse nan volim zewo pou fè yon fondu sonò natirèl
+    currentAudioElement.volume = 0;
 
     const playPromise = currentAudioElement.play();
     if (playPromise !== undefined) {
       playPromise
         .then(() => {
           isPlaying = true;
+          // Fondu sonò dous (Fade-in sou 600ms)
+          if (fadeInterval) clearInterval(fadeInterval);
+          let currentVol = 0;
+          const targetVol = 0.72;
+          fadeInterval = setInterval(() => {
+            if (!currentAudioElement || !isPlaying) {
+              clearInterval(fadeInterval);
+              return;
+            }
+            currentVol += 0.06;
+            if (currentVol >= targetVol) {
+              currentAudioElement.volume = targetVol;
+              clearInterval(fadeInterval);
+            } else {
+              currentAudioElement.volume = currentVol;
+            }
+          }, 35);
         })
         .catch((err) => {
           console.warn('Odyo a mande yon jès itilizatè pou demare:', err);
@@ -184,16 +242,30 @@ export function playHolidaySoundtrack(musicId = 'festif_violon', customAudioUrl 
 }
 
 /**
- * Koupe oswa kanpe mizik la nèt
+ * Koupe oswa kanpe mizik la ak yon fondu dous (Fade-out) pou evite nenpòt krakman brid sou kou
  */
 export function stopHolidaySoundtrack() {
   isPlaying = false;
+  if (fadeInterval) {
+    clearInterval(fadeInterval);
+    fadeInterval = null;
+  }
   if (currentAudioElement) {
-    try {
-      currentAudioElement.pause();
-      currentAudioElement.currentTime = 0;
-    } catch (e) {}
+    const el = currentAudioElement;
     currentAudioElement = null;
+    let vol = el.volume;
+    const fadeOutInterval = setInterval(() => {
+      vol -= 0.12;
+      if (vol <= 0) {
+        clearInterval(fadeOutInterval);
+        try {
+          el.pause();
+          el.currentTime = 0;
+        } catch (e) {}
+      } else {
+        el.volume = vol;
+      }
+    }, 25);
   }
 }
 

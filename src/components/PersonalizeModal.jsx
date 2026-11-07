@@ -22,7 +22,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
   const [sender, setSender] = useState('');
   const [selectedPreset, setSelectedPreset] = useState('fanmi');
   const [customMessage, setCustomMessage] = useState(PRESET_MESSAGES[0].text);
-  const [selectedMusic, setSelectedMusic] = useState(template?.defaultMusic || 'festif_violon');
+  const [selectedMusic, setSelectedMusic] = useState(template?.defaultMusic || 'deck_the_halls');
   const [customAudioUrl, setCustomAudioUrl] = useState('');
   const [uploadedFileName, setUploadedFileName] = useState('');
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
