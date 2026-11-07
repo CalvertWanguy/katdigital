@@ -11,8 +11,8 @@ export const AUDIO_TRACKS = {
   // 2. Pachemen Libète 1804 - Im Nasyonal Ayisyen "La Dessalinienne"
   haitian_tradition: '/audio/haiti_national_anthem.mp3',
 
-  // 3. Folio Pye Sapen & Zétwal - Johann Strauss Radetzky March (Fanfare Triyonfal)
-  bon_ane: '/audio/radetzky_march.mp3',
+  // 3. Folio Pye Sapen & Zétwal - Arly Larivière (Nu Look) "L'Esprit de Noël"
+  bon_ane: '/audio/lesprit_de_noel.mp3',
 
   // 4. Lèt Damou Sou Papye Kraft - Canon in D (Pachelbel) Kòd & Vyolonsèl
   romance: '/audio/canon_in_d.mp3',
@@ -96,10 +96,10 @@ export const MUSIC_OPTIONS = [
   },
   {
     id: 'bon_ane',
-    label: 'Bòn Ane 2027 • Radetzky March',
-    desc: 'Mache triyonfal jwaye e plen grandè pou ouvri nouvo ane a',
-    category: 'nouvel-an',
-    src: '/audio/radetzky_march.mp3'
+    label: "L'Esprit de Noël • Arly Larivière",
+    desc: 'Klasik Nwèl ayisyen popilè ("Timoun kounya pa konnen Tonton Nwèl")',
+    category: 'noel',
+    src: '/audio/lesprit_de_noel.mp3'
   },
   {
     id: 'joy_to_the_world',
@@ -191,37 +191,45 @@ export function playHolidaySoundtrackWithDelay(musicId = 'deck_the_halls', custo
   try {
     const audio = new Audio(src);
     audio.loop = true;
-    audio.volume = 0; // Kòmanse nan volim 0 pandan sele a ap kase
+    audio.preload = 'auto';
     currentAudioElement = audio;
-
-    // Demare imedyatman nan klik itilizatè a pou navigatè a pa janm bloke odyo a
-    const playPromise = audio.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          isPlaying = true;
-        })
-        .catch((err) => {
-          console.warn('Navigatè mande klik pou kòmanse:', err);
-          isPlaying = false;
-        });
-    }
-
     isPlaying = true;
 
-    // Egzakteman 1 segonn apre sele a kase, monte volim nan dousman (fluid fade-in)
-    delayedMusicTimeout = setTimeout(() => {
+    // Fonksyon prensipal pou lanse mizik la depi nan tout premye nòt la (0.00s)
+    const startAudioPlayback = () => {
       if (!currentAudioElement || !isPlaying) return;
 
-      if (currentFadeInterval) clearInterval(currentFadeInterval);
-      let vol = 0;
+      // 1. Fòse odyo a tounen nan 0.00s egzakteman pou itilizatè a tande kòmansman chan an
+      try {
+        currentAudioElement.currentTime = 0;
+      } catch (e) {}
+
+      // 2. Kòmanse nan yon volim dirèk e klè (0.35) pou okenn premye akò pa pèdi nan silans
+      let vol = 0.35;
       const targetVol = 0.68;
+      try {
+        currentAudioElement.volume = vol;
+      } catch (e) {}
+
+      try {
+        const p = currentAudioElement.play();
+        if (p !== undefined) {
+          p.then(() => {
+            isPlaying = true;
+          }).catch((err) => {
+            console.warn('Erè lekti odyo:', err);
+          });
+        }
+      } catch (e) {}
+
+      // 3. Montée fluide e pwofesyonèl jiska volim final (0.68) sou ~150ms
+      if (currentFadeInterval) clearInterval(currentFadeInterval);
       currentFadeInterval = setInterval(() => {
         if (!currentAudioElement || !isPlaying) {
           clearInterval(currentFadeInterval);
           return;
         }
-        vol += 0.04;
+        vol += 0.07;
         if (vol >= targetVol) {
           currentAudioElement.volume = targetVol;
           clearInterval(currentFadeInterval);
@@ -230,8 +238,31 @@ export function playHolidaySoundtrackWithDelay(musicId = 'deck_the_halls', custo
             currentAudioElement.volume = vol;
           } catch (e) {}
         }
-      }, 45); // Ramps from 0 to 0.68 smoothly over ~750ms
-    }, delayMs);
+      }, 30);
+    };
+
+    if (delayMs > 0) {
+      // Otorize navigatè a imedyatman nan klik la pandan n ap kenbe lekti a fiks nan 0.00s
+      audio.volume = 0;
+      const initialPlayPromise = audio.play();
+      if (initialPlayPromise !== undefined) {
+        initialPlayPromise
+          .then(() => {
+            // Fige odyo a nan 0.00s pou l pa janm vanse an silans pandan segonn nan
+            try {
+              audio.pause();
+              audio.currentTime = 0;
+            } catch (e) {}
+          })
+          .catch(() => {});
+      }
+
+      delayedMusicTimeout = setTimeout(() => {
+        startAudioPlayback();
+      }, delayMs);
+    } else {
+      startAudioPlayback();
+    }
 
     return true;
   } catch (err) {

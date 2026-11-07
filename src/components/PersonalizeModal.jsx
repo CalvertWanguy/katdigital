@@ -37,6 +37,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
 
   // Verrouiller le défilement de l'arrière-plan de manière absolue
   useEffect(() => {
+    stopHolidaySoundtrack(true);
     const scrollY = window.scrollY;
     const originalOverflow = document.body.style.overflow;
     const originalPosition = document.body.style.position;
@@ -54,7 +55,7 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
       document.body.style.top = originalTop;
       document.body.style.width = originalWidth;
       window.scrollTo(0, scrollY);
-      stopHolidaySoundtrack();
+      stopHolidaySoundtrack(true);
     };
   }, []);
 

@@ -99,7 +99,7 @@ export default function EnvelopeViewerModal({
       document.body.style.width = originalWidth;
       window.scrollTo(0, scrollY);
       window.removeEventListener('keydown', handleKeyDown);
-      stopHolidaySoundtrack();
+      stopHolidaySoundtrack(true);
     };
   }, [onClose]);
 
@@ -1088,7 +1088,7 @@ export default function EnvelopeViewerModal({
                     className="btn-stationery-secondary"
                     style={secondaryBtnStyle}
                     onClick={() => {
-                      stopHolidaySoundtrack();
+                      stopHolidaySoundtrack(true);
                       onOpenCustomizer(template);
                     }}
                   >
@@ -1117,7 +1117,7 @@ export default function EnvelopeViewerModal({
                   className="btn-stationery-primary"
                   style={primaryBtnStyle}
                   onClick={() => {
-                    stopHolidaySoundtrack();
+                    stopHolidaySoundtrack(true);
                     onOpenCustomizer(template);
                   }}
                 >

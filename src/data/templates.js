@@ -75,23 +75,6 @@ export const TEMPLATES = [
     confettiColors: ['#C99726', '#E5B246', '#FFFFFF', '#3A2714']
   },
   {
-    id: 'bifold-sapin',
-    title: 'Folio Pye Sapen & Zétwal',
-    subtitle: 'Liv Papetri Fèy Pliyet ki Ouvri',
-    category: 'nouvel-an',
-    format: 'bifold',
-    ambientAnimation: 'snow',
-    defaultMusic: 'bon_ane',
-    envelopeColor: '#2B4736',
-    coverColor: '#1E3326',
-    accentColor: '#D4AF37',
-    heading: 'Bòn Ane 2027 & Siksè',
-    defaultMessage: 'Pandan ane 2026 la ap fè plas pou 2027, mwen swete w yon nouvo depa ki chaje ak benediksyon, reyalizasyon ak bonè. Se pou chak pwojè w gen nan kè w jwenn siksè, e se pou kay ou toujou rete plen ak lajwa.',
-    priceHTG: 100,
-    priceUSD: 2.99,
-    confettiColors: ['#ECC880', '#D4AF37', '#FFFFFF', '#2B4736']
-  },
-  {
     id: 'kraft-lanmou',
     title: 'Lèt Damou Sou Papye Kraft',
     subtitle: 'Fèy Pliye ak Kè k ap Flote',
@@ -171,6 +154,24 @@ export const TEMPLATES = [
     confettiColors: ['#D4AF37', '#FFFFFF', '#1B3B2B', '#ECC880']
   },
   {
+    id: 'bifold-sapin',
+    title: 'Folio Pye Sapen & Zétwal',
+    subtitle: 'Liv Papetri Fèy Pliyet ki Ouvri',
+    category: 'noel',
+    format: 'bifold',
+    ambientAnimation: 'snow',
+    defaultMusic: 'bon_ane',
+    envelopeColor: '#2B4736',
+    coverColor: '#1E3326',
+    accentColor: '#D4AF37',
+    heading: 'Bòn Fèt Nwèl & Lapè nan Kè',
+    defaultMessage: 'Pandan sezon Nwèl la ap klere anba bèl pye sapen ak zétwal yo, mwen swete w yon fèt ki plen ak lapè, lajwa ak benediksyon pou tout fanmi an. Se pou nouvo ane k ap vini an louvri tout bèl pòt siksè pou ou.',
+    priceHTG: 100,
+    priceUSD: 2.99,
+    confettiColors: ['#ECC880', '#D4AF37', '#FFFFFF', '#2B4736']
+  },
+
+  {
     id: 'nouvel-an-champagne',
     title: 'Bòn Ane 2027 Klere & Siksè',
     subtitle: 'Liv Papetri Fèy Pliyet',
@@ -194,7 +195,7 @@ export const TEMPLATES = [
     category: 'tradition',
     format: 'parchment',
     ambientAnimation: 'stars',
-    defaultMusic: 'o_holy_night',
+    defaultMusic: 'soup_joumou',
     envelopeColor: '#422817',
     rodColor: '#8C5922',
     parchmentBg: '#F7EBD6',

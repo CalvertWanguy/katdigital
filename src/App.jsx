@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TEMPLATES } from './data/templates';
 import EnvelopeViewerModal from './components/EnvelopeViewerModal';
 import PersonalizeModal from './components/PersonalizeModal';
@@ -47,6 +47,36 @@ const CATEGORY_SECTIONS = [
 
 function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
   const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef(null);
+  const justClosedRef = useRef(false);
+
+  useEffect(() => {
+    if (!showMenu) return;
+
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        justClosedRef.current = true;
+        setShowMenu(false);
+        setTimeout(() => {
+          justClosedRef.current = false;
+        }, 150);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('pointerdown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showMenu]);
 
   const getFormatBadge = (fmt) => {
     switch (fmt) {
@@ -58,7 +88,14 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
   };
 
   return (
-    <div className="canva-template-card" onClick={onOpenDemo}>
+    <div
+      className="canva-template-card"
+      onClick={() => {
+        if (!justClosedRef.current) {
+          onOpenDemo();
+        }
+      }}
+    >
       {/* Mockup vizyèl espesifik selon fòma kat la (Anvlòp, Pachemen, Liv, Lèt Kraft) */}
       <div className={`canva-card-mockup is-format-${template.format || 'envelope'}`}>
         
@@ -136,11 +173,11 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
         )}
 
         {/* Bouton 3 ti pwen (...) tankou sou Canva */}
-        <div className="canva-card-dots-wrap" onClick={(e) => e.stopPropagation()}>
+        <div ref={menuRef} className="canva-card-dots-wrap" onClick={(e) => e.stopPropagation()}>
           <button
             type="button"
             className="canva-card-dots-btn"
-            onClick={() => setShowMenu(!showMenu)}
+            onClick={() => setShowMenu((prev) => !prev)}
             aria-label="Opsyon kat sa a"
             title="Opsyon"
           >
