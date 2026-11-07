@@ -262,14 +262,14 @@ export default function EnvelopeViewerModal({
       }, '-=0.1')
       .fromTo(
         bifoldBookRef.current,
-        { opacity: 0, scale: 0.94, y: 15 },
+        { opacity: 0, y: 15 },
         {
           opacity: 1,
-          scale: 1,
           y: 0,
           pointerEvents: 'auto',
           duration: 0.5,
           ease: 'power2.out',
+          clearProps: 'transform',
           onComplete: () => launchLuxuryConfetti()
         },
         '-=0.3'
