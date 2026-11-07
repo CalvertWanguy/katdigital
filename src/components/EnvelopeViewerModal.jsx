@@ -659,7 +659,7 @@ export default function EnvelopeViewerModal({
                 </div>
 
                 {/* Kat papye tactile ki glise soti nan anvlòp la */}
-                <div ref={cardRef} className="real-card tactile-paper-card">
+                <div ref={cardRef} className="real-card tactile-paper-card" style={{ opacity: isOpened ? 1 : 0, pointerEvents: isOpened ? 'auto' : 'none' }}>
                   {/* Tranche de papier visible biseautée */}
                   <div className="tactile-paper-edge" />
                   {/* Grain papier subtil 320g */}

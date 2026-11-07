@@ -1368,6 +1368,7 @@ body {
   max-width: calc(100vw - 32px);
   height: 270px;
   display: flex;
+  flex-direction: column !important;
   align-items: center;
   justify-content: center;
   margin: 0 auto !important;
@@ -2426,7 +2427,7 @@ body {
   border-radius: 12px;
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.42), 0 3px 12px rgba(0, 0, 0, 0.12) !important;
   border: 1px solid #E5DCCE !important;
-  position: relative;
+  
 }
 
 /* Tranche de papier visible (highlight lumière en haut/gauche, ombre de contact en bas/droite) */
