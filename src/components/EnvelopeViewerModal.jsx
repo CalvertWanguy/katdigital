@@ -17,6 +17,7 @@ import AmbientEffects from './AmbientEffects';
 import {
   preloadHolidaySoundtrack,
   playHolidaySoundtrack,
+  playHolidaySoundtrackWithDelay,
   playCardOpenSound,
   stopHolidaySoundtrack,
   isSoundtrackPlaying
@@ -85,7 +86,7 @@ export default function EnvelopeViewerModal({
 
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
-        stopHolidaySoundtrack();
+        stopHolidaySoundtrack(true);
         onClose();
       }
     };
@@ -160,7 +161,7 @@ export default function EnvelopeViewerModal({
   };
 
   const handleModalClose = () => {
-    stopHolidaySoundtrack();
+    stopHolidaySoundtrack(true);
     onClose();
   };
 
@@ -169,7 +170,7 @@ export default function EnvelopeViewerModal({
     setIsOpened(true);
 
     if (!isMusicMuted && musicId !== 'none') {
-      playHolidaySoundtrack(musicId, customAudioUrl);
+      playHolidaySoundtrackWithDelay(musicId, customAudioUrl, 1000);
     }
 
     playCardOpenSound(template, format);
@@ -338,17 +339,12 @@ export default function EnvelopeViewerModal({
       ease: 'power2.out'
     }, '-=0.1');
 
-    // 5. Melodi fèt la kòmanse sèlman APRÈ lèt la fin parèt devan je moun nan
-    tl.add(() => {
-      if (!isMusicMuted && musicId !== 'none' && !isSoundtrackPlaying()) {
-        playHolidaySoundtrack(musicId, customAudioUrl);
-      }
-    }, '+=0.05');
+    // 5. Mizik la deja pwograme pou l kòmanse egzakteman 1s apre sele a kase
   };
 
   const replayAnimation = () => {
     setIsOpened(false);
-    stopHolidaySoundtrack();
+    stopHolidaySoundtrack(true);
     gsap.killTweensOf('*');
     if (promptRef.current) {
       promptRef.current.style.visibility = 'visible';

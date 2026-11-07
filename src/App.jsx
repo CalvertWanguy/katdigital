@@ -366,14 +366,14 @@ export default function App() {
   });
 
   const handleOpenDemo = (template) => {
-    stopHolidaySoundtrack();
+    stopHolidaySoundtrack(true);
     setCustomData(null);
     setIsDirectRecipientView(false);
     setActiveTemplate(template);
   };
 
   const handleOpenCustomizer = (template) => {
-    stopHolidaySoundtrack();
+    stopHolidaySoundtrack(true);
     setCustomizerTemplate(template);
   };
 
@@ -593,7 +593,7 @@ export default function App() {
           customData={customData}
           isDirectView={isDirectRecipientView}
           onClose={() => {
-            stopHolidaySoundtrack();
+            stopHolidaySoundtrack(true);
             setActiveTemplate(null);
             setCustomData(null);
             if (isDirectRecipientView) {
@@ -601,7 +601,7 @@ export default function App() {
             }
           }}
           onOpenCustomizer={(t) => {
-            stopHolidaySoundtrack();
+            stopHolidaySoundtrack(true);
             setActiveTemplate(null);
             handleOpenCustomizer(t);
           }}
