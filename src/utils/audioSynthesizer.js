@@ -182,7 +182,7 @@ export function preloadHolidaySoundtrack(musicId = 'deck_the_halls', customAudio
  * epi fè yon fondu sonò dous e fluid (fade-in) pou yon anbyans majè.
  */
 export function playHolidaySoundtrackWithDelay(musicId = 'deck_the_halls', customAudioUrl = null, delayMs = 500) {
-  stopHolidaySoundtrack(true); // Kanpe san okenn reta mizik anvan an
+  stopHolidaySoundtrack(true); // Kanpe nenpòt lòt mizik anvan an
 
   if (musicId === 'none') {
     isPlaying = false;
@@ -199,79 +199,86 @@ export function playHolidaySoundtrackWithDelay(musicId = 'deck_the_halls', custo
   if (!src) return false;
 
   try {
-    const audio = new Audio(src);
+    // Si fichye a te prechaje deja, re-itilize l pou zewo tan datant
+    let audio = null;
+    if (preloadedAudio && preloadedSrc === src) {
+      audio = preloadedAudio;
+    } else {
+      audio = new Audio(src);
+      audio.preload = 'auto';
+      audio.src = src;
+    }
+
     audio.loop = true;
-    audio.preload = 'auto';
     currentAudioElement = audio;
     isPlaying = true;
 
-    // Fonksyon prensipal pou lanse mizik la depi nan tout premye nòt la (0.00s)
-    const startAudioPlayback = () => {
+    // 1. Otorizasyon dirèk nan klik sele a :
+    // Kòmanse jwe a volim 0 pou navigatè a deboke lekti a imedyatman san blòk
+    audio.volume = 0;
+    try {
+      audio.currentTime = 0;
+    } catch (e) {}
+
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((err) => {
+        console.warn('Otorizasyon odyo navigatè:', err);
+      });
+    }
+
+    // 2. Fonksyon pou kòmanse son an ak fondu fluid
+    const triggerAudioSound = () => {
       if (!currentAudioElement || !isPlaying) return;
 
-      // 1. Fòse odyo a tounen nan 0.00s egzakteman pou itilizatè a tande kòmansman chan an
+      // Rewind nan tout premye nòt la
       try {
         currentAudioElement.currentTime = 0;
       } catch (e) {}
 
-      // 2. Kòmanse nan yon volim dirèk e klè (0.35) pou okenn premye akò pa pèdi nan silans
-      let vol = 0.35;
-      const targetVol = 0.68;
-      try {
-        currentAudioElement.volume = vol;
-      } catch (e) {}
-
+      // Asire odyo a ap jwe
       try {
         const p = currentAudioElement.play();
         if (p !== undefined) {
           p.then(() => {
             isPlaying = true;
-          }).catch((err) => {
-            console.warn('Erè lekti odyo:', err);
-          });
+          }).catch(() => {});
         }
       } catch (e) {}
 
-      // 3. Montée fluide e pwofesyonèl jiska volim final (0.68) sou ~150ms
+      // Monte volim nan dousman depi 0.25 rive 0.70
+      let vol = 0.25;
+      const targetVol = 0.70;
+      try {
+        currentAudioElement.volume = vol;
+      } catch (e) {}
+
       if (currentFadeInterval) clearInterval(currentFadeInterval);
       currentFadeInterval = setInterval(() => {
         if (!currentAudioElement || !isPlaying) {
           clearInterval(currentFadeInterval);
           return;
         }
-        vol += 0.07;
+        vol += 0.08;
         if (vol >= targetVol) {
-          currentAudioElement.volume = targetVol;
+          try {
+            currentAudioElement.volume = targetVol;
+          } catch (e) {}
           clearInterval(currentFadeInterval);
         } else {
           try {
-            currentAudioElement.volume = vol;
+            currentAudioElement.volume = Math.min(targetVol, vol);
           } catch (e) {}
         }
-      }, 30);
+      }, 35);
     };
 
     if (delayMs > 0) {
-      // Otorize navigatè a imedyatman nan klik la pandan n ap kenbe lekti a fiks nan 0.00s
-      audio.volume = 0;
-      const initialPlayPromise = audio.play();
-      if (initialPlayPromise !== undefined) {
-        initialPlayPromise
-          .then(() => {
-            // Fige odyo a nan 0.00s pou l pa janm vanse an silans pandan segonn nan
-            try {
-              audio.pause();
-              audio.currentTime = 0;
-            } catch (e) {}
-          })
-          .catch(() => {});
-      }
-
       delayedMusicTimeout = setTimeout(() => {
-        startAudioPlayback();
+        triggerAudioSound();
       }, delayMs);
     } else {
-      startAudioPlayback();
+      triggerAudioSound();
     }
 
     return true;
@@ -282,9 +289,6 @@ export function playHolidaySoundtrackWithDelay(musicId = 'deck_the_halls', custo
   }
 }
 
-/**
- * Jwe melodi fèt la imedyatman ak fondu fluid (itilize pa egzanp lè w relimen mizik la)
- */
 export function playHolidaySoundtrack(musicId = 'deck_the_halls', customAudioUrl = null) {
   return playHolidaySoundtrackWithDelay(musicId, customAudioUrl, 0);
 }
