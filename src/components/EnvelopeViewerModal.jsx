@@ -110,12 +110,9 @@ export default function EnvelopeViewerModal({
   const musicId = customData?.musicId || template.defaultMusic || 'deck_the_halls';
   const customAudioUrl = customData?.customAudioUrl || null;
 
-  // Lè itilizatè a louvri nenpòt modèl, mizik tèm nan kòmanse jwe imedyatman
+  // Prechaje odyo a nan kach la pou l pa gen reta, men mizik la PAP jwe toutotan moun nan pa klike sou sele a
   useEffect(() => {
     preloadHolidaySoundtrack(musicId, customAudioUrl);
-    if (!isMusicMuted && musicId !== 'none') {
-      playHolidaySoundtrack(musicId, customAudioUrl);
-    }
     return () => {
       stopHolidaySoundtrack(true);
     };
@@ -535,8 +532,8 @@ export default function EnvelopeViewerModal({
           onClick={toggleSoundtrack}
           title={isMusicMuted ? 'Limen Mizik' : 'Koupe Mizik'}
         >
-          {isMusicMuted ? <SpeakerSlash size={16} weight="regular" /> : <SpeakerHigh size={16} weight="regular" />}
-          <span>{isMusicMuted ? 'Mizik Eten' : 'Mizik Limen'}</span>
+          {(!isOpened || isMusicMuted) ? <SpeakerSlash size={16} weight="regular" /> : <SpeakerHigh size={16} weight="regular" />}
+          <span>{(!isOpened || isMusicMuted) ? 'Mizik Eten' : 'Mizik Limen'}</span>
         </button>
       )}
 
