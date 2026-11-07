@@ -34,9 +34,10 @@ export const AUDIO_TRACKS = {
   o_holy_night: '/audio/o_holy_night.mp3',
   haiti_soup_joumou: '/audio/o_holy_night.mp3',
 
-  // 10. Kè Damou & Dousè Fen Dane - Clair de Lune (Claude Debussy Pyano Solo)
-  clair_de_lune: '/audio/clair_de_lune.mp3',
-  romance_piano: '/audio/clair_de_lune.mp3',
+  // 10. Kè Damou & Dousè Fen Dane - Put Your Head on My Shoulder (Paul Anka)
+  put_your_head_on_my_shoulder: '/audio/put_your_head_on_my_shoulder.mp3',
+  clair_de_lune: '/audio/put_your_head_on_my_shoulder.mp3',
+  romance_piano: '/audio/put_your_head_on_my_shoulder.mp3',
 
   // Opsyon adisyonèl nan pèsonalizasyon
   we_wish_you: '/audio/we_wish_you.mp3',
@@ -115,11 +116,11 @@ export const MUSIC_OPTIONS = [
     src: '/audio/canon_in_d.mp3'
   },
   {
-    id: 'clair_de_lune',
-    label: 'Dousè Lanmou • Clair de Lune (Debussy)',
-    desc: 'Chèfdèv pyano solo amoure, dous, powetik e delika',
+    id: 'put_your_head_on_my_shoulder',
+    label: 'Dousè Lanmou • Put Your Head on My Shoulder',
+    desc: 'Bèl klasik amoure lejanndè pa Paul Anka, dous e amoure pou moun ou renmen an',
     category: 'mennaj',
-    src: '/audio/clair_de_lune.mp3'
+    src: '/audio/put_your_head_on_my_shoulder.mp3'
   },
   {
     id: 'none',

@@ -212,7 +212,7 @@ export const TEMPLATES = [
     category: 'mennaj',
     format: 'kraft_sheet',
     ambientAnimation: 'hearts',
-    defaultMusic: 'clair_de_lune',
+    defaultMusic: 'put_your_head_on_my_shoulder',
     envelopeColor: '#802B48',
     kraftColor: '#F2D8D8',
     accentColor: '#E86F88',
