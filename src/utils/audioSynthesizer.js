@@ -26,8 +26,9 @@ export const AUDIO_TRACKS = {
   // 7. Nwèl Vèt Sapen & Or - The First Noel (Senfoni Nwèl Chalere)
   the_first_noel: '/audio/the_first_noel.mp3',
 
-  // 8. Bòn Ane 2027 Klere & Siksè - Auld Lang Syne (31 Desanm Minwi)
-  auld_lang_syne: '/audio/auld_lang_syne.mp3',
+  // 8. Bòn Ane 2027 Klere & Siksè - We Wish You a Happy New Year (Senfoni Lajwa & Bòn Ane)
+  we_wish_you: '/audio/we_wish_you.mp3',
+  auld_lang_syne: '/audio/we_wish_you.mp3',
 
   // 9. Soup Joumou 1804 & Diyite - O Holy Night / Cantique de Noël (Senfoni Majestyez)
   o_holy_night: '/audio/o_holy_night.mp3',
@@ -66,9 +67,9 @@ export const MUSIC_OPTIONS = [
   },
   {
     id: 'we_wish_you',
-    label: 'We Wish You a Merry Christmas',
-    desc: 'Klasik Nwèl plen lajwa, souri ak bon enèji fèt',
-    category: 'noel',
+    label: 'Bòn Ane & Selebrasyon • We Wish You',
+    desc: 'Bèl senfoni fèt ak nouvo ane, dous, vivan, plen lajwa ak bon enèji 2027',
+    category: 'nouvel-an',
     src: '/audio/we_wish_you.mp3'
   },
   {
@@ -105,13 +106,6 @@ export const MUSIC_OPTIONS = [
     desc: 'Fanfare ak klòch viktwa, grandè ak selebrasyon lajwa 2027',
     category: 'nouvel-an',
     src: '/audio/joy_to_the_world.mp3'
-  },
-  {
-    id: 'auld_lang_syne',
-    label: '31 Desanm • Auld Lang Syne',
-    desc: 'Melodi tradisyonèl 31 desanm minwi pou akeyi nouvo ane a',
-    category: 'nouvel-an',
-    src: '/audio/auld_lang_syne.mp3'
   },
   {
     id: 'romance',

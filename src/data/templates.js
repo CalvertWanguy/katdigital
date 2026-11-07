@@ -177,7 +177,7 @@ export const TEMPLATES = [
     category: 'nouvel-an',
     format: 'bifold',
     ambientAnimation: 'stars',
-    defaultMusic: 'auld_lang_syne',
+    defaultMusic: 'we_wish_you',
     envelopeColor: '#362B1A',
     coverColor: '#2C2314',
     accentColor: '#E5B842',
