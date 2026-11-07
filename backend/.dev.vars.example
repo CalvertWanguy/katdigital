@@ -1,7 +1,9 @@
-SUPABASE_URL=https:https://gqllqfxkfjpnikzpgaac.supabase.co
+SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=votre_cle_service_role_supabase
 ZAFEW_API_KEY=votre_cle_api_zafew
 ZAFEW_MERCHANT_ID=votre_merchant_id_zafew
 ZAFEW_WEBHOOK_SECRET=votre_secret_webhook_zafew
 STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
+RESEND_API_KEY=re_...
+EMAIL_FROM=KatDijital <no-reply@mail.lectus.club>

@@ -30,9 +30,12 @@ export const AUDIO_TRACKS = {
   we_wish_you: '/audio/we_wish_you.mp3',
   auld_lang_syne: '/audio/we_wish_you.mp3',
 
-  // 9. Soup Joumou 1804 & Diyite - O Holy Night / Cantique de Noël (Senfoni Majestyez)
+  // 9. Soup Joumou 1804 & Diyite - Ayiti Se pa Mikaben
+  soup_joumou: '/audio/ayiti_se_mikaben.mp3',
+  haiti_soup_joumou: '/audio/ayiti_se_mikaben.mp3',
+  ayiti_se: '/audio/ayiti_se_mikaben.mp3',
+  haiti_cherie: '/audio/ayiti_se_mikaben.mp3',
   o_holy_night: '/audio/o_holy_night.mp3',
-  haiti_soup_joumou: '/audio/o_holy_night.mp3',
 
   // 10. Kè Damou & Dousè Fen Dane - Put Your Head on My Shoulder (Paul Anka)
   put_your_head_on_my_shoulder: '/audio/put_your_head_on_my_shoulder.mp3',
@@ -88,10 +91,17 @@ export const MUSIC_OPTIONS = [
     src: '/audio/haiti_national_anthem.mp3'
   },
   {
-    id: 'o_holy_night',
-    label: 'Soup Joumou • Senfoni Majestyez',
-    desc: 'Bèl senfoni fèt nasyonal 1ye Janvye ak chalè tradisyon soup joumou',
+    id: 'soup_joumou',
+    label: 'Ayiti Se • Mikaben',
+    desc: 'Bèl klasik patriyotik nasyonal pa Mikaben, plen lanmou ak fyète pou peyi a',
     category: 'tradition',
+    src: '/audio/ayiti_se_mikaben.mp3'
+  },
+  {
+    id: 'o_holy_night',
+    label: 'O Holy Night • Senfoni Nwèl',
+    desc: 'Bèl klasik Nwèl selès ak lapè pou nwit fèt la',
+    category: 'noel',
     src: '/audio/o_holy_night.mp3'
   },
   {
@@ -171,7 +181,7 @@ export function preloadHolidaySoundtrack(musicId = 'deck_the_halls', customAudio
  * Jwe melodi fèt la ak yon reta egzak 1 segonn APRÈ sele a kase,
  * epi fè yon fondu sonò dous e fluid (fade-in) pou yon anbyans majè.
  */
-export function playHolidaySoundtrackWithDelay(musicId = 'deck_the_halls', customAudioUrl = null, delayMs = 1000) {
+export function playHolidaySoundtrackWithDelay(musicId = 'deck_the_halls', customAudioUrl = null, delayMs = 500) {
   stopHolidaySoundtrack(true); // Kanpe san okenn reta mizik anvan an
 
   if (musicId === 'none') {

@@ -310,11 +310,58 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
               </div>
             ) : (
               <div className="tab-pane-fade">
-                {/* Tab 2 : Seleksyon Mizik & Melodi */}
+                {/* 1. Telechaje pwòp vwa oswa mizik pa w (Premye Pozisyon) */}
+                <div className="music-upload-section" style={{ marginBottom: 14 }}>
+                  <input
+                    type="file"
+                    id="device-audio-upload"
+                    accept="audio/*"
+                    style={{ display: 'none' }}
+                    onChange={handleDeviceAudioUpload}
+                  />
+
+                  {uploadedFileName ? (
+                    <div className="uploaded-audio-banner">
+                      <div className="uploaded-audio-meta">
+                        <SpeakerHigh size={17} weight="regular" color="var(--primary-green)" />
+                        <span className="uploaded-audio-filename">{uploadedFileName}</span>
+                      </div>
+                      <div className="uploaded-audio-actions">
+                        <button
+                          type="button"
+                          className="btn-uploaded-listen"
+                          onClick={() => handleTogglePreviewAudio('custom')}
+                        >
+                          {isPlayingPreview ? 'Kanpe' : 'Koute'}
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-uploaded-delete"
+                          onClick={handleRemoveUploadedAudio}
+                          title="Retire dosye sa a"
+                        >
+                          <Trash size={15} weight="regular" />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <label htmlFor="device-audio-upload" className="music-upload-dropzone">
+                      <div className="upload-circle-icon">
+                        <UploadSimple size={16} weight="regular" />
+                      </div>
+                      <div className="upload-text-group">
+                        <strong>Telechaje yon vwa oswa mizik pa w</strong>
+                        <span>Fòma MP3, M4A oswa WAV nan telefòn oswa òdinatè w</span>
+                      </div>
+                    </label>
+                  )}
+                </div>
+
+                {/* 2. Seleksyon Melodi Fèt nan Katalòg la */}
                 <div className="music-section-intro">
                   <span className="form-field-label">
                     <MusicNotes size={14} weight="regular" style={{ color: 'var(--primary-green)' }} />
-                    <span>Chwazi yon melodi fèt pou akonpaye ouvèti kat la :</span>
+                    <span>Oswa chwazi yon melodi fèt nan lis la :</span>
                   </span>
                 </div>
 
@@ -358,53 +405,6 @@ export default function PersonalizeModal({ template, onClose, onSaveAndPreview }
                       </div>
                     );
                   })}
-                </div>
-
-                {/* Telechaje pwòp vwa oswa mizik pa w */}
-                <div className="music-upload-section">
-                  <input
-                    type="file"
-                    id="device-audio-upload"
-                    accept="audio/*"
-                    style={{ display: 'none' }}
-                    onChange={handleDeviceAudioUpload}
-                  />
-
-                  {uploadedFileName ? (
-                    <div className="uploaded-audio-banner">
-                      <div className="uploaded-audio-meta">
-                        <SpeakerHigh size={17} weight="regular" color="var(--primary-green)" />
-                        <span className="uploaded-audio-filename">{uploadedFileName}</span>
-                      </div>
-                      <div className="uploaded-audio-actions">
-                        <button
-                          type="button"
-                          className="btn-uploaded-listen"
-                          onClick={() => handleTogglePreviewAudio('custom')}
-                        >
-                          {isPlayingPreview ? 'Kanpe' : 'Koute'}
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-uploaded-delete"
-                          onClick={handleRemoveUploadedAudio}
-                          title="Retire dosye sa a"
-                        >
-                          <Trash size={15} weight="regular" />
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <label htmlFor="device-audio-upload" className="music-upload-dropzone">
-                      <div className="upload-circle-icon">
-                        <UploadSimple size={16} weight="regular" />
-                      </div>
-                      <div className="upload-text-group">
-                        <strong>Oubyen telechaje yon vwa oswa mizik pa w</strong>
-                        <span>Fòma MP3, M4A oswa WAV nan telefòn oswa òdinatè w</span>
-                      </div>
-                    </label>
-                  )}
                 </div>
               </div>
             )}

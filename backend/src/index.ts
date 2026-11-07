@@ -5,6 +5,7 @@ import { ordersRouter } from './routes/orders';
 import { webhooksRouter } from './routes/webhooks';
 import { cardsRouter } from './routes/cards';
 import { opengraphRouter } from './routes/opengraph';
+import { emailsRouter } from './routes/emails';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -33,6 +34,8 @@ app.get('/api/health', (c) => c.json({ status: 'ok', service: 'katdijital-backen
 app.route('/api/orders', ordersRouter);
 app.route('/api/webhooks', webhooksRouter);
 app.route('/api/cards', cardsRouter);
+app.route('/api/send-kit-email', emailsRouter);
+app.route('/api/emails', emailsRouter);
 
 // Montage de la route SSR OpenGraph
 app.route('/c', opengraphRouter);

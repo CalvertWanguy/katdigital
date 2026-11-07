@@ -3,6 +3,7 @@ import { TEMPLATES } from './data/templates';
 import EnvelopeViewerModal from './components/EnvelopeViewerModal';
 import PersonalizeModal from './components/PersonalizeModal';
 import { stopHolidaySoundtrack } from './utils/audioSynthesizer';
+import { initSecurityShield } from './utils/securityShield';
 import {
   SquaresFour,
   TreeEvergreen,
@@ -44,6 +45,152 @@ const CATEGORY_SECTIONS = [
     icon: HandHeart
   }
 ];
+
+/* ==============================================================
+   IKÒN & MOTIF GRAFIK POU PREVIEW CHAK KAT (DIVERSIFIE & PALPABLE)
+   ============================================================== */
+function PreviewSnowflakeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#D4AF37" strokeWidth="1.6" strokeLinecap="round">
+      <line x1="12" y1="2" x2="12" y2="22" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+      <line x1="19.07" y1="4.93" x2="4.93" y2="19.07" />
+      <circle cx="12" cy="12" r="1.5" fill="#D4AF37" />
+    </svg>
+  );
+}
+
+function PreviewConstellationIcon() {
+  return (
+    <svg viewBox="0 0 36 18" width="30" height="15" fill="none">
+      <path d="M10 3 A 5 5 0 0 0 14 14 A 7 7 0 1 1 10 3 Z" fill="#F5D77F" opacity="0.95" />
+      <polygon points="23,2 24.5,6 29,7 25.5,10 26.5,14 23,11.5 19.5,14 20.5,10 17,7 21.5,6" fill="#FFEBA3" />
+      <circle cx="4" cy="12" r="1" fill="#FFF" />
+      <circle cx="33" cy="12" r="1.2" fill="#FFF" />
+    </svg>
+  );
+}
+
+function PreviewPineTreeIcon() {
+  return (
+    <svg viewBox="0 0 24 26" width="16" height="18" fill="none">
+      <polygon points="12,1 14,4 17,4 14.5,7 15.5,10 12,8 8.5,10 9.5,7 7,4 10,4" fill="#FFE685" />
+      <polygon points="12,5 16,11 13.5,11 18,17 15,17 20,22 4,22 9,17 6,17 10.5,11 8,11" fill="#D4AF37" opacity="0.95" />
+      <rect x="10.5" y="22" width="3" height="3" fill="#8C5922" />
+    </svg>
+  );
+}
+
+function PreviewHaiti1804Icon() {
+  return (
+    <svg viewBox="0 0 36 22" width="28" height="17" fill="none">
+      <rect x="16.5" y="6" width="3" height="13" fill="#8C5922" />
+      <path d="M18 7 Q11 3 7 8 Q13 6 17 8" fill="#1E5C32" opacity="0.9" />
+      <path d="M18 7 Q25 3 29 8 Q23 6 19 8" fill="#1E5C32" opacity="0.9" />
+      <path d="M18 7 Q18 2 15 1 Q16 4 17 7" fill="#1E5C32" opacity="0.9" />
+      <polygon points="18,1 20,4 16,4" fill="#D4AF37" />
+      <path d="M9 11 L14 14 L9 17 Z" fill="#00209F" />
+      <path d="M27 11 L22 14 L27 17 Z" fill="#D21034" />
+    </svg>
+  );
+}
+
+function PreviewSoupJoumouIcon() {
+  return (
+    <svg viewBox="0 0 32 22" width="26" height="18" fill="none">
+      <path d="M11 4 Q13 1 11 0" stroke="#FFDF88" strokeWidth="1" strokeLinecap="round" />
+      <path d="M16 5 Q18 2 16 0" stroke="#FFDF88" strokeWidth="1" strokeLinecap="round" />
+      <path d="M21 4 Q23 1 21 0" stroke="#FFDF88" strokeWidth="1" strokeLinecap="round" />
+      <ellipse cx="16" cy="10" rx="12" ry="3.5" fill="#E59B12" />
+      <path d="M4 10 C4 17, 10 20, 16 20 C22 20, 28 17, 28 10 Z" fill="#C97A08" stroke="#FFEAA0" strokeWidth="0.8" />
+      <ellipse cx="16" cy="10" rx="9" ry="2" fill="#FFC344" />
+    </svg>
+  );
+}
+
+function PreviewRoyalCrownIcon() {
+  return (
+    <svg viewBox="0 0 30 18" width="24" height="15" fill="none">
+      <path d="M4 15 L7 5 L11 10 L15 2 L19 10 L23 5 L26 15 Z" fill="#E5B842" stroke="#664608" strokeWidth="0.8" />
+      <circle cx="7" cy="4" r="1.3" fill="#FFF5D6" />
+      <circle cx="15" cy="1.8" r="1.5" fill="#FFF5D6" />
+      <circle cx="23" cy="4" r="1.3" fill="#FFF5D6" />
+      <rect x="5" y="15" width="20" height="2.5" fill="#B38012" rx="0.5" />
+    </svg>
+  );
+}
+
+function PreviewChampagneIcon() {
+  return (
+    <svg viewBox="0 0 30 24" width="24" height="19" fill="none">
+      <circle cx="15" cy="3" r="1" fill="#FFEAA0" />
+      <circle cx="11" cy="6" r="0.8" fill="#FFF" />
+      <circle cx="19" cy="5" r="0.8" fill="#FFF" />
+      <path d="M8 6 L13 11 L11.5 12 L6.5 7 Z" fill="#FFDF88" opacity="0.9" />
+      <line x1="12.2" y1="11.5" x2="15.5" y2="17" stroke="#D4AF37" strokeWidth="1.2" />
+      <path d="M22 6 L17 11 L18.5 12 L23.5 7 Z" fill="#FFDF88" opacity="0.9" />
+      <line x1="17.8" y1="11.5" x2="14.5" y2="17" stroke="#D4AF37" strokeWidth="1.2" />
+    </svg>
+  );
+}
+
+function PreviewAirmailStampIcon() {
+  return (
+    <svg viewBox="0 0 34 26" width="30" height="23" fill="none" className="real-postage-stamp">
+      <defs>
+        <filter id="stampShadow" x="-15%" y="-15%" width="130%" height="135%">
+          <feDropShadow dx="0" dy="1.5" stdDeviation="1.2" floodColor="rgba(0,0,0,0.25)" />
+        </filter>
+        <radialGradient id="stampHeartGrad" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#E63956" />
+          <stop offset="100%" stopColor="#9E142B" />
+        </radialGradient>
+      </defs>
+      {/* Perforated Stamp Base with fine die-cut tooth scallops */}
+      <rect x="2" y="2" width="30" height="22" fill="#FAF6EE" stroke="#B33951" strokeWidth="1" strokeDasharray="3 1.5" filter="url(#stampShadow)" rx="0.5" />
+      <rect x="4" y="4" width="26" height="18" fill="#FFFBF5" stroke="#C41230" strokeWidth="0.6" />
+      {/* Guilloche Inner Frame */}
+      <rect x="5.5" y="5.5" width="23" height="15" fill="none" stroke="#E29AAB" strokeWidth="0.4" strokeDasharray="1.5 1" />
+      {/* Heart Medallion */}
+      <circle cx="17" cy="13" r="5.5" fill="#FDF3F5" stroke="#C41230" strokeWidth="0.6" />
+      <path d="M17 9.8 C15.4 8, 12.2 8.8, 12.2 11.5 C12.2 13.8, 17 16.2, 17 16.2 C17 16.2, 21.8 13.8, 21.8 11.5 C21.8 8.8, 18.6 8, 17 9.8 Z" fill="url(#stampHeartGrad)" />
+      {/* Denomination & Country */}
+      <text x="6" y="8" fontSize="2.8" fontWeight="bold" fill="#8C1D33" fontFamily="sans-serif" letterSpacing="0.3">POSTE</text>
+      <text x="22" y="8" fontSize="2.8" fontWeight="bold" fill="#8C1D33" fontFamily="sans-serif">100G</text>
+      {/* Postal Cancellation Wavy Lines across stamp */}
+      <path d="M1 9 Q6 7 11 9 Q16 11 21 9 Q26 7 33 9" stroke="rgba(35, 75, 115, 0.45)" strokeWidth="0.8" fill="none" />
+      <path d="M1 13 Q6 11 11 13 Q16 15 21 13 Q26 11 33 13" stroke="rgba(35, 75, 115, 0.45)" strokeWidth="0.8" fill="none" />
+      <path d="M1 17 Q6 15 11 17 Q16 19 21 17 Q26 15 33 17" stroke="rgba(35, 75, 115, 0.45)" strokeWidth="0.8" fill="none" />
+    </svg>
+  );
+}
+
+function PreviewDoubleHeartsIcon() {
+  return (
+    <svg viewBox="0 0 32 20" width="28" height="17" fill="none">
+      <defs>
+        <filter id="heartShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="1.2" stdDeviation="1" floodColor="rgba(100, 20, 45, 0.32)" />
+        </filter>
+        <radialGradient id="heartGrad1" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#FFAEC0" />
+          <stop offset="55%" stopColor="#E86F88" />
+          <stop offset="100%" stopColor="#B33951" />
+        </radialGradient>
+        <radialGradient id="heartGrad2" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#FFF2F6" />
+          <stop offset="55%" stopColor="#F7B2C2" />
+          <stop offset="100%" stopColor="#D9637E" />
+        </radialGradient>
+      </defs>
+      {/* Heart 1 (Back/Primary) */}
+      <path d="M11 3 C8.2 0.8, 3.2 1.8, 3.2 6.5 C3.2 10.5, 11 15, 11 15 C11 15, 18.8 10.5, 18.8 6.5 C18.8 1.8, 13.8 0.8, 11 3 Z" fill="url(#heartGrad1)" filter="url(#heartShadow)" />
+      {/* Heart 2 (Front/Secondary) */}
+      <path d="M20 5 C17.8 3, 13.5 3.5, 13.5 7.2 C13.5 10.8, 20 14.5, 20 14.5 C20 14.5, 26.5 10.8, 26.5 7.2 C26.5 3.5, 22.2 3, 20 5 Z" fill="url(#heartGrad2)" stroke="#FFFFFF" strokeWidth="0.75" filter="url(#heartShadow)" />
+    </svg>
+  );
+}
 
 function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
   const [showMenu, setShowMenu] = useState(false);
@@ -104,9 +251,26 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
           <div className="preview-envelope-container">
             <div className="preview-env-back" style={{ background: template.envelopeColor }} />
             <div className="preview-env-flap" style={{ borderBottomColor: template.flapColor || template.envelopeColor }} />
-            <div className="preview-env-card">
+            <div className={`preview-env-card is-${template.coverArtType || 'default'}`}>
               <div className="preview-paper-edge" />
-              <div className="preview-card-heading" style={{ color: template.envelopeColor }}>{template.title}</div>
+              <div className="preview-motif-badge">
+                {template.coverArtType === 'snowflakes' && <PreviewSnowflakeIcon />}
+                {template.coverArtType === 'constellation' && <PreviewConstellationIcon />}
+                {template.coverArtType === 'pine_tree' && <PreviewPineTreeIcon />}
+              </div>
+              <div
+                className="preview-card-heading"
+                style={{
+                  color: template.envelopeColor,
+                  fontFamily: template.titleFont || "'Montserrat', sans-serif",
+                  fontStyle: template.fontStyle || 'normal',
+                  fontSize: template.titleFont?.includes('Cinzel') ? '9.5px' : '10.5px',
+                  lineHeight: '1.25',
+                  letterSpacing: template.titleFont?.includes('Cinzel') ? '0.8px' : '0.2px'
+                }}
+              >
+                {template.title}
+              </div>
               <div className="preview-card-divider" style={{ background: template.accentColor }} />
               <p className="preview-card-snippet">{template.defaultMessage.slice(0, 52)}...</p>
             </div>
@@ -141,7 +305,25 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
             <div className="preview-parchment-roller preview-roller-top" style={{ background: template.rodColor || '#855A25' }} />
             <div className="preview-parchment-paper" style={{ background: template.parchmentBg || '#F5E6CA', borderColor: template.accentColor || '#C99726' }}>
               <div className="preview-parchment-seal-ribbon" />
-              <div className="preview-card-heading" style={{ color: template.envelopeColor, marginTop: 4 }}>{template.title}</div>
+              <div className="preview-motif-badge" style={{ marginTop: 2 }}>
+                {template.coverArtType === 'haiti_1804' && <PreviewHaiti1804Icon />}
+                {template.coverArtType === 'soup_joumou' && <PreviewSoupJoumouIcon />}
+                {template.coverArtType === 'royal_decree' && <PreviewRoyalCrownIcon />}
+              </div>
+              <div
+                className="preview-card-heading"
+                style={{
+                  color: template.envelopeColor,
+                  fontFamily: template.titleFont || "'Montserrat', sans-serif",
+                  fontStyle: template.fontStyle || 'normal',
+                  fontSize: template.titleFont?.includes('Cinzel') ? '10px' : '11px',
+                  letterSpacing: template.titleFont?.includes('Cinzel') ? '0.8px' : '0.2px',
+                  marginTop: 2
+                }}
+              >
+                {template.title}
+              </div>
+              <div className="preview-card-divider" style={{ background: template.accentColor }} />
               <p className="preview-card-snippet" style={{ color: '#3A2714' }}>{template.defaultMessage.slice(0, 48)}...</p>
             </div>
             <div className="preview-parchment-roller preview-roller-bottom" style={{ background: template.rodColor || '#855A25' }} />
@@ -151,23 +333,94 @@ function TemplateCard({ template, onOpenDemo, onOpenCustomizer }) {
         {/* FÒMA 3 : LIV PAPETRI FOLIO DE LUKS */}
         {template.format === 'bifold' && (
           <div className="preview-bifold-container">
-            <div className="preview-bifold-cover" style={{ background: `linear-gradient(135deg, ${template.coverColor || '#1E3326'} 0%, #122118 100%)`, borderColor: template.accentColor || '#D4AF37' }}>
+            <div
+              className="preview-bifold-cover"
+              style={{
+                background: `linear-gradient(135deg, ${template.coverColor || '#1E3326'} 0%, #122118 100%)`,
+                borderColor: template.accentColor || '#D4AF37'
+              }}
+            >
               <div className="preview-bifold-spine" />
-              <div className="preview-bifold-star" />
-              <div className="preview-bifold-title">{template.title}</div>
-              <div className="preview-bifold-gold-seal" />
+              <div style={{ marginTop: 8, display: 'flex', justifyContent: 'center' }}>
+                {template.coverArtType === 'champagne_celebration' ? <PreviewChampagneIcon /> : <PreviewPineTreeIcon />}
+              </div>
+
+              <div
+                className="preview-bifold-title"
+                style={{
+                  fontFamily: template.titleFont || "'Montserrat', sans-serif",
+                  fontStyle: template.fontStyle || 'normal',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '0.4px',
+                  marginTop: 3,
+                  padding: '0 6px',
+                  textAlign: 'center'
+                }}
+              >
+                {template.title}
+              </div>
+
+              <div className="preview-bifold-gold-seal">KD</div>
             </div>
           </div>
         )}
 
-        {/* FÒMA 4 : LÈT KRAFT AK KÈ K AP FLOTE */}
+        {/* FÒMA 4 : LÈT KRAFT AK KÈ K AP FLOTE (DIZAYN PWÒP, ELEGANT TANKOU ANVAN AN) */}
         {template.format === 'kraft_sheet' && (
           <div className="preview-kraft-container">
-            <div className="preview-kraft-sheet" style={{ background: template.kraftColor || '#E8D5B7', borderColor: template.accentColor || '#B33951' }}>
-              <div className="preview-kraft-top-flap" />
-              <div className="preview-kraft-heart">♥</div>
-              <div className="preview-card-heading" style={{ color: '#6B3045', marginTop: 4 }}>{template.title}</div>
-              <p className="preview-card-snippet" style={{ color: '#4A1D2B' }}>{template.defaultMessage.slice(0, 45)}...</p>
+            <div className="preview-kraft-sheet" style={{ background: template.kraftColor || '#E8D5B7' }}>
+              {/* Bòdi Avyon Rétro Otantik (Airmail Stripes) pou Premye Kat Mesaj Lanmou an */}
+              {template.coverArtType === 'airmail_love' && (
+                <>
+                  <div className="preview-airmail-border" />
+                  <div className="preview-airmail-stamp">
+                    <PreviewAirmailStampIcon />
+                  </div>
+                </>
+              )}
+              {template.id === 'lanmou-velours-rose' && (
+                <>
+                  <div className="preview-lace-border" />
+                  <div style={{ position: 'absolute', top: 6, right: 8, fontSize: '11px', color: template.accentColor || '#E86F88', letterSpacing: '2px', zIndex: 3 }}>
+                    ♥♥
+                  </div>
+                </>
+              )}
+              {!template.coverArtType && (
+                <div className="preview-kraft-top-flap" />
+              )}
+              {template.coverArtType !== 'airmail_love' && template.id !== 'lanmou-velours-rose' && (
+                <div className="preview-kraft-heart" style={{ color: template.accentColor || '#B33951' }}>
+                  ♥
+                </div>
+              )}
+              <div
+                className="preview-card-heading"
+                style={{
+                  color: template.id === 'lanmou-velours-rose' ? '#7A1C3E' : '#5C222F',
+                  fontFamily: template.titleFont || "'Playfair Display', serif",
+                  fontStyle: template.fontStyle || 'normal',
+                  fontSize: '11.5px',
+                  fontWeight: 700,
+                  lineHeight: '1.3',
+                  marginTop: 6,
+                  padding: '0 8px',
+                  display: 'block',
+                  overflow: 'visible',
+                  maxHeight: 'none',
+                  whiteSpace: 'normal',
+                  wordBreak: 'normal',
+                  overflowWrap: 'break-word',
+                  textAlign: 'center'
+                }}
+              >
+                {template.title}
+              </div>
+              <div className="preview-card-divider" style={{ background: template.accentColor || '#B33951', width: 22, height: 1.5, margin: '4px auto' }} />
+              <p className="preview-card-snippet" style={{ color: '#401A24', fontSize: '9.5px', lineHeight: '1.38', padding: '0 8px' }}>
+                {template.defaultMessage.slice(0, 48)}...
+              </p>
             </div>
           </div>
         )}
@@ -343,6 +596,11 @@ export default function App() {
   const [customizerTemplate, setCustomizerTemplate] = useState(null);
   const [customData, setCustomData] = useState(null);
   const [isDirectRecipientView, setIsDirectRecipientView] = useState(false);
+
+  // Inisyalize boukliye sekirite anti-kapti ak anti-enspekte
+  useEffect(() => {
+    initSecurityShield();
+  }, []);
 
   // Deteksyon yon lyen inik destinataire nan URL la (Supporte slug backend API ak query params)
   useEffect(() => {
