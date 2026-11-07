@@ -581,7 +581,7 @@ export default function App() {
           <div className="footer-sub-row">
             <span>© 2026 KAT DIJITAL</span>
             <span className="footer-bullet">•</span>
-            <span>Fèt ak anpil fyète pou tout Ayisyen nan mond lan !</span>
+            <span>Tout dwa rezève</span>
           </div>
         </div>
       </footer>
